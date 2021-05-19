@@ -31,21 +31,33 @@ class _PListState extends State<PList> {
   }
 
   Widget _buildCard(OneMisson plistItem) {
-    return Card(
-      child: InkWell(
-        splashColor: Colors.blue.withAlpha(30),
-        onTap: () {},
-        child: SizedBox(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('电脑HIS无法打开'),
-              Text('陈马也'),
-              Text('18689532602'),
-              Text('20210509'),
-              Text('已解决'),
-            ],
+    return Container(
+      child: Card(
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text('陈马也'),
+                    Text('1008611'),
+                    Text('20210509'),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('电脑HIS无法打开'),
+                    Text('已解决'),
+                  ],
+                ),
+
+              ],
+            ),
           ),
         ),
       ),

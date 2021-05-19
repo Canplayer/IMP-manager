@@ -14,6 +14,7 @@ class LoginPage extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text(_title),
+          brightness: Brightness.dark,
         ),
         body: const Body(),
       ),

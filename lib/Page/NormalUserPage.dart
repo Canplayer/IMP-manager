@@ -16,15 +16,15 @@ class _TabInfo {
   final Color color;
 }
 
-class ITCenterPage extends StatefulWidget {
-  const ITCenterPage({Key key}) : super(key: key);
+class NormalUserPage extends StatefulWidget {
+  const NormalUserPage({Key key}) : super(key: key);
 
   @override
-  _ITCenterPageState createState() => _ITCenterPageState();
+  _NormalUserPageState createState() => _NormalUserPageState();
 }
 
-class _ITCenterPageState extends State<ITCenterPage> {
-  final String _page = 'IT服务台';
+class _NormalUserPageState extends State<NormalUserPage> {
+  final String _page = '报障平台';
   int currentIndex;
 
   @override
@@ -37,7 +37,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
   Widget build(BuildContext context) {
     final _tabInfo = [
       _TabInfo(
-        '未处理',
+        '列表',
         Icons.list,
         Colors.blue,
         Center(
@@ -48,26 +48,10 @@ class _ITCenterPageState extends State<ITCenterPage> {
             )),
       ),
       _TabInfo(
-        '已处理',
-        Icons.done,
+        '个人资料',
+        Icons.person,
         Colors.blue,
-        Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: PList()),
-            )),
-      ),
-      _TabInfo(
-        '已分发',
-        Icons.account_tree_outlined,
-        Colors.blue,
-        Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: PList()),
-            )),
+        MyInfoPage(),
       ),
     ];
 
@@ -75,6 +59,16 @@ class _ITCenterPageState extends State<ITCenterPage> {
       appBar: AppBar(
         title: Text(_page),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            new MaterialPageRoute(builder: (context) => new NewMissionPage()),
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: _tabInfo[currentIndex].widget,
       bottomNavigationBar: BottomNavigationBar(
         items: [

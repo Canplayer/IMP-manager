@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hnszlyyimp/Page/ITCenterPage.dart';
+import 'package:hnszlyyimp/Page/NormalUserPage.dart';
+
+import 'ITCenterPage.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key key}) : super(key: key);
@@ -47,7 +49,7 @@ class Body extends StatelessWidget {
                   children: <Widget>[
                     const ListTile(
                       leading: Icon(Icons.work_outline),
-                      title: Text('我是总台'),
+                      title: Text('我是IT服务台'),
                       subtitle: Text('面向信息总台的选项'),
                     ),
                   ],
@@ -57,7 +59,9 @@ class Body extends StatelessWidget {
             Card(
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
-                onTap: () {},
+                onTap: () {
+
+                },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -74,7 +78,11 @@ class Body extends StatelessWidget {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  print('istap');
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new NormalUserPage()),
+                  );
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
