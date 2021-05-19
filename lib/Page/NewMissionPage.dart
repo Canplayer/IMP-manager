@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:filesystem_picker/filesystem_picker.dart';
+import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 import '../client.dart';
 
@@ -40,11 +40,13 @@ class _NewMissionPageState extends State<NewMissionPage> {
   }
 
   Future _getImageFromPC() async{
-    Directory rootPath =await getTemporaryDirectory();
-    var path = await FilesystemPicker.open(context: context, rootDirectory: rootPath);
+    final pickedFile = await OpenFilePicker()..filterSpecification={
+      '支持的图片格式':'*.jpg;*.jpeg;*.png',
+    }..defaultFilterIndex=0 ..defaultExtension='jpg' ..title= '选择一张图片';
+    final result = pickedFile.getFile();
     setState(() {
-      if (path != null) {
-        _image = File(path);
+      if (result != null) {
+        _image = File(result.path);
       }
     });
   }
