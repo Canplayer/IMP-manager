@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
@@ -12,10 +14,6 @@ class LoginPage extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(_title),
-          brightness: Brightness.dark,
-        ),
         body: const Body(),
       ),
     );
@@ -72,6 +70,13 @@ class Body extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(
+              height: 150,
+                width: 150,
+                child: Image.asset('res/logo.png'),),
+            SizedBox(
+              height: 30,
+            ),
             TextField(
               decoration: InputDecoration(
                   border: OutlineInputBorder(), labelText: 'No.'),

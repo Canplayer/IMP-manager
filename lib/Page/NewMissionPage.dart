@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../client.dart';
 
 class NewMissionPage extends StatefulWidget {
-  const NewMissionPage({Key key}) : super(key: key);
+  const NewMissionPage({Key key,int a}) : super(key: key);
 
   @override
   _NewMissionPageState createState() => _NewMissionPageState();
@@ -216,74 +216,3 @@ class _NewMissionPageState extends State<NewMissionPage> {
     );
   }
 }
-
-//
-// class ImageBox extends StatefulWidget {
-//   ImageBox({Key key}) : super(key: key);
-//
-//   _ImageBoxState createState() => _ImageBoxState();
-// }
-//
-// class _ImageBoxState extends State<ImageBox> {
-//   //记录选择的照片
-//   File _image;
-//   final picker = ImagePicker();
-//
-//   //拍照
-//   Future _getImageFromCamera() async {
-//     final pickedFile = await picker.getImage(source: ImageSource.camera,maxWidth: 400);
-//
-//     setState(() {
-//       if(pickedFile != null){
-//         _image = File(pickedFile.path);
-//       }
-//     });
-//   }
-//
-//   //相册选择
-//   Future _getImageFromGallery() async {
-//     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-//
-//     setState(() {
-//       if(pickedFile != null){
-//         _image = File(pickedFile.path);
-//       }
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text("选择图片并上传")),
-//       body: Container(
-//         child: ListView(
-//           children: <Widget>[
-//             RaisedButton(
-//               onPressed: () {
-//                 _getImageFromCamera();
-//               },
-//               child: Text("照相机"),
-//             ),
-//             SizedBox(height: 10),
-//             RaisedButton(
-//               onPressed: () {
-//                 _getImageFromGallery();
-//               },
-//               child: Text("相册"),
-//             ),
-//             SizedBox(height: 10),
-//             /**
-//              * 展示选择的图片
-//              */
-//             _image == null
-//                 ? Text("no image selected")
-//                 : Image.file(
-//               _image,
-//               fit: BoxFit.cover,
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

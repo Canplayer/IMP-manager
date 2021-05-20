@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NormalUserPage.dart';
 
 import 'ITCenterPage.dart';
+import 'ITUserPage.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key key}) : super(key: key);
@@ -60,7 +61,11 @@ class Body extends StatelessWidget {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new ITUserPage()),
+                  );
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
