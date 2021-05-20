@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 import '../client.dart';
@@ -49,6 +50,11 @@ class _NewMissionPageState extends State<NewMissionPage> {
         _image = File(result.path);
       }
     });
+  }
+
+  Future _openWindowsSSTool() async{
+    const url = 'file://C:/Windows/system32/SnippingTool.exe';
+    await canLaunch(url)?launch(url):throw 'Could not launch $url';
   }
 
 
@@ -150,6 +156,19 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          (Platform.isWindows||Platform.isLinux||Platform.isMacOS)?
+                          TextButton(
+                            onPressed: () {
+                              _openWindowsSSTool();
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.airplay_outlined),
+                                Text('调用截图程序')
+                              ],
+                            ),
+                          ):
                           TextButton(
                             onPressed: () {
                               _getImageFromCamera();
