@@ -183,8 +183,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              //_getImageFromGallery();
-                              _getImageFromPC();
+                              (Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,

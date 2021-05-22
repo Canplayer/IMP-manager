@@ -15,7 +15,7 @@ const SystemUiOverlayStyle my = SystemUiOverlayStyle(
   systemNavigationBarDividerColor: Colors.transparent,
   systemNavigationBarIconBrightness: Brightness.dark,
   statusBarColor: Colors.transparent,
-  statusBarIconBrightness: Brightness.light,
+  statusBarIconBrightness: Brightness.dark,
   statusBarBrightness: Brightness.light,
 );
 
