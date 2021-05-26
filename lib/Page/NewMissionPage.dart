@@ -53,7 +53,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
   }
 
   Future _openWindowsSSTool() async{
-    const url = 'file://C:/Windows/system32/SnippingTool.exe';
+    const url = 'file://%windir%/system32/SnippingTool.exe';
     await canLaunch(url)?launch(url):throw 'Could not launch $url';
   }
 

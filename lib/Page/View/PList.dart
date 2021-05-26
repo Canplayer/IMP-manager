@@ -9,21 +9,18 @@ class PList extends StatefulWidget {
 }
 
 class _PListState extends State<PList> {
-
   final _PlistItem = <OneMisson>[];
 
-  Widget _buildList(){
-    return ListView.builder(itemBuilder: (context,i){
-
-
-      if (i >= _PlistItem.length) {
-        _PlistItem.addAll([new OneMisson()]); /*4*/
-      }
-      return _buildCard(_PlistItem[i]);
-    },);
+  Widget _buildList() {
+    return ListView.builder(
+      itemBuilder: (context, i) {
+        if (i >= _PlistItem.length) {
+          _PlistItem.addAll([new OneMisson()]); /*4*/
+        }
+        return _buildCard(_PlistItem[i]);
+      },
+    );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,25 +34,45 @@ class _PListState extends State<PList> {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {},
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('陈马也'),
-                    Text('1008611'),
-                    Text('20210509'),
+                    Row(
+                      children: [
+                        Text('门诊部'),
+                        Text('  1008611'),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '设备',
+                          style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          ' 打印机故障，麻烦来修一下',
+                          style: TextStyle(fontSize: 17,fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('电脑HIS无法打开'),
+                        Text('已解决'),
+                      ],
+                    ),
                   ],
                 ),
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text('电脑HIS无法打开'),
-                    Text('已解决'),
-                  ],
+                Icon(
+                  Icons.done,
+                  size: 40,
+                  color: Colors.green,
                 ),
-
               ],
             ),
           ),
@@ -66,7 +83,7 @@ class _PListState extends State<PList> {
 }
 
 class OneMisson {
-  String _name= '123',_phone='456';
+  String _name = '123', _phone = '456';
 
   String get next => _name;
   set next(String value) {

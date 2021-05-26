@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hnszlyyimp/Page/NewUserPage.dart';
 import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
 
@@ -107,6 +108,31 @@ class Body extends StatelessWidget {
                   },
                   child: Text(
                     '登陆',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              child: SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => new NewUserPage()),
+                    );
+                  },
+                  child: Text(
+                    '注册',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
