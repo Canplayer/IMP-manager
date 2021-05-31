@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:filepicker_windows/filepicker_windows.dart';
+//import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,13 +21,13 @@ class _NewMissionPageState extends State<NewMissionPage> {
 
   //拍照
   Future _getImageFromCamera() async {
-    final pickedFile =
-        await PhoneWebPicker.getImage(source: ImageSource.camera, maxHeight: 2048);
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
-    });
+    // final pickedFile =
+    //     await PhoneWebPicker.getImage(source: ImageSource.camera, maxHeight: 2048);
+    // setState(() {
+    //   if (pickedFile != null) {
+    //     _image = File(pickedFile.path);
+    //   }
+    // });
   }
   //相册
   Future _getImageFromGallery() async {
@@ -40,20 +40,20 @@ class _NewMissionPageState extends State<NewMissionPage> {
     });
   }
 
-  Future _getImageFromPC() async{
-    final pickedFile = await OpenFilePicker()..filterSpecification={
-      '支持的图片格式':'*.jpg;*.jpeg;*.png',
-    }..defaultFilterIndex=0 ..defaultExtension='jpg' ..title= '选择一张图片';
-    final result = pickedFile.getFile();
-    setState(() {
-      if (result != null) {
-        _image = File(result.path);
-      }
-    });
-  }
+  // Future _getImageFromPC() async{
+  //   final pickedFile = await OpenFilePicker()..filterSpecification={
+  //     '支持的图片格式':'*.jpg;*.jpeg;*.png',
+  //   }..defaultFilterIndex=0 ..defaultExtension='jpg' ..title= '选择一张图片';
+  //   final result = pickedFile.getFile();
+  //   setState(() {
+  //     if (result != null) {
+  //       _image = File(result.path);
+  //     }
+  //   });
+  // }
 
   Future _openWindowsSSTool() async{
-    const url = 'file://%windir%/system32/SnippingTool.exe';
+    const url = 'file://C:/Windows/system32/SnippingTool.exe';
     await canLaunch(url)?launch(url):throw 'Could not launch $url';
   }
 
@@ -156,19 +156,21 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          (Platform.isWindows||Platform.isLinux||Platform.isMacOS)?
-                          TextButton(
-                            onPressed: () {
-                              _openWindowsSSTool();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.airplay_outlined),
-                                Text('调用截图程序')
-                              ],
-                            ),
-                          ):
+                          // Platform.isWindows||Platform.isLinux||Platform.isMacOS
+                          // (1==1)?
+                          // TextButton(
+                          //   onPressed: () {
+                          //     _openWindowsSSTool();
+                          //   },
+                          //   child: Row(
+                          //     mainAxisSize: MainAxisSize.min,
+                          //     children: [
+                          //       Icon(Icons.airplay_outlined),
+                          //       Text('调用截图程序')
+                          //     ],
+                          //   ),
+                          // ),
+                              // :
                           TextButton(
                             onPressed: () {
                               _getImageFromCamera();
@@ -183,7 +185,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              (Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
+                              //(Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
