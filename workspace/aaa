@@ -1,0 +1,96 @@
+// Copyright 2019 The Flutter team. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class _TabInfo {
+  const _TabInfo(this.title, this.icon, this.widget);
+
+  final String title;
+  final IconData icon;
+  final Widget widget;
+}
+
+class ITCenterPage extends StatelessWidget {
+  const ITCenterPage();
+
+  @override
+  Widget build(BuildContext context) {
+    final _tabInfo = [
+      _TabInfo(
+        '正在执行',
+        CupertinoIcons.checkmark_seal,
+        SizedBox(),
+      ),
+      _TabInfo(
+        '已完成',
+        CupertinoIcons.list_number,
+        SizedBox(),
+      ),
+      _TabInfo(
+        '个人资料',
+        CupertinoIcons.profile_circled,
+        SizedBox(),
+      ),
+    ];
+
+    return DefaultTextStyle(
+      style: CupertinoTheme.of(context).textTheme.textStyle,
+      child: CupertinoTabScaffold(
+        restorationId: 'cupertino_tab_scaffold',
+        tabBar: CupertinoTabBar(
+          items: [
+            for (final tabInfo in _tabInfo)
+              BottomNavigationBarItem(
+                label: tabInfo.title,
+                icon: Icon(tabInfo.icon),
+              ),
+          ],
+        ),
+        tabBuilder: (context, index) {
+          return CupertinoTabView(
+            restorationScopeId: 'cupertino_tab_view_$index',
+            builder: (context) => _CupertinoDemoTab(
+              title: _tabInfo[index].title,
+              icon: _tabInfo[index].icon,
+              body: _tabInfo[index].widget,
+            ),
+            defaultTitle: _tabInfo[index].title,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CupertinoDemoTab extends StatelessWidget {
+  const _CupertinoDemoTab({
+    Key key,
+    @required this.title,
+    @required this.icon,
+    @required this.body,
+  }) : super(key: key);
+
+  final String title;
+  final IconData icon;
+  final Widget body;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(),
+      backgroundColor: CupertinoColors.systemBackground,
+      child: Center(
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            child:Icon(CupertinoIcons.checkmark_seal),
+            onPressed: (){print('123');},
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        ),
+      ),
+    );
+  }
+}

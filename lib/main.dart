@@ -22,5 +22,4 @@ const SystemUiOverlayStyle my = SystemUiOverlayStyle(
 );
 Future DesktopWindowFunctions() async{
   await DesktopWindow.setWindowSize(Size(480,700));
-
 }

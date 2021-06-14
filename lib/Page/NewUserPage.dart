@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 
 import '../client.dart';
@@ -16,8 +14,6 @@ class NewUserPage extends StatefulWidget {
 }
 
 class _NewUserPageState extends State<NewUserPage> {
-  File _image;
-  final PhoneWebPicker = ImagePicker();
 
 
   Future<void> _showMyDialog() async {
