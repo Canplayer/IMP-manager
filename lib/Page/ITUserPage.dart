@@ -53,11 +53,4 @@ class _ITUserPageState extends State<ITUserPage> {
     );
   }
 
-  void _changePage(int index) {
-    if (index != currentIndex) {
-      setState(() {
-        currentIndex = index;
-      });
-    }
-  }
 }

@@ -5,6 +5,8 @@ import 'package:hnszlyyimp/Page/NewUserPage.dart';
 import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
 
+
+
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
@@ -21,48 +23,101 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Future<void> _showMyDialog() async {
-      Future a = login('123', '123');
-      a.then((value) {
-        Navigator.of(context).pop();
-        if (value == 1) {
-          Navigator.push(
-            context,
-            new MaterialPageRoute(builder: (context) => new WelcomePage()),
-          );
-        }
-        else{}
-      });
+  _BodyState createState() => _BodyState();
+}
 
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('正在登陆'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  LinearProgressIndicator(),
-                ],
+class _BodyState extends State<Body> {
+
+  var _titleID = new TextEditingController();
+  var _titlePass = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+
+    Future<void> _login() async {
+      if(_titleID.text != '' && _titlePass.text != '') {
+        Future a = login(_titleID.text, _titlePass.text);
+        a.then((value) {
+          Navigator.of(context).pop();
+          if (value == 1) {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(builder: (context) => new WelcomePage()),
+            );
+          }
+          else {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('登陆失败'),
+                  content: SingleChildScrollView(
+                    child: Text('错误代码:还没做'),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('取消'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        });
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('正在登陆'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    LinearProgressIndicator(),
+                  ],
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('取消'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+              actions: <Widget>[
+                TextButton(
+                  child: Text('取消'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+      else {
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('用户名和密码不能为空！'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('确认'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+
+
     }
 
     return Center(
@@ -73,12 +128,13 @@ class Body extends StatelessWidget {
           children: <Widget>[
             SizedBox(
               height: 150,
-                width: 150,
-                child: Image.asset('res/logo.png'),),
+              width: 150,
+              child: Image.asset('res/logo.png'),),
             SizedBox(
               height: 30,
             ),
             TextField(
+              controller: _titleID,
               decoration: InputDecoration(
                   border: OutlineInputBorder(), labelText: 'No.'),
             ),
@@ -86,6 +142,7 @@ class Body extends StatelessWidget {
               height: 30,
             ),
             TextField(
+              controller: _titlePass,
               obscureText: true,
               decoration: InputDecoration(
                   border: OutlineInputBorder(), labelText: '密码'),
@@ -99,12 +156,7 @@ class Body extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    _showMyDialog();
-                    // Navigator.push(
-                    //   context,
-                    //   new MaterialPageRoute(
-                    //       builder: (context) => new WelcomePage()),
-                    // );
+                    _login();
                   },
                   child: Text(
                     '登陆',
@@ -147,4 +199,5 @@ class Body extends StatelessWidget {
     );
   }
 }
+
 
