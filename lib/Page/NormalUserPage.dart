@@ -45,7 +45,7 @@ class _NormalUserPageState extends State<NormalUserPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: MyList()),
+                  constraints: BoxConstraints(maxWidth: 500), child: null),
             )),
       ),
       _TabInfo(

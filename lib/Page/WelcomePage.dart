@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NormalUserPage.dart';
 
+import '../client.dart';
 import 'ITCenterPage.dart';
 import 'ITUserPage.dart';
 
@@ -10,7 +11,11 @@ class WelcomePage extends StatelessWidget {
   static const String _title = '身份选择页面';
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text(_title),
+      ),
       body: Body(),
     );
   }
@@ -49,8 +54,8 @@ class Body extends StatelessWidget {
                   children: <Widget>[
                     const ListTile(
                       leading: Icon(Icons.work_outline),
-                      title: Text('我是IT服务台'),
-                      subtitle: Text('面向信息总台的选项'),
+                      title: Text('【还没做！】我是IT服务台'),
+                      subtitle: Text('【还没做！】面向信息总台的选项'),
                     ),
                   ],
                 ),
@@ -93,8 +98,8 @@ class Body extends StatelessWidget {
                   children: <Widget>[
                     const ListTile(
                       leading: Icon(Icons.warning_amber_rounded),
-                      title: Text('我要报障'),
-                      subtitle: Text('面对医院员工的报障选项'),
+                      title: Text('【还没做！】我要报障'),
+                      subtitle: Text('【还没做！】面对医院员工的报障选项'),
                     ),
                   ],
                 ),

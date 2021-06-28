@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NewMissionPage.dart';
 
+import 'View/MyList.dart';
 import 'View/PList.dart';
 
-class _TabInfo {
-  const _TabInfo(this.title, this.icon, this.color, this.widget);
-
-  final String title;
-  final IconData icon;
-  final Widget widget;
-  final Color color;
-}
 
 class ITUserPage extends StatefulWidget {
   const ITUserPage({Key key}) : super(key: key);
@@ -48,7 +41,7 @@ class _ITUserPageState extends State<ITUserPage> {
           child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-            constraints: BoxConstraints(maxWidth: 500), child: PList()),
+            constraints: BoxConstraints(maxWidth: 500), child: MyList()),
       )),
     );
   }

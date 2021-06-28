@@ -4,7 +4,7 @@ const zmq = require("zeromq");
 const redis = require("redis");
 const moment = require("moment")
 const fs = require("fs")
-
+const { promisify } = require("util")
 
 
 async function login(userid, passwd) {
@@ -45,7 +45,7 @@ async function update() {
 async function query() {
     let sock = new zmq.Request()
 
-    let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>01599</ACCOUNT><BEGINDATE>2021-05-23</BEGINDATE><ENDDATE>2021-06-06</ENDDATE></SOAP>`
+    let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>666</ACCOUNT><BEGINDATE>2021-05-23</BEGINDATE><ENDDATE>2021-06-25</ENDDATE></SOAP>`
     sock.connect("tcp://10.10.142.81:5566")
     // sock.connect("tcp://10.10.170.191:5566")
     await sock.send(msg)
@@ -54,6 +54,7 @@ async function query() {
 
 }
 // query()
+
 async function deal() {
     let sock = new zmq.Request()
 
@@ -102,10 +103,9 @@ async function deal() {
     const result = await sock.receive()
     console.log(result.toString())
 }
-const client = redis.createClient({
-    host: "10.10.142.81"
-});
+
 async function add_fault_order() {
+    // FAULTREPORTLBM_C
     let data = {
         "original-streams-id": "",
         "distribute-streams-id": "",
@@ -143,7 +143,7 @@ async function add_fault_order() {
     })
 
 }
-add_fault_order()
+// add_fault_order()
 /**
  * {
     "original-streams-id": "",
@@ -165,3 +165,107 @@ add_fault_order()
     "solution": ""
 }
  */
+
+async function datain() {
+    let data = {
+        "original-streams-id": "",
+        "distribute-streams-id": "",
+        "userid": "01599",
+        "opuserid": "",
+        "sduserid": "",
+        "department": "信息部",
+        "person2contact": "666",
+        "phone2contact": "7777",
+        "faultdate": "2021-05-20",
+        "faulttype": "His系统",
+        "problemdescribe": "wx",
+        "reportdate": "2021-06-20",
+        "reporttime": "16:59:35",
+        "engineer": "",
+        "engineerphone": "",
+        "faultprogress": "未处理",
+        "solution": "2337"
+    }
+    let table_name = "ORDERDATAIN"
+    let args = [table_name, "*"]
+    Object.keys(data).forEach(key => {
+        args.push(key)
+        args.push(data[key])
+    })
+    client.sendCommand("XADD", args, (err, key) => {
+        console.log(key)
+    })
+}
+// datain()
+
+async function query_data_in(id) {
+    let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>${id}</ACCOUNT><BEGINDATE>2021-06-13</BEGINDATE><ENDDATE>2021-06-27</ENDDATE></SOAP>`
+    let sock = new zmq.Request()
+
+    sock.connect("tcp://10.10.142.81:5566")
+    // sock.connect("tcp://10.10.170.191:5566")
+    await sock.send(msg)
+    const result = await sock.receive()
+    read_matchorder(id)
+}
+const client = redis.createClient({
+    host: "10.10.142.81"
+});
+// query_data_in("666")
+async function read_matchorder(id) {
+    const xRead = promisify(client.xread).bind(client)
+    const xDel = promisify(client.xdel).bind(client)
+    let stream = await xRead("COUNT", 100, "STREAMS", `${id}_MATCHORDER`, "0-0")
+    if (stream) {
+        let stream_name = stream[0][0]
+        let stream_data = stream[0][1]
+        for (stream_item of stream_data) {
+            let item_id = stream_item[0]
+            let count = await xDel(`${id}_MATCHORDER`, item_id)
+            console.log("DELTED amount:", count)
+            let item_data = stream_item[1]
+            let item_json = {}
+            for (let i = 0; i < item_data.length; i += 2) {
+                item_json[item_data[i]] = item_data[i + 1]
+            }
+            console.log(item_id)
+            console.log(item_json)
+        }
+    }
+    client.end(true)
+}
+
+
+function dataIn(username){
+    let data = {
+        "original-streams-id": "",
+        "distribute-streams-id": "",
+        "userid": "666",
+        "opuserid": "666",
+        "sduserid": "",
+        "department": "门诊",
+        "person2contact": "某个人",
+        "phone2contact": "",
+        "faultdate": "2021-06-26",
+        "faulttype": "His系统",
+        "problemdescribe": "error",
+        "reportdate": "2021-06-26",
+        "reporttime": "21:59:35",
+        "engineer": "某个人",
+        "engineerphone": "",
+        "faultprogress": "",
+        "solution": "solutaion 111"
+    }
+
+    let dataInMap = `ORDERDATAIN`
+    let args = [dataInMap, "*"]
+    Object.keys(data).forEach(key => {
+        args.push(key)
+        args.push(data[key])
+    })
+    client.sendCommand(`XADD`, args, (err, key) => {
+        console.log(key)
+    })
+
+}
+dataIn("666")

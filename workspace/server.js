@@ -1,7 +1,14 @@
 const express = require("express")
 const zmq = require("zeromq")
 const parseStringPromise = require('xml2js').parseStringPromise;
-
+const redis = require("redis");
+const { promisify } = require("util")
+const serverUrl = "10.10.142.81"
+//const serverUrl = "10.10.170.191"
+const port = "5566"
+const client = redis.createClient({
+  host: serverUrl
+});
 const app = express()
 app.use(express.json())
 
@@ -10,7 +17,7 @@ async function login(userid, passwd) {
   let msg = `<?xml version="1.0" encoding="UTF-8"?>
   <SOAP><MSGTYPE>000001</MSGTYPE><ACCOUNT>${userid}</ACCOUNT
   ><PASSWORD>${passwd}</PASSWORD><AUTHORITY>1</AUTHORITY></SOAP>`
-  sock.connect("tcp://10.10.170.191:5566")
+  sock.connect(`tcp://${serverUrl}:${port}`)
   await sock.send(msg)
   let result_str = (await sock.receive()).toString()
   let result = await parseStringPromise(result_str)
@@ -31,9 +38,9 @@ app.post("/login", async (req, res) => {
       "result": "OK",
       "authority": result["SOAP"]["AUTHORITY"][0].split(","),
       "department": result["SOAP"]["DEPARTMENT"][0],
-      "username":result["SOAP"]["USERNAME"][0],
-      "phone":result["SOAP"]["PHONE"][0],
-      "email":result["SOAP"]["EMAIL"][0],
+      "username": result["SOAP"]["USERNAME"][0],
+      "phone": result["SOAP"]["PHONE"][0],
+      "email": result["SOAP"]["EMAIL"][0],
     })
   } else {
     res.json({
@@ -43,4 +50,106 @@ app.post("/login", async (req, res) => {
 
 })
 
+app.get("/datain", async (req, res) => {
+  const { userId } = req.query
+  if (userId == null) {
+    res.json({
+      "result": "failed"
+    })
+    return
+  }
+  let result = await queryDataIn(userId)
+  res.json(result)
+})
+/**
+ * 查询录入信息
+ * @param {string} id 
+ */
+async function queryDataIn(id) {
+  let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>${id}</ACCOUNT><BEGINDATE>2021-06-13</BEGINDATE><ENDDATE>2021-06-27</ENDDATE></SOAP>`
+  let sock = new zmq.Request()
+
+  sock.connect(`tcp://${serverUrl}:${port}`)
+  await sock.send(msg)
+  const result = await sock.receive()
+  // TODO: parse xml for result
+  return read_matchorder(id)
+
+}
+
+
+async function read_matchorder(id) {
+  const xRead = promisify(client.xread).bind(client)
+  const xDel = promisify(client.xdel).bind(client)
+  let stream = await xRead("COUNT", 100, "STREAMS", `${id}_MATCHORDER`, "0-0")
+  let result = []
+  if (stream) {
+    // let stream_name = stream[0][0]
+    let stream_data = stream[0][1]
+    for (stream_item of stream_data) {
+      let item_id = stream_item[0]
+      let count = await xDel(`${id}_MATCHORDER`, item_id)
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      result.push(item_json)
+    }
+  }
+  return result
+}
+
+app.post("/datain", async (res, req) => {
+  const data = res.body
+  try {
+    let key = await dataIn(data)
+    req.json({
+      "result": "OK",
+      "key": key
+    })
+  } catch (error) {
+    req.json({
+      "result": "FAILED",
+    })
+  }
+
+})
+  // let data = {
+  //   "original-streams-id": "",
+  //   "distribute-streams-id": "",
+  //   "userid": username,
+  //   "opuserid": username,
+  //   "sduserid": "",
+  //   "department": department,
+  //   "person2contact": person2contact,
+  //   "phone2contact": phone2contact,
+  //   "faultdate": faultdate,
+  //   "faulttype": faulttype,
+  //   "problemdescribe": "error",
+  //   "reportdate": reportdate,
+  //   "reporttime": reporttime,
+  //   "engineer": engineer,
+  //   "engineerphone": "",
+  //   "faultprogress": "",
+  //   "solution": solution
+  // }
+function dataIn(data) {
+  let dataInMap = `ORDERDATAIN`
+  let args = [dataInMap, "*"]
+  Object.keys(data).forEach(key => {
+    args.push(key)
+    args.push(data[key])
+  })
+  return new Promise((res, rej) => {
+    client.sendCommand(`XADD`, args, (err, key) => {
+      if (err) {
+        rej(err)
+      } else {
+        res(key)
+      }
+    })
+  })
+
+}
 app.listen(8081)

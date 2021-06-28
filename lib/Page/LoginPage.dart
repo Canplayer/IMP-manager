@@ -57,7 +57,7 @@ class _BodyState extends State<Body> {
                 return AlertDialog(
                   title: Text('登陆失败'),
                   content: SingleChildScrollView(
-                    child: Text('错误代码:还没做'),
+                    child: Text('错误代码:反正就是失败了'),
                   ),
                   actions: <Widget>[
                     TextButton(
