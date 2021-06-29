@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
 
-import 'NewMissionPage.dart';
+import '../NewMissionPage.dart';
 
 class _TabInfo {
   const _TabInfo(this.title, this.icon, this.color, this.widget);
@@ -153,80 +153,3 @@ class _ITCenterPageState extends State<ITCenterPage> {
 //
 //   void _changePage(int index) {}
 // }
-
-class MyInfoPage extends StatelessWidget {
-  const MyInfoPage({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 500),
-        child: Card(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(15),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.person,
-                    size: 100,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '报障人'),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '电话号码'),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '科室'),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('123'),
-                              action: SnackBarAction(
-                                label: '897ad8',
-                                onPressed: (){},
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          '提交',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
 
 import 'NewMissionPage.dart';
-import 'View/MyList.dart';
+import 'ITUserPage/MyList.dart';
 
 class _TabInfo {
   const _TabInfo(this.title, this.icon, this.color, this.widget);

@@ -6,16 +6,23 @@ import 'package:hnszlyyimp/model.dart';
 import 'package:http/http.dart' as http;
 
 var url = "http://127.0.0.1:8081/";
+LoginResModel isLogin;
 
 Future<int> login(String _id, String _password) async {
-  var loginUrl = url+"login";
+  var loginUrl = url + "login";
   Response response;
   var dio = Dio();
-  response = await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
+  response =
+      await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
   //var result = response.data.toString();
   LoginResModel lm = LoginResModel.fromJson(response.data);
-  print('什么鬼');
-  if(lm.result == 'OK') return 1;
+  print(response.data);
+  if (lm.result == 'OK') {
+    isLogin=lm;
+    isLogin.id = _id;
+    return 1;
+  }
+  ;
   return 0;
 }
 
@@ -64,15 +71,15 @@ Future<int> ITUserDateListGet() async {}
 Future<int> ITUserDateListPost() async {}
 //工作计划获取
 Future<List<ListItemModel>> ITUserPlanListGet() async {
-  var loginUrl = url+"datain";
+  var loginUrl = url + "datain";
   Response response;
   var dio = Dio();
-  var a = {
-    "userId":"666"
-  };
-  response = await dio.get(loginUrl,queryParameters:a);
+  var a = {"userId": isLogin.id};
+  response = await dio.get(loginUrl, queryParameters: a);
   //print(response.data.toString());
-  List<ListItemModel> patrolList = (response.data).map<ListItemModel>((e) => ListItemModel.fromJson(e)).toList();
+  List<ListItemModel> patrolList = (response.data)
+      .map<ListItemModel>((e) => ListItemModel.fromJson(e))
+      .toList();
 
   return patrolList;
 }

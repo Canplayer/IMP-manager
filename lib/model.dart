@@ -10,7 +10,8 @@ class LoginResModel {
       this.department,
       this.username,
       this.phone,
-      this.email});
+      this.email,
+      this.id});
   factory LoginResModel.fromJson(Map<String, dynamic> jsonRes) =>
       jsonRes == null
           ? null
@@ -29,6 +30,7 @@ class LoginResModel {
   String username;
   String phone;
   String email;
+  String id;
 
   @override
   String toString() {
@@ -90,6 +92,7 @@ class ListItemModel {
     this.phone,
     this.type,
     this.describe,
+    this.solution,
   });
 
   factory ListItemModel.fromJson(Map<String, dynamic> jsonRes) =>
@@ -102,6 +105,7 @@ class ListItemModel {
               phone: asT<String>(jsonRes['phone2contact']),
               type: asT<String>(jsonRes['faulttype']),
               describe: asT<String>(jsonRes['problemdescribe']),
+              solution: asT<String>(jsonRes['solution']),
             );
   String id;
   String department;
@@ -109,6 +113,7 @@ class ListItemModel {
   String phone;
   String type;
   String describe;
+  String solution;
 
   @override
   String toString() {
@@ -116,11 +121,14 @@ class ListItemModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
+        'original-streams-id': id,
         'department': department,
-        'phone': phone,
+        'person2contact': name,
+        'phone2contact': phone,
         'type': type,
-        'describe': describe,
+        'faulttype': type,
+        'problemdescribe': describe,
+        'solution': solution,
       };
 
   ListItemModel clone() => ListItemModel.fromJson(

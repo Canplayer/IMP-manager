@@ -171,28 +171,28 @@ class _BodyState extends State<Body> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              child: SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => new NewUserPage()),
-                    );
-                  },
-                  child: Text(
-                    '注册',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   child: SizedBox(
+            //     width: 300,
+            //     height: 50,
+            //     child: ElevatedButton(
+            //       onPressed: () {
+            //         Navigator.push(
+            //           context,
+            //           new MaterialPageRoute(
+            //               builder: (context) => new NewUserPage()),
+            //         );
+            //       },
+            //       child: Text(
+            //         '注册',
+            //         style: TextStyle(
+            //           fontSize: 20,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

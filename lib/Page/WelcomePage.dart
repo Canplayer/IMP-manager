@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NormalUserPage.dart';
 
 import '../client.dart';
-import 'ITCenterPage.dart';
+import 'ITUserPage/ITCenterPage.dart';
 import 'ITUserPage.dart';
 
 class WelcomePage extends StatelessWidget {

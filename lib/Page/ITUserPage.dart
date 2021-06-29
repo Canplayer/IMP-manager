@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NewMissionPage.dart';
 
-import 'View/MyList.dart';
+import 'ITUserPage/MyList.dart';
 import 'View/PList.dart';
 
 
