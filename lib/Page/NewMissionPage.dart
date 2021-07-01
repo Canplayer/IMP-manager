@@ -59,14 +59,14 @@ class _NewMissionPageState extends State<NewMissionPage> {
 
 
   Future<void> _showMyDialog() async {
-    Future a = addNewReport();
-    a.then((value) {
-      Navigator.of(context).pop();
-      if (value == 1) {
-        Navigator.pop(context);
-      }
-      else{}
-    });
+    // Future a = addNewReport();
+    // a.then((value) {
+    //   Navigator.of(context).pop();
+    //   if (value == 1) {
+    //     Navigator.pop(context);
+    //   }
+    //   else{}
+    // });
 
     return showDialog<void>(
       context: context,

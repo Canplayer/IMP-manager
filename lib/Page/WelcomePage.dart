@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NormalUserPage.dart';
 
 import '../client.dart';
-import 'ITUserPage/ITCenterPage.dart';
-import 'ITUserPage.dart';
+import 'ITCenterPage.dart';
+import 'ITUserPage/ITUserPage.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key key}) : super(key: key);
@@ -13,9 +13,6 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-      ),
       body: Body(),
     );
   }
@@ -33,7 +30,7 @@ class Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome',
+              '欢迎回来,'+isLogin.username,
               style: TextStyle(fontSize: 40),
             ),
             SizedBox(

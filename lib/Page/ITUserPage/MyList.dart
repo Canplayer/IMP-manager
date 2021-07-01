@@ -23,7 +23,7 @@ class _MyListState extends State<MyList> {
     loadData();
   }
   loadData() async {
-    var a = await ITUserPlanListGet();
+    var a = await getITUserSelfMission();
     setState(() {
       myList=a;
     });
@@ -69,6 +69,9 @@ class _MyListState extends State<MyList> {
                           pair.type,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
+                        ),
+                        SizedBox(
+                          width: 10,
                         ),
                         Text(
                           pair.describe,

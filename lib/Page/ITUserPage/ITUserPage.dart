@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/NewMissionPage.dart';
 
-import 'ITUserPage/MyList.dart';
-import 'View/PList.dart';
+import 'MyList.dart';
+import '../View/PList.dart';
+import 'NewSelfMissionPage.dart';
 
 
 class ITUserPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ITUserPageState extends State<ITUserPage> {
         onPressed: () {
           Navigator.push(
             context,
-            new MaterialPageRoute(builder: (context) => new NewMissionPage()),
+            new MaterialPageRoute(builder: (context) => new NewSelfMissionPage()),
           );
         },
       ),

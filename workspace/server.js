@@ -3,8 +3,8 @@ const zmq = require("zeromq")
 const parseStringPromise = require('xml2js').parseStringPromise;
 const redis = require("redis");
 const { promisify } = require("util")
-const serverUrl = "10.10.142.81"
-//const serverUrl = "10.10.170.191"
+//const serverUrl = "10.10.142.81"
+const serverUrl = "10.10.170.191"
 const port = "5566"
 const client = redis.createClient({
   host: serverUrl
@@ -32,6 +32,7 @@ app.post("/login", async (req, res) => {
     })
     return
   }
+  console.log('用户'+username+'尝试登录');
   let result = await login(username, passwd)
   if (result["SOAP"]["MSGTYPE"][0] === "000002" && result["SOAP"]["LOGINREPLY"][0] === "1") {
     res.json({
@@ -101,6 +102,7 @@ async function read_matchorder(id) {
 }
 
 app.post("/datain", async (res, req) => {
+  console.log('有人尝试获取用户列表');
   const data = res.body
   try {
     let key = await dataIn(data)
@@ -118,21 +120,21 @@ app.post("/datain", async (res, req) => {
   // let data = {
   //   "original-streams-id": "",
   //   "distribute-streams-id": "",
-  //   "userid": username,
-  //   "opuserid": username,
+  //   "userid": "666",
+  //   "opuserid": "666",
   //   "sduserid": "",
-  //   "department": department,
-  //   "person2contact": person2contact,
-  //   "phone2contact": phone2contact,
-  //   "faultdate": faultdate,
-  //   "faulttype": faulttype,
-  //   "problemdescribe": "error",
-  //   "reportdate": reportdate,
-  //   "reporttime": reporttime,
-  //   "engineer": engineer,
+  //   "department": "囧",
+  //   "person2contact": "囧士",
+  //   "phone2contact": "1006811",
+  //   "faultdate": "2021-6-30",
+  //   "faulttype": "囧",
+  //   "problemdescribe": "囧",
+  //   "reportdate": "2021-6-30",
+  //   "reporttime": "09:44:55",
+  //   "engineer": "囧",
   //   "engineerphone": "",
   //   "faultprogress": "",
-  //   "solution": solution
+  //   "solution": "囧"
   // }
 function dataIn(data) {
   let dataInMap = `ORDERDATAIN`
@@ -153,3 +155,4 @@ function dataIn(data) {
 
 }
 app.listen(8081)
+console.log('服务器开始运作');
