@@ -14,7 +14,6 @@ class MyList extends StatefulWidget {
 }
 
 class _MyListState extends State<MyList> {
-  final _viewList = <ListItemModel>[];
   List myList = [];
   int listLength;
   @override
@@ -38,7 +37,7 @@ class _MyListState extends State<MyList> {
         },
       );
     } else {
-      return CupertinoActivityIndicator();
+      return LinearProgressIndicator();
     }
   }
 
@@ -58,9 +57,10 @@ class _MyListState extends State<MyList> {
                   children: [
                     Row(
                       children: [
-                        Text(pair.department),
-                        Text(pair.name),
-                        Text(pair.phone),
+                        Text(pair.department),SizedBox(width: 10,),
+                        Text(pair.name),SizedBox(width: 10,),
+                        Text(pair.date),SizedBox(width: 10,),
+                        Text(pair.phone),SizedBox(width: 10,),
                       ],
                     ),
                     Row(

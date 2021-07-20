@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:hnszlyyimp/Page/NewUserPage.dart';
 import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
+import 'package:lottie/lottie.dart';
 
 
 
@@ -129,7 +129,10 @@ class _BodyState extends State<Body> {
             SizedBox(
               height: 150,
               width: 150,
-              child: Image.asset('res/logo.png'),),
+              child:
+              //Image.asset('res/logo.png'),
+              Lottie.asset('res/logoAnim.json'),
+            ),
             SizedBox(
               height: 30,
             ),

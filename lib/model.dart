@@ -2,6 +2,28 @@ import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 
+class VersionCheckModel {
+  VersionCheckModel({
+    this.version,
+  });
+  factory VersionCheckModel.fromJson(Map<String, dynamic> jsonRes) =>
+      jsonRes == null
+          ? null
+          : VersionCheckModel(
+              version: asT<int>(jsonRes['version']),
+            );
+
+  int version;
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
+  VersionCheckModel clone() => VersionCheckModel.fromJson(
+      asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
+}
+
 //登陆数据模型
 class LoginResModel {
   LoginResModel(
@@ -46,7 +68,7 @@ class LoginResModel {
         'email': email
       };
 
-  ListItemModel clone() => ListItemModel.fromJson(
+  LoginResModel clone() => LoginResModel.fromJson(
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
 }
 
@@ -88,6 +110,7 @@ class ListItemModel {
   ListItemModel({
     this.id,
     this.department,
+    this.date,
     this.name,
     this.phone,
     this.type,
@@ -101,6 +124,7 @@ class ListItemModel {
           : ListItemModel(
               id: asT<String>(jsonRes['{original-streams-id']),
               department: asT<String>(jsonRes['department']),
+              date: asT<String>(jsonRes['faultdate']),
               name: asT<String>(jsonRes['person2contact']),
               phone: asT<String>(jsonRes['phone2contact']),
               type: asT<String>(jsonRes['faulttype']),
@@ -109,6 +133,7 @@ class ListItemModel {
             );
   String id;
   String department;
+  String date;
   String name;
   String phone;
   String type;
@@ -123,6 +148,7 @@ class ListItemModel {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'original-streams-id': id,
         'department': department,
+        'faultdate': date,
         'person2contact': name,
         'phone2contact': phone,
         'type': type,
@@ -134,3 +160,26 @@ class ListItemModel {
   ListItemModel clone() => ListItemModel.fromJson(
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
 }
+
+class TypeListModel {
+  TypeListModel({
+    this.data,
+  });
+
+  factory TypeListModel.fromJson(Map<String, dynamic> jsonRes) =>
+      jsonRes == null
+          ? null
+          : TypeListModel(
+        data: List<String>.from(jsonRes['Data']),
+      );
+  List<String> data;
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
+  TypeListModel clone() => TypeListModel.fromJson(
+      asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
+}
+

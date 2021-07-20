@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:date_format/date_format.dart';
@@ -15,15 +16,16 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   var _name = new TextEditingController();
   var _phone = new TextEditingController();
   var _depart = new TextEditingController();
-  var _type = new TextEditingController();
   var _problemDescribe = new TextEditingController();
   var _solution = new TextEditingController();
 
   DateTime selectedDate = DateTime.now();
+  List<DropdownMenuItem> typeItems = [];
+  var selectItemValue = '其他';
 
   Future<void> _showMyDialog() async {
     Future a = newITUserSelfMission(_name.text, _phone.text, _depart.text,
-        selectedDate, _type.text, _problemDescribe.text, _solution.text);
+        selectedDate, selectItemValue, _problemDescribe.text, _solution.text);
     a.then((value) {
       Navigator.of(context).pop();
       if (value == 1) {
@@ -69,6 +71,26 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
 
     setState(() {
       selectedDate = date;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadTypeList();
+  }
+
+  loadTypeList() async {
+    List<DropdownMenuItem> items = [];
+    var a = await getTypeList();
+    a.data.forEach((element) {
+      items.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
+    setState(() {
+      typeItems = items;
     });
   }
 
@@ -127,18 +149,25 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                         child: Row(
                           children: <Widget>[
                             Icon(Icons.calendar_today),
-                            Text(
-                              formatDate(selectedDate, [yyyy, '/', mm, '/', dd])),
+                            Text(formatDate(
+                                selectedDate, [yyyy, '/', mm, '/', dd])),
                           ],
                         ),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 20,
                       ),
-                      TextField(
-                        controller: _type,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '故障类型'),
+                      DropdownButton(
+                        value: selectItemValue,
+                        isExpanded: true,
+                        disabledHint: Text('暂不可用'),
+                        items: typeItems,
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {
+                            selectItemValue = value;
+                          });
+                        },
                       ),
                       SizedBox(
                         height: 20,
