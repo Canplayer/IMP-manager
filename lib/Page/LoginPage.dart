@@ -5,8 +5,6 @@ import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
 import 'package:lottie/lottie.dart';
 
-
-
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
@@ -31,15 +29,13 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-
   var _titleID = new TextEditingController();
   var _titlePass = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     Future<void> _login() async {
-      if(_titleID.text != '' && _titlePass.text != '') {
+      if (_titleID.text != '' && _titlePass.text != '') {
         Future a = login(_titleID.text, _titlePass.text);
         a.then((value) {
           Navigator.of(context).pop();
@@ -48,8 +44,7 @@ class _BodyState extends State<Body> {
               context,
               new MaterialPageRoute(builder: (context) => new WelcomePage()),
             );
-          }
-          else {
+          } else {
             return showDialog<void>(
               context: context,
               barrierDismissible: false, // user must tap button!
@@ -96,28 +91,17 @@ class _BodyState extends State<Body> {
             );
           },
         );
-      }
-      else {
-        return showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('用户名和密码不能为空！'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('确认'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+      } else {
+        return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset('res/logoAnim.json',
+                    width: 100, height: 100, repeat: false),
+                Text("用户名和密码千万不能为空 :<"),
               ],
-            );
-          },
-        );
+            )));
       }
-
-
     }
 
     return Center(
@@ -130,8 +114,8 @@ class _BodyState extends State<Body> {
               height: 150,
               width: 150,
               child:
-              //Image.asset('res/logo.png'),
-              Lottie.asset('res/logoAnim.json'),
+                  //Image.asset('res/logo.png'),
+                  Lottie.asset('res/logoAnim.json'),
             ),
             SizedBox(
               height: 30,
@@ -147,6 +131,9 @@ class _BodyState extends State<Body> {
             TextField(
               controller: _titlePass,
               obscureText: true,
+              onSubmitted: (value){
+                _login();
+              },
               decoration: InputDecoration(
                   border: OutlineInputBorder(), labelText: '密码'),
             ),
@@ -202,5 +189,3 @@ class _BodyState extends State<Body> {
     );
   }
 }
-
-

@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:json_annotation/json_annotation.dart';
-
 class VersionCheckModel {
   VersionCheckModel({
     this.version,
@@ -39,7 +37,7 @@ class LoginResModel {
           ? null
           : LoginResModel(
               result: asT<String>(jsonRes['result']),
-              authority: asT<String>(jsonRes['authority']),
+              authority: List<String>.from(jsonRes['authority']),
               department: asT<String>(jsonRes['department']),
               username: asT<String>(jsonRes['username']),
               phone: asT<String>(jsonRes['phone']),
@@ -47,7 +45,7 @@ class LoginResModel {
             );
 
   String result;
-  String authority;
+  List<String> authority;
   String department;
   String username;
   String phone;
@@ -105,9 +103,9 @@ T asT<T>(dynamic value) {
   return null;
 }
 
-//用于列表加载的模型
-class ListItemModel {
-  ListItemModel({
+//用于列表工程师自定义数据上报模型
+class SelfMissionModel {
+  SelfMissionModel({
     this.id,
     this.department,
     this.date,
@@ -118,11 +116,11 @@ class ListItemModel {
     this.solution,
   });
 
-  factory ListItemModel.fromJson(Map<String, dynamic> jsonRes) =>
+  factory SelfMissionModel.fromJson(Map<String, dynamic> jsonRes) =>
       jsonRes == null
           ? null
-          : ListItemModel(
-              id: asT<String>(jsonRes['{original-streams-id']),
+          : SelfMissionModel(
+              id: asT<String>(jsonRes['original-streams-id']),
               department: asT<String>(jsonRes['department']),
               date: asT<String>(jsonRes['faultdate']),
               name: asT<String>(jsonRes['person2contact']),
@@ -157,7 +155,71 @@ class ListItemModel {
         'solution': solution,
       };
 
-  ListItemModel clone() => ListItemModel.fromJson(
+  SelfMissionModel clone() => SelfMissionModel.fromJson(
+      asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
+}
+
+class MissionModel {
+  MissionModel({
+    this.id,
+    this.department,
+    this.date,
+    this.time,
+    this.engineer,
+    this.progress,
+    this.name,
+    this.phone,
+    this.type,
+    this.describe,
+    this.solution,
+  });
+
+  factory MissionModel.fromJson(Map<String, dynamic> jsonRes) =>
+      jsonRes == null
+          ? null
+          : MissionModel(
+        id: asT<String>(jsonRes['original-streams-id']),
+        department: asT<String>(jsonRes['department']),
+        date: asT<String>(jsonRes['faultdate']),
+        time: asT<String>(jsonRes['time']),
+        engineer: asT<String>(jsonRes['engineer']),
+        progress: asT<String>(jsonRes['faultprogress']),
+        name: asT<String>(jsonRes['person2contact']),
+        phone: asT<String>(jsonRes['phone2contact']),
+        type: asT<String>(jsonRes['faulttype']),
+        describe: asT<String>(jsonRes['problemdescribe']),
+        solution: asT<String>(jsonRes['solution']),
+      );
+  String id;
+  String department;
+  String date;
+  String time;
+  String engineer;
+  String progress;
+  String name;
+  String phone;
+  String type;
+  String describe;
+  String solution;
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'original-streams-id': id,
+    'department': department,
+    'faultdate': date,
+    'person2contact': name,
+    'phone2contact': phone,
+    'type': type,
+    'faulttype': type,
+    'problemdescribe': describe,
+    'solution': solution,
+  };
+
+  MissionModel clone() => MissionModel.fromJson(
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
 }
 
@@ -170,8 +232,8 @@ class TypeListModel {
       jsonRes == null
           ? null
           : TypeListModel(
-        data: List<String>.from(jsonRes['Data']),
-      );
+              data: List<String>.from(jsonRes['Data']),
+            );
   List<String> data;
 
   @override
@@ -182,4 +244,3 @@ class TypeListModel {
   TypeListModel clone() => TypeListModel.fromJson(
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
 }
-

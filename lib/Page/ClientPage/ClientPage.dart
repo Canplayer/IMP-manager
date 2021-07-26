@@ -3,10 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
 
-import 'NewMissionPage.dart';
-import 'ITUserPage/MyList.dart';
+import '../NewMissionPage.dart';
+import '../ITUserPage/SelfMissionListView.dart';
 
 class _TabInfo {
   const _TabInfo(this.title, this.icon, this.color, this.widget);
@@ -45,7 +46,7 @@ class _NormalUserPageState extends State<NormalUserPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: null),
+                  constraints: BoxConstraints(maxWidth: 500), child: MissionListView()),
             )),
       ),
       _TabInfo(

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hnszlyyimp/Page/NewMissionPage.dart';
 
-import 'MyList.dart';
-import '../View/PList.dart';
+import 'SelfMissionListView.dart';
 import 'NewSelfMissionPage.dart';
-
 
 class ITUserPage extends StatefulWidget {
   const ITUserPage({Key key}) : super(key: key);
@@ -15,11 +12,11 @@ class ITUserPage extends StatefulWidget {
 
 class _ITUserPageState extends State<ITUserPage> {
   final String _page = '信息人员平台';
-  int currentIndex;
+  int currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
-    currentIndex = 0;
   }
 
   @override
@@ -33,8 +30,14 @@ class _ITUserPageState extends State<ITUserPage> {
         onPressed: () {
           Navigator.push(
             context,
-            new MaterialPageRoute(builder: (context) => new NewSelfMissionPage()),
-          );
+            new MaterialPageRoute(
+                builder: (context) => new NewSelfMissionPage()),
+          ).then((value) => {
+                if (value == "refresh")
+                  setState(() {
+
+                  })
+              });
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -42,9 +45,8 @@ class _ITUserPageState extends State<ITUserPage> {
           child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Container(
-            constraints: BoxConstraints(maxWidth: 500), child: MyList()),
+            constraints: BoxConstraints(maxWidth: 500), child: SelfMissionListView()),
       )),
     );
   }
-
 }

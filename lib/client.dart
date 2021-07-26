@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:developer';
+
 import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hnszlyyimp/model.dart';
-import 'package:http/http.dart' as http;
 
 var url = "http://10.10.142.77:8081/";
 LoginResModel isLogin;
@@ -24,9 +22,8 @@ Future<int> versionCheck() async {
 
 Future<int> login(String _id, String _password) async {
   var loginUrl = url + "login";
-  response =
-      await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
-  //var result = response.data.toString();
+  response = await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
+  log(response.data.toString());
   LoginResModel lm = LoginResModel.fromJson(response.data);
   print(response.data);
   if (lm.result == 'OK') {
@@ -38,13 +35,13 @@ Future<int> login(String _id, String _password) async {
 }
 
 //工作计划获取
-Future<List<ListItemModel>> getITUserSelfMission() async {
+Future<List<SelfMissionModel>> getITUserSelfMission() async {
   var loginUrl = url + "iTUserSelfMission";
   var a = {"userId": isLogin.id};
   response = await dio.get(loginUrl, queryParameters: a);
   print(response.data.toString());
-  List<ListItemModel> patrolList = (response.data)
-      .map<ListItemModel>((e) => ListItemModel.fromJson(e))
+  List<SelfMissionModel> patrolList = (response.data)
+      .map<SelfMissionModel>((e) => SelfMissionModel.fromJson(e))
       .toList();
   return patrolList.reversed.toList();
 }
@@ -79,10 +76,35 @@ Future<int> newITUserSelfMission(String name, String phone, String dep,
   return 1;
 }
 
+Future<int> delITUserSelfMission(String msgID) async {
+  var loginUrl = url + "iTUserSelfMission";
+  response = await dio.delete(loginUrl, data: {"msgID": msgID});
+  log(response.data.toString());
+  var result = response.data['result'];
+  if (result == 'OK') {
+    return 1;
+  }
+  return 0;
+}
+
 //工作可用故障类型
 Future<TypeListModel> getTypeList() async {
   var loginUrl = url + "getTypeList";
   response = await dio.get(loginUrl);
   TypeListModel list = TypeListModel.fromJson(response.data);
   return list;
+}
+
+
+
+//客户端内容获取
+Future<List<MissionModel>> getClientMission() async {
+  var loginUrl = url + "Client";
+  var a = {"userId": isLogin.id};
+  response = await dio.get(loginUrl, queryParameters: a);
+  print(response.data.toString());
+  List<MissionModel> patrolList = (response.data)
+      .map<MissionModel>((e) => MissionModel.fromJson(e))
+      .toList();
+  return patrolList.reversed.toList();
 }

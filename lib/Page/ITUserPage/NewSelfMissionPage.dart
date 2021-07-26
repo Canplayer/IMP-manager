@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../client.dart';
 
 class NewSelfMissionPage extends StatefulWidget {
@@ -29,7 +30,16 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
     a.then((value) {
       Navigator.of(context).pop();
       if (value == 1) {
-        Navigator.pop(context);
+        Navigator.of(context).pop("refresh");
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset('res/logoAnim.json',width: 100,height: 100,repeat: false),
+                Text("操作成功~"),
+              ],
+            )));
       } else {}
     });
 
