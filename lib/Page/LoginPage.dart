@@ -5,6 +5,8 @@ import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
 import 'package:lottie/lottie.dart';
 
+import 'NewUserPage.dart';
+
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
@@ -145,6 +147,12 @@ class _BodyState extends State<Body> {
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                        StadiumBorder(
+                          side: BorderSide(color: Colors.transparent),)
+                    ),
+                  ),
                   onPressed: () {
                     _login();
                   },
@@ -159,30 +167,35 @@ class _BodyState extends State<Body> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
-            // Container(
-            //   child: SizedBox(
-            //     width: 300,
-            //     height: 50,
-            //     child: ElevatedButton(
-            //       onPressed: () {
-            //         Navigator.push(
-            //           context,
-            //           new MaterialPageRoute(
-            //               builder: (context) => new NewUserPage()),
-            //         );
-            //       },
-            //       child: Text(
-            //         '注册',
-            //         style: TextStyle(
-            //           fontSize: 20,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Row(
+                mainAxisSize:MainAxisSize.min,
+              children: [
+                Text("尚未拥有账号？那请"),
+                OutlinedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                        StadiumBorder(
+                            side: BorderSide(
+                              color: Colors.transparent,
+                            )
+                        )
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => new NewUserPage()),
+                    );
+                  },
+                  child: Text(
+                    '注册',
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -32,17 +32,39 @@ class LoginResModel {
       this.phone,
       this.email,
       this.id});
-  factory LoginResModel.fromJson(Map<String, dynamic> jsonRes) =>
-      jsonRes == null
-          ? null
-          : LoginResModel(
-              result: asT<String>(jsonRes['result']),
-              authority: List<String>.from(jsonRes['authority']),
-              department: asT<String>(jsonRes['department']),
-              username: asT<String>(jsonRes['username']),
-              phone: asT<String>(jsonRes['phone']),
-              email: asT<String>(jsonRes['email']),
-            );
+  factory LoginResModel.fromJson(Map<String, dynamic> jsonRes){
+    if (jsonRes == null) {
+      return null;
+    }
+
+    final List<String> _authority = jsonRes['authority'] is List ? <String>[] : null;
+    if (_authority != null) {
+      for (final dynamic item in jsonRes['authority']) {
+        if (item != null) {
+          _authority.add(asT<String>(item));
+        }
+      }
+    }
+    return LoginResModel(
+                  result: asT<String>(jsonRes['result']),
+                  authority: _authority,
+                  department: asT<String>(jsonRes['department']),
+                  username: asT<String>(jsonRes['username']),
+                  phone: asT<String>(jsonRes['phone']),
+                  email: asT<String>(jsonRes['email']),
+    );
+  }
+  // =>
+  //     jsonRes == null
+  //         ? null
+  //         : LoginResModel(
+  //             result: asT<String>(jsonRes['result']),
+  //             authority: List<String>.from(jsonRes['authority']),
+  //             department: asT<String>(jsonRes['department']),
+  //             username: asT<String>(jsonRes['username']),
+  //             phone: asT<String>(jsonRes['phone']),
+  //             email: asT<String>(jsonRes['email']),
+  //           );
 
   String result;
   List<String> authority;

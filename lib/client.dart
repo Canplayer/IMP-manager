@@ -25,7 +25,7 @@ Future<int> login(String _id, String _password) async {
   response = await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
   log(response.data.toString());
   LoginResModel lm = LoginResModel.fromJson(response.data);
-  print(response.data);
+  print(lm.result);
   if (lm.result == 'OK') {
     isLogin = lm;
     isLogin.id = _id;

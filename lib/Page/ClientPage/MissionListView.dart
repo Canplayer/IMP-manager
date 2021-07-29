@@ -137,26 +137,7 @@ class _MissionListViewState extends State<MissionListView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text(pair.department),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(pair.name),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(pair.date),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(pair.phone),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
+                    Text(pair.date),
                     Row(
                       children: [
                         Text(

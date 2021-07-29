@@ -250,11 +250,53 @@ app.get("/Client", async (req, res) => {
 })
 async function read_redisClient(id) {
   const xRead = promisify(client.xread).bind(client)
-  let stream = await xRead("COUNT", 100, "STREAMS", `FAULTORDER`, "0-0")
+  let stream1 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDER`, "0-0")
+  let stream2 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDERDONE`, "0-0")
+  let stream3 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDERHANDLED`, "0-0")
+  let stream4 = await xRead("COUNT", 100, "STREAMS", `OPFAULTORDER`, "0-0")
   let result = []
-  if (stream) {
+  if (stream1) {
     // let stream_name = stream[0][0]
-    let stream_data = stream[0][1]
+    let stream_data = stream1[0][1]
+    for (stream_item of stream_data) {
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      if(item_json["userid"] != id) continue
+      result.push(item_json)
+    }
+  }
+  if (stream2) {
+    // let stream_name = stream[0][0]
+    let stream_data = stream2[0][1]
+    for (stream_item of stream_data) {
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      if(item_json["userid"] != id) continue
+      result.push(item_json)
+    }
+  }
+  if (stream3) {
+    // let stream_name = stream[0][0]
+    let stream_data = stream3[0][1]
+    for (stream_item of stream_data) {
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      if(item_json["userid"] != id) continue
+      result.push(item_json)
+    }
+  }
+  if (stream4) {
+    // let stream_name = stream[0][0]
+    let stream_data = stream4[0][1]
     for (stream_item of stream_data) {
       let item_data = stream_item[1]
       let item_json = {}
