@@ -31,7 +31,7 @@ class _MissionListViewState extends State<MissionListView> {
   }
 
   loadData() async {
-    var a = await getClientMission();
+    var a = await getNormalUserMission();
     setState(() {
       myList = a;
     });
@@ -46,7 +46,12 @@ class _MissionListViewState extends State<MissionListView> {
         },
       );
     } else {
-      return LinearProgressIndicator();
+      return Row(
+        children: [
+          Text("这里乜都冇啊~"),
+          CircularProgressIndicator(),
+        ],
+      );
     }
   }
 

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
 
-import '../NewMissionPage.dart';
+import 'NewMissionPage.dart';
 import '../ITUserPage/SelfMissionListView.dart';
 
 class _TabInfo {

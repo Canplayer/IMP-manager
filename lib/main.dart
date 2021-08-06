@@ -2,14 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:desktop_window/desktop_window.dart';
+import 'dart:io';
+
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hnszlyyimp/Page/LoginPage.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 void main() {
   runApp(LoginPage());
   SystemChrome.setSystemUIOverlayStyle(my);
+  WidgetsFlutterBinding.ensureInitialized();
+  Acrylic.initialize();
   DesktopWindowFunctions();
 }
 const SystemUiOverlayStyle my = SystemUiOverlayStyle(
@@ -21,5 +26,15 @@ const SystemUiOverlayStyle my = SystemUiOverlayStyle(
   statusBarBrightness: Brightness.light,
 );
 Future DesktopWindowFunctions() async{
-  await DesktopWindow.setWindowSize(Size(480,700));
+  if (Platform.isWindows) {
+    doWhenWindowReady(() {
+      final win = appWindow;
+      final initialSize = Size(600, 600);
+      win.minSize = initialSize;
+      win.size = initialSize;
+      win.alignment = Alignment.center;
+      win.title = "Custom window with Flutter";
+      win.show();
+    });
+  }
 }

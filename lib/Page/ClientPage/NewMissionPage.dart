@@ -1,12 +1,14 @@
-import 'dart:io';
+
 
 //import 'package:filepicker_windows/filepicker_windows.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-import '../client.dart';
+import '../../client.dart';
 
 class NewMissionPage extends StatefulWidget {
   const NewMissionPage({Key key,int a}) : super(key: key);
@@ -32,7 +34,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
   //相册
   Future _getImageFromGallery() async {
     final pickedFile = await PhoneWebPicker.getImage(source: ImageSource.gallery, maxHeight: 2048);
-
+    final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -186,6 +188,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                           TextButton(
                             onPressed: () {
                               //(Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
+                              _getImageFromGallery();
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -203,6 +206,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       FloatingActionButton(
                         child: Icon(Icons.done),
                         onPressed: () {
+                          newNormalUserMission(_image);
                           _showMyDialog();
                         },
                       ),

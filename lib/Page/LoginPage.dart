@@ -1,27 +1,53 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:hnszlyyimp/Page/WelcomePage.dart';
 import 'package:hnszlyyimp/client.dart';
 import 'package:lottie/lottie.dart';
 
 import 'NewUserPage.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
 
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   static const String _title = '登录页面';
 
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   this.setWindowEffect();
+  // }
+  // void setWindowEffect() {
+  //   Acrylic.setEffect(effect: AcrylicEffect.acrylic, gradientColor: Platform.isWindows ? Colors.white.withOpacity(0.7) : Colors.white);
+  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: _title,
       home: Scaffold(
+        //backgroundColor: Colors.transparent,
         body: const Body(),
       ),
     );
   }
 }
+
+
+
+
+
+
+
+
+
 
 class Body extends StatefulWidget {
   const Body({Key key}) : super(key: key);

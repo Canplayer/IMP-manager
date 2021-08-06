@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:html';
+import 'package:http/http.dart' as http;
 
 import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
@@ -16,13 +18,14 @@ Future<int> versionCheck() async {
   response = await dio.get(loginUrl);
   print(response.data.toString());
   VersionCheckModel vcm = VersionCheckModel.fromJson(response.data);
-  if(vcm.version != version) return 0;
+  if (vcm.version != version) return 0;
   return 1;
 }
 
 Future<int> login(String _id, String _password) async {
   var loginUrl = url + "login";
-  response = await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
+  response =
+      await dio.post(loginUrl, data: {"username": _id, "passwd": _password});
   log(response.data.toString());
   LoginResModel lm = LoginResModel.fromJson(response.data);
   print(lm.result);
@@ -34,7 +37,7 @@ Future<int> login(String _id, String _password) async {
   return 0;
 }
 
-//工作计划获取
+//工程师自定列表
 Future<List<SelfMissionModel>> getITUserSelfMission() async {
   var loginUrl = url + "iTUserSelfMission";
   var a = {"userId": isLogin.id};
@@ -46,6 +49,7 @@ Future<List<SelfMissionModel>> getITUserSelfMission() async {
   return patrolList.reversed.toList();
 }
 
+//工程师上传新自定数据
 Future<int> newITUserSelfMission(String name, String phone, String dep,
     DateTime date, String type, String des, String sol) async {
   var loginUrl = url + "iTUserSelfMission";
@@ -67,8 +71,8 @@ Future<int> newITUserSelfMission(String name, String phone, String dep,
     "engineerphone": "",
     "faultprogress": "",
     "solution": sol,
-    "processingtime":"0",
-    "processingtime_unit":""
+    "processingtime": "0",
+    "processingtime_unit": ""
   };
   response = await dio.post(loginUrl, data: data);
   print(response.data.toString());
@@ -76,6 +80,7 @@ Future<int> newITUserSelfMission(String name, String phone, String dep,
   return 1;
 }
 
+//工程师删除自定数据
 Future<int> delITUserSelfMission(String msgID) async {
   var loginUrl = url + "iTUserSelfMission";
   response = await dio.delete(loginUrl, data: {"msgID": msgID});
@@ -95,10 +100,8 @@ Future<TypeListModel> getTypeList() async {
   return list;
 }
 
-
-
 //客户端内容获取
-Future<List<MissionModel>> getClientMission() async {
+Future<List<MissionModel>> getNormalUserMission() async {
   var loginUrl = url + "Client";
   var a = {"userId": isLogin.id};
   response = await dio.get(loginUrl, queryParameters: a);
@@ -107,4 +110,26 @@ Future<List<MissionModel>> getClientMission() async {
       .map<MissionModel>((e) => MissionModel.fromJson(e))
       .toList();
   return patrolList.reversed.toList();
+}
+
+//客户端数据上报
+Future<int> newNormalUserMission(File image) async {
+  var loginUrl = url + "Client";
+
+  String? path = image.relativePath;
+
+  Map<String ,dynamic> map = Map();
+  map["id"]="12345";
+  map["file"] = await MultipartFile.fromFile(path!,filename: "1.PNG");
+  FormData data = FormData.fromMap(map);
+
+
+
+
+
+
+  response = await dio.post(loginUrl, data: data);
+  print(response.data.toString());
+
+  return 1;
 }

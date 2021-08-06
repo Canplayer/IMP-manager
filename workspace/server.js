@@ -2,6 +2,9 @@ const express = require("express")
 const zmq = require("zeromq")
 const parseStringPromise = require('xml2js').parseStringPromise;
 const redis = require("redis");
+const fs = require("fs")
+
+
 const { promisify } = require("util")
 const time = require("silly-datetime")
 
@@ -12,7 +15,7 @@ const port = "5566"
 const client = redis.createClient({
   host: serverUrl
 });
-client.on('error', function(err) {
+client.on('error', function (err) {
   console.log('与redis服务器连接出现了异常报告');
 });
 const app = express()
@@ -26,6 +29,7 @@ app.all('*', function (req, res, next) {
   next();
 });
 
+//---------------------------------------
 //登陆
 app.post("/login", async (req, res) => {
   const { username, passwd } = req.body
@@ -64,6 +68,8 @@ async function login(userid, passwd) {
   let result = await parseStringPromise(result_str)
   return result
 }
+
+//---------------------------------------
 
 //获取自由录入数据
 app.get("/iTUserSelfMission", async (req, res) => {
@@ -155,7 +161,7 @@ app.delete("/iTUserSelfMission", async (req, res) => {
     })
     return
   }
-  console.log(msgID+"删除数据");
+  console.log(msgID + "删除数据");
   let result = await deliTUserSelfMission(msgID)
   if (result["SOAP"]["MSGTYPE"][0] === "000015" && result["SOAP"]["DATAQUERYREPLY"][0] === "1") {
     res.json({
@@ -207,12 +213,17 @@ async function read_redisITUserMission(id) {
       for (let i = 0; i < item_data.length; i += 2) {
         item_json[item_data[i]] = item_data[i + 1]
       }
-      if(item_json["opuserid"] != id) continue
+      if (item_json["opuserid"] != id) continue
       result.push(item_json)
     }
   }
   return result
 }
+
+
+
+
+//---------------------------------------
 
 //获取可选业务类型
 app.get("/getTypeList", async (req, res) => {
@@ -221,18 +232,23 @@ app.get("/getTypeList", async (req, res) => {
       "His系统",
       "手术麻醉系统",
       "电子病历",
-      "打印机",
       "windows系统",
+      "其他软件",
+
+      "打印机",
       "电脑设备",
       "网络",
-      "弱电",
+      "弱电系统相关",
+      "其他硬件",
+
+
       "行政沟通",
       "其他"]
   })
 })
 
 
-
+//---------------------------------------
 
 
 //客户端上报内容数据获取
@@ -264,7 +280,7 @@ async function read_redisClient(id) {
       for (let i = 0; i < item_data.length; i += 2) {
         item_json[item_data[i]] = item_data[i + 1]
       }
-      if(item_json["userid"] != id) continue
+      if (item_json["userid"] != id) continue
       result.push(item_json)
     }
   }
@@ -277,7 +293,7 @@ async function read_redisClient(id) {
       for (let i = 0; i < item_data.length; i += 2) {
         item_json[item_data[i]] = item_data[i + 1]
       }
-      if(item_json["userid"] != id) continue
+      if (item_json["userid"] != id) continue
       result.push(item_json)
     }
   }
@@ -290,7 +306,7 @@ async function read_redisClient(id) {
       for (let i = 0; i < item_data.length; i += 2) {
         item_json[item_data[i]] = item_data[i + 1]
       }
-      if(item_json["userid"] != id) continue
+      if (item_json["userid"] != id) continue
       result.push(item_json)
     }
   }
@@ -303,12 +319,91 @@ async function read_redisClient(id) {
       for (let i = 0; i < item_data.length; i += 2) {
         item_json[item_data[i]] = item_data[i + 1]
       }
-      if(item_json["userid"] != id) continue
+      if (item_json["userid"] != id) continue
       result.push(item_json)
     }
   }
   return result
 }
+
+//故障报修上传
+app.post("/Client", async (res, req) => {
+  console.log('有人上传新故障报修');
+  let key = await add_fault_order()
+  const { id, file } = req.body
+  fs.writeFile("./2.PNG",file,(err) => {console.log("文件写入成功");})
+
+  
+  try {
+    req.json({
+      "result": "OK",
+      "key": key
+    })
+  } catch (error) {
+    req.json({
+      "result": "FAILED",
+    })
+  }
+})
+async function add_fault_order() {
+  // FAULTREPORTLBM_C
+  
+  // let data = {
+  //   "original-streams-id": "",
+  //   "distribute-streams-id": "",
+  //   "userid": "01599",
+  //   "opuserid": "",
+  //   "sduserid": "",
+  //   "department": "信息部",
+  //   "person2contact": "陈驰",
+  //   "phone2contact": "18689532602",
+  //   "faultdate": "2021-08-03",
+  //   "faulttype": "His系统",
+  //   "problemdescribe": "AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  //   "reportdate": "2021-05-30",
+  //   "reporttime": "16:59:35",
+  //   "engineer": "",
+  //   "engineerphone": "",
+  //   "faultprogress": "未处理",
+  //   "processingtime": "",
+  //   "processingtime_unit": "",
+  //   "solution": ""
+  // }
+  // let dataInMap = `FAULTORDER`
+  // let args = [dataInMap, "*"]
+
+  
+
+
+  fs.readFile("./1.PNG", (err, img_data) => {
+    console.log("获取图片成功");
+
+    
+    let img = img_data.toString('base64')
+    // Object.keys(data).forEach(key => {
+    //   args.push(key)
+    //   args.push(data[key])
+    // })
+
+    // return new Promise((res, rej) => {
+    //   client.sendCommand(`XADD`, args, (err, key) => {
+    //     if (err) {
+    //       rej(err)
+    //     } else {
+    //       res(key)
+    //       let image_key = `${key}_Img_Req`
+    //   client.set(image_key, img, () => {
+    //     client.end(true)
+    //   })
+    //     }
+    //   })
+    // })
+  })
+
+}
+
+
+
 
 
 
