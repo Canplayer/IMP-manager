@@ -17,7 +17,7 @@ class _TabInfo {
 }
 
 class ITCenterPage extends StatefulWidget {
-  const ITCenterPage({Key key}) : super(key: key);
+  const ITCenterPage({Key? key}) : super(key: key);
 
   @override
   _ITCenterPageState createState() => _ITCenterPageState();
@@ -25,7 +25,7 @@ class ITCenterPage extends StatefulWidget {
 
 class _ITCenterPageState extends State<ITCenterPage> {
   final String _page = 'IT服务台';
-  int currentIndex;
+  int? currentIndex;
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
       appBar: AppBar(
         title: Text(_page),
       ),
-      body: _tabInfo[currentIndex].widget,
+      body: _tabInfo[currentIndex!].widget,
       bottomNavigationBar: BottomNavigationBar(
         items: [
           for (final tabInfo in _tabInfo)
@@ -85,7 +85,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
                 backgroundColor: tabInfo.color)
         ],
         //type: BottomNavigationBarType.shifting,
-        currentIndex: currentIndex,
+        currentIndex: currentIndex!,
         onTap: (index) {
           _changePage(index);
         },
@@ -155,7 +155,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
 // }
 
 class MyInfoPage extends StatelessWidget {
-  const MyInfoPage({Key key}) : super(key: key);
+  const MyInfoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

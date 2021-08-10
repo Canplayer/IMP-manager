@@ -7,7 +7,7 @@ import 'ITCenterPage.dart';
 import 'ITUserPage/ITUserPage.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key key}) : super(key: key);
+  const WelcomePage({Key? key}) : super(key: key);
   static const String _title = '身份选择页面';
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class WelcomePage extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
-  const Body({Key key}) : super(key: key);
+  const Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -96,14 +96,14 @@ class Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '欢迎回来,' + isLogin.username,
+              '欢迎回来,' + isLogin!.username!,
               style: TextStyle(fontSize: 40),
             ),
             SizedBox(
               height: 30,
             ),
             //for(var i in isLogin.authority) cardList[i]
-            if (isLogin.authority.contains("1"))
+            if (isLogin!.authority!.contains("1"))
               Card(
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
@@ -126,7 +126,7 @@ class Body extends StatelessWidget {
                   ),
                 ),
               ),
-            if (isLogin.authority.contains("2"))
+            if (isLogin!.authority!.contains("2"))
               Card(
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),
@@ -149,7 +149,7 @@ class Body extends StatelessWidget {
                   ),
                 ),
               ),
-            if (isLogin.authority.contains("3"))
+            if (isLogin!.authority!.contains("3"))
               Card(
                 child: InkWell(
                   splashColor: Colors.blue.withAlpha(30),

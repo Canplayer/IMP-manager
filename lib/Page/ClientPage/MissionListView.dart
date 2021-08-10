@@ -8,15 +8,15 @@ import '../../client.dart';
 import '../../model.dart';
 
 class MissionListView extends StatefulWidget {
-  const MissionListView({Key key}) : super(key: key);
+  const MissionListView({Key? key}) : super(key: key);
   @override
   _MissionListViewState createState() => _MissionListViewState();
 }
 
 class _MissionListViewState extends State<MissionListView> {
   List myList = [];
-  int listLength;
-  Timer timer;
+  int? listLength;
+  Timer? timer;
   @override
   void initState() {
     super.initState();
@@ -65,7 +65,7 @@ class _MissionListViewState extends State<MissionListView> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('您即将删除:' + pair.describe+pair.id),
+                Text('您即将删除:'+ pair.describe!+pair.id!),
               ],
             ),
           ),
@@ -73,8 +73,8 @@ class _MissionListViewState extends State<MissionListView> {
             TextButton(
               child: Text('删除'),
               onPressed: () {
-                print("删除按钮被点击了"+pair.id);
-                Future a = delITUserSelfMission(pair.id);
+                print("删除按钮被点击了"+pair.id!);
+                Future a = delITUserSelfMission(pair.id!);
                 a.then((value) {
                   if (value == 1) {
                     Navigator.of(context).pop();
@@ -117,7 +117,7 @@ class _MissionListViewState extends State<MissionListView> {
   }
 
   Widget _buildRow(MissionModel pair) {
-    String a =pair.progress;
+    String a =pair!.progress!;
     IconData b;
     switch(a){
       case '未完成': {b=Icons.access_time;}break;
@@ -142,11 +142,11 @@ class _MissionListViewState extends State<MissionListView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(pair.date),
+                    Text(pair!.date!),
                     Row(
                       children: [
                         Text(
-                          pair.type,
+                          pair!.type!,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
                         ),
@@ -154,7 +154,7 @@ class _MissionListViewState extends State<MissionListView> {
                           width: 10,
                         ),
                         Text(
-                          pair.describe,
+                          pair!.describe!,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
                         ),
@@ -163,7 +163,7 @@ class _MissionListViewState extends State<MissionListView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(pair.solution),
+                        Text(pair!.solution!),
                       ],
                     ),
                   ],

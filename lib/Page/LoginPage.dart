@@ -10,7 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'NewUserPage.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
 class Body extends StatefulWidget {
-  const Body({Key key}) : super(key: key);
+  const Body({Key? key}) : super(key: key);
 
   @override
   _BodyState createState() => _BodyState();
@@ -120,7 +120,7 @@ class _BodyState extends State<Body> {
           },
         );
       } else {
-        return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

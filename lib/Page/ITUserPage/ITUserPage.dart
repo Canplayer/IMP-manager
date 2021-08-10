@@ -4,7 +4,7 @@ import 'SelfMissionListView.dart';
 import 'NewSelfMissionPage.dart';
 
 class ITUserPage extends StatefulWidget {
-  const ITUserPage({Key key}) : super(key: key);
+  const ITUserPage({Key? key}) : super(key: key);
 
   @override
   _ITUserPageState createState() => _ITUserPageState();

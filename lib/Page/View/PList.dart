@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PList extends StatefulWidget {
-  const PList({Key key}) : super(key: key);
+  const PList({Key? key}) : super(key: key);
 
   @override
   _PListState createState() => _PListState();

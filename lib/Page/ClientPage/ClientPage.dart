@@ -19,7 +19,7 @@ class _TabInfo {
 }
 
 class NormalUserPage extends StatefulWidget {
-  const NormalUserPage({Key key}) : super(key: key);
+  const NormalUserPage({Key? key}) : super(key: key);
 
   @override
   _NormalUserPageState createState() => _NormalUserPageState();
@@ -27,7 +27,7 @@ class NormalUserPage extends StatefulWidget {
 
 class _NormalUserPageState extends State<NormalUserPage> {
   final String _page = '报障平台';
-  int currentIndex;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -151,7 +151,7 @@ class _NormalUserPageState extends State<NormalUserPage> {
 // }
 
 class MyInfoPage extends StatelessWidget {
-  const MyInfoPage({Key key}) : super(key: key);
+  const MyInfoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

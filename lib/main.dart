@@ -29,7 +29,7 @@ Future DesktopWindowFunctions() async{
   if (Platform.isWindows) {
     doWhenWindowReady(() {
       final win = appWindow;
-      final initialSize = Size(600, 600);
+      final initialSize = Size(600, 900);
       win.minSize = initialSize;
       win.size = initialSize;
       win.alignment = Alignment.center;

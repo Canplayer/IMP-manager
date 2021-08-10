@@ -1,24 +1,26 @@
 
 
 //import 'package:filepicker_windows/filepicker_windows.dart';
+
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
 import '../../client.dart';
-
 class NewMissionPage extends StatefulWidget {
-  const NewMissionPage({Key key,int a}) : super(key: key);
+  const NewMissionPage({Key? key}) : super(key: key);
 
   @override
   _NewMissionPageState createState() => _NewMissionPageState();
 }
 
 class _NewMissionPageState extends State<NewMissionPage> {
-  File _image;
+  XFile? _image;
   final PhoneWebPicker = ImagePicker();
 
   //拍照
@@ -33,11 +35,12 @@ class _NewMissionPageState extends State<NewMissionPage> {
   }
   //相册
   Future _getImageFromGallery() async {
-    final pickedFile = await PhoneWebPicker.getImage(source: ImageSource.gallery, maxHeight: 2048);
-    final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery);
+    //final pickedFile = await PhoneWebPicker.getImage(source: ImageSource.gallery, maxHeight: 2048);
+    log("尝试读取图片");
+    final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery, maxHeight: 2048);
     setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
+      if (image != null) {
+        _image = image;
       }
     });
   }
@@ -147,10 +150,13 @@ class _NewMissionPageState extends State<NewMissionPage> {
                           ? SizedBox()
                           : SizedBox(
                         height: 200,
-                        child: Image.file(
-                          _image,
+                        child: (kIsWeb == true)?Image.network(
+                          _image!.path,
                           fit: BoxFit.cover,
-                        ),
+                        ):Image.file(
+                          File(_image!.path),
+                          fit: BoxFit.cover,
+                        )
                       ),
                       SizedBox(
                         height: 20,
@@ -206,7 +212,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       FloatingActionButton(
                         child: Icon(Icons.done),
                         onPressed: () {
-                          newNormalUserMission(_image);
+                          newNormalUserMission(_image!);
                           _showMyDialog();
                         },
                       ),

@@ -7,7 +7,7 @@ import 'package:lottie/lottie.dart';
 import '../../client.dart';
 
 class NewSelfMissionPage extends StatefulWidget {
-  const NewSelfMissionPage({Key key, int a}) : super(key: key);
+  const NewSelfMissionPage({Key? key}) : super(key: key);
 
   @override
   _NewSelfMissionPageState createState() => _NewSelfMissionPageState();
@@ -21,7 +21,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   var _solution = new TextEditingController();
 
   DateTime selectedDate = DateTime.now();
-  List<DropdownMenuItem> typeItems = [];
+  List<DropdownMenuItem<String>> typeItems = [];
   var selectItemValue = '其他';
 
   Future<void> _showMyDialog() async {
@@ -70,7 +70,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   }
 
   Future<void> _selectDate() async {
-    final DateTime date = await showDatePicker(
+    final DateTime? date = await showDatePicker(
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(1900),
@@ -91,9 +91,9 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   }
 
   loadTypeList() async {
-    List<DropdownMenuItem> items = [];
+    List<DropdownMenuItem<String>> items = [];
     var a = await getTypeList();
-    a.data.forEach((element) {
+    a.data!.forEach((element) {
       items.add(DropdownMenuItem(
         child: Text(element),
         value: element,
@@ -167,15 +167,15 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      DropdownButton(
+                      DropdownButton<String>(
                         value: selectItemValue,
                         isExpanded: true,
                         disabledHint: Text('暂不可用'),
                         items: typeItems,
-                        onChanged: (value) {
+                        onChanged: (String? value) {
                           print(value);
                           setState(() {
-                            selectItemValue = value;
+                            selectItemValue = value!;
                           });
                         },
                       ),

@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../client.dart';
 
 class NewUserPage extends StatefulWidget {
-  const NewUserPage({Key key,int a}) : super(key: key);
+  const NewUserPage({Key? key}) : super(key: key);
 
   @override
   _NewUserPageState createState() => _NewUserPageState();

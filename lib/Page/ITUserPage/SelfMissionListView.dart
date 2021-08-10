@@ -8,15 +8,15 @@ import '../../client.dart';
 import '../../model.dart';
 
 class SelfMissionListView extends StatefulWidget {
-  const SelfMissionListView({Key key}) : super(key: key);
+  const SelfMissionListView({Key? key}) : super(key: key);
   @override
   _SelfMissionListViewState createState() => _SelfMissionListViewState();
 }
 
 class _SelfMissionListViewState extends State<SelfMissionListView> {
   List myList = [];
-  int listLength;
-  Timer timer;
+  int? listLength;
+  Timer? timer;
   @override
   void initState() {
     super.initState();
@@ -60,7 +60,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('您即将删除:' + pair.describe+pair.id),
+                Text('您即将删除:' + pair!.describe!+pair!.id!),
               ],
             ),
           ),
@@ -68,8 +68,8 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
             TextButton(
               child: Text('删除'),
               onPressed: () {
-                print("删除按钮被点击了"+pair.id);
-                Future a = delITUserSelfMission(pair.id);
+                print("删除按钮被点击了"+pair!.id!);
+                Future a = delITUserSelfMission(pair!.id!);
                 a.then((value) {
                   if (value == 1) {
                     Navigator.of(context).pop();
@@ -130,19 +130,19 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                   children: [
                     Row(
                       children: [
-                        Text(pair.department),
+                        Text(pair!.department!),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(pair.name),
+                        Text(pair!.name!),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(pair.date),
+                        Text(pair!.date!),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(pair.phone),
+                        Text(pair!.phone!),
                         SizedBox(
                           width: 10,
                         ),
@@ -151,7 +151,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                     Row(
                       children: [
                         Text(
-                          pair.type,
+                          pair!.type!,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
                         ),
@@ -159,7 +159,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                           width: 10,
                         ),
                         Text(
-                          pair.describe,
+                          pair!.describe!,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
                         ),
@@ -168,7 +168,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(pair.solution),
+                        Text(pair!.solution!),
                       ],
                     ),
                   ],

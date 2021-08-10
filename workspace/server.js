@@ -41,6 +41,7 @@ app.post("/login", async (req, res) => {
   }
   console.log('用户' + username + '尝试登录');
   let result = await login(username, passwd)
+  console.log(result);
   if (result["SOAP"]["MSGTYPE"][0] === "000002" && result["SOAP"]["LOGINREPLY"][0] === "1") {
     res.json({
       "result": "OK",
@@ -329,11 +330,31 @@ async function read_redisClient(id) {
 //故障报修上传
 app.post("/Client", async (res, req) => {
   console.log('有人上传新故障报修');
-  let key = await add_fault_order()
-  const { id, file } = req.body
-  fs.writeFile("./2.PNG",file,(err) => {console.log("文件写入成功");})
+  fs.writeFile("./3.PNG",req.files,(err) => {console.log("文件写入成功");})
+  if (req.files && req.files.codecsv != 'undifined') {
 
-  
+    
+    var temp_path = req.files.codecsv.path;
+    if (temp_path) {
+      // fs.readFile(temp_path, 'utf-8', function (err, content) {
+      //   //文件的内容
+      //   console.log('content', content);
+      //   // 删除临时文件
+      //   fs.unlink(temp_path);
+      // });
+      fs.writeFile("./3.PNG",temp_path,(err) => {console.log("文件写入成功");})
+    }
+  }
+
+
+
+  // console.log(req.size);
+
+  // const { file } = req.body
+  // console.log(file);
+  //fs.writeFile("./2.PNG",file,(err) => {console.log("文件写入成功");})
+
+
   try {
     req.json({
       "result": "OK",
@@ -347,7 +368,7 @@ app.post("/Client", async (res, req) => {
 })
 async function add_fault_order() {
   // FAULTREPORTLBM_C
-  
+
   // let data = {
   //   "original-streams-id": "",
   //   "distribute-streams-id": "",
@@ -372,13 +393,13 @@ async function add_fault_order() {
   // let dataInMap = `FAULTORDER`
   // let args = [dataInMap, "*"]
 
-  
+
 
 
   fs.readFile("./1.PNG", (err, img_data) => {
     console.log("获取图片成功");
 
-    
+
     let img = img_data.toString('base64')
     // Object.keys(data).forEach(key => {
     //   args.push(key)
