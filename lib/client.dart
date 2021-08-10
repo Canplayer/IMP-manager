@@ -1,8 +1,9 @@
 import 'dart:developer';
-import 'dart:html';
-
-import 'package:date_format/date_format.dart';
+import 'dart:typed_data';
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'package:date_format/date_format.dart';
 import 'package:hnszlyyimp/model.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -116,15 +117,13 @@ Future<List<MissionModel>> getNormalUserMission() async {
 Future<int> newNormalUserMission(XFile image) async {
   var loginUrl = url + "Client";
 
-  String? filePath = image.path;
+
+  Uint8List? _bytesData;
+  await image.readAsBytes().then((value) => _bytesData= value);
 
   Map<String ,dynamic> map = Map();
   map["id"]="12345";
-
-  await image.readAsBytes().then((value) => {
-
-  map["file"] = MultipartFile.fromFile(filePath,filename: "1.png")
-  });
+  map["file"] = http.MultipartFile.fromBytes("1.png",_bytesData!);
 
   //File(path!,filename: "1.PNG");
   FormData formData = FormData.fromMap(map);

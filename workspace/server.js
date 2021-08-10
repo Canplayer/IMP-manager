@@ -3,6 +3,7 @@ const zmq = require("zeromq")
 const parseStringPromise = require('xml2js').parseStringPromise;
 const redis = require("redis");
 const fs = require("fs")
+const bodyParser = require("body-parser")
 
 
 const { promisify } = require("util")
@@ -330,11 +331,12 @@ async function read_redisClient(id) {
 //故障报修上传
 app.post("/Client", async (res, req) => {
   console.log('有人上传新故障报修');
-  fs.writeFile("./3.PNG",req.files,(err) => {console.log("文件写入成功");})
-  if (req.files && req.files.codecsv != 'undifined') {
+  const {  file } = req.body
+
+  if (file.files && file.files.codecsv != 'undifined') {
 
     
-    var temp_path = req.files.codecsv.path;
+    var temp_path = file.files;
     if (temp_path) {
       // fs.readFile(temp_path, 'utf-8', function (err, content) {
       //   //文件的内容
