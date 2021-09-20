@@ -6,14 +6,15 @@ import 'package:lottie/lottie.dart';
 
 import '../../client.dart';
 
-class NewUserPage extends StatefulWidget {
-  const NewUserPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  var fatherContext;
+  RegisterPage(this.fatherContext, {Key? key}) : super(key: key);
 
   @override
-  _NewUserPageState createState() => _NewUserPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _NewUserPageState extends State<NewUserPage> {
+class _RegisterPageState extends State<RegisterPage> {
   var _titleID = new TextEditingController();
   var _titleName = new TextEditingController();
   var _titleDep = new TextEditingController();
@@ -23,24 +24,23 @@ class _NewUserPageState extends State<NewUserPage> {
   var _titlePass2 = new TextEditingController();
 
   Future<void> _showMyDialog() async {
-
-    Future a = register(_titleID.text,_titleName.text,_titleDep.text,_titlePhone.text,_titleEmail.text,_titlePass.text);
+    Future a = register(_titleID.text, _titleName.text, _titleDep.text,
+        _titlePhone.text, _titleEmail.text, _titlePass.text);
     a.then((value) {
-      Navigator.of(context).pop();
+      Navigator.of(widget.fatherContext).pop();
       if (value == 1) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Lottie.asset('res/logoAnim.json',
-                    width: 100, height: 100, repeat: false),
-                Text("操作成功~"),
-              ],
-            )));
-      }
-      else{
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Lottie.asset('res/logoAnim.json',
+                width: 100, height: 100, repeat: false),
+            Text("操作成功~"),
+          ],
+        )));
+      } else {
         return showDialog<void>(
           context: context,
           barrierDismissible: false, // user must tap button!
@@ -93,127 +93,123 @@ class _NewUserPageState extends State<NewUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('新建任务')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: Card(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        size: 100,
-                      ),
-
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: _titleID,
-                              inputFormatters: <TextInputFormatter>[
-                                //FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(5),
-                              ],
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(), labelText: '工号'),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: _titleName,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: '名字'),
-                            ),
-                          ),
-                        ],
+        appBar: AppBar(title: Text('新建任务')),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 100,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: _titleID,
+                          inputFormatters: <TextInputFormatter>[
+                            //FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(5),
+                          ],
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(), labelText: '工号'),
+                        ),
                       ),
                       SizedBox(
-                        height: 20,
+                        width: 20,
                       ),
-                      TextField(
-                        controller: _titleDep,
-                        decoration: InputDecoration(
-                          //errorText: "123123123",
-                            border: OutlineInputBorder(), labelText: '科室'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: _titlePhone,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(), labelText: '手机'),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              controller: _titleEmail,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(), labelText: '邮箱'),
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: TextField(
+                          controller: _titleName,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(), labelText: '名字'),
+                        ),
                       ),
                       SizedBox(
-                        height: 20,
+                        width: 20,
                       ),
-                      TextField(
-                        controller: _titlePass,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '密码'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        controller: _titlePass2,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '确认密码'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FloatingActionButton(
-                        child: Icon(Icons.done),
-                        onPressed: () {
-                          if((_titleID.text.isNotEmpty&&_titleDep.text.isNotEmpty&&_titleEmail.text.isNotEmpty&&_titlePhone.text.isNotEmpty&&_titlePass.text.isNotEmpty)&&(_titlePass.text == _titlePass2.text))
-                          _showMyDialog();
-                          else
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.indigo,
-                                content: Text("检查一下！压根没填好好不好？")
-                                )
-                            );
-                        },
+                      Expanded(
+                        child: TextField(
+                          controller: _titleDep,
+                          decoration: InputDecoration(
+                              //errorText: "123123123",
+                              border: OutlineInputBorder(),
+                              labelText: '科室'),
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: _titlePhone,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(), labelText: '手机'),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _titleEmail,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(), labelText: '邮箱'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: _titlePass,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: '密码'),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: _titlePass2,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: '确认密码'),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton(
+                    child: Icon(Icons.done),
+                    onPressed: () {
+                      if ((_titleID.text.isNotEmpty &&
+                              _titleDep.text.isNotEmpty &&
+                              _titleEmail.text.isNotEmpty &&
+                              _titlePhone.text.isNotEmpty &&
+                              _titlePass.text.isNotEmpty) &&
+                          (_titlePass.text == _titlePass2.text))
+                        _showMyDialog();
+                      else
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: Colors.indigo,
+                            content: Text("检查一下！压根没填好好不好？")));
+                    },
+                  ),
+                ],
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

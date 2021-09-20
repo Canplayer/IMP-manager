@@ -80,17 +80,7 @@ class LoginResModel {
                   email: asT<String?>(jsonRes['email']),
     );
   }
-  // =>
-  //     jsonRes == null
-  //         ? null
-  //         : LoginResModel(
-  //             result: asT<String>(jsonRes['result']),
-  //             authority: List<String>.from(jsonRes['authority']),
-  //             department: asT<String>(jsonRes['department']),
-  //             username: asT<String>(jsonRes['username']),
-  //             phone: asT<String>(jsonRes['phone']),
-  //             email: asT<String>(jsonRes['email']),
-  //           );
+
 
   String? result;
   List<String>? authority;

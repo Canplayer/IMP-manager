@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hnszlyyimp/Page/LoginPage/LoginPage.dart';
+import 'package:hnszlyyimp/Page/LoginPage/HomePage.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -24,7 +24,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: HomePage(),
       theme: ThemeData(fontFamily: "SourceHanSans"),
       localizationsDelegates: [
         //此处
