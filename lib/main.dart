@@ -7,16 +7,38 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hnszlyyimp/Page/LoginPage.dart';
+import 'package:hnszlyyimp/Page/LoginPage/LoginPage.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  runApp(LoginPage());
+  runApp(App());
   SystemChrome.setSystemUIOverlayStyle(my);
   WidgetsFlutterBinding.ensureInitialized();
   Acrylic.initialize();
   DesktopWindowFunctions();
 }
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: LoginPage(),
+      theme: ThemeData(fontFamily: "SourceHanSans"),
+      localizationsDelegates: [
+        //此处
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        //此处
+        const Locale('zh', 'CH'),
+      ],
+    );
+  }
+}
+
 const SystemUiOverlayStyle my = SystemUiOverlayStyle(
   systemNavigationBarColor: Colors.transparent,
   systemNavigationBarDividerColor: Colors.transparent,
@@ -29,8 +51,8 @@ Future DesktopWindowFunctions() async{
   if (Platform.isWindows) {
     doWhenWindowReady(() {
       final win = appWindow;
-      final initialSize = Size(600, 900);
-      win.minSize = initialSize;
+      final initialSize = Size(1024, 800);
+      win.minSize = Size(640, 640);
       win.size = initialSize;
       win.alignment = Alignment.center;
       win.title = "Custom window with Flutter";

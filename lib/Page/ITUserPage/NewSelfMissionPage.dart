@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import '../../client.dart';
 
@@ -19,14 +20,27 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   var _depart = new TextEditingController();
   var _problemDescribe = new TextEditingController();
   var _solution = new TextEditingController();
+  var _time = new TextEditingController();
 
   DateTime selectedDate = DateTime.now();
   List<DropdownMenuItem<String>> typeItems = [];
-  var selectItemValue = '其他';
+  String selectItemValue = '其他';
+
+  List<DropdownMenuItem<String>> timeUnitItems = [];
+  String selectTimeUnit = '时';
+  String time = "0";
 
   Future<void> _showMyDialog() async {
-    Future a = newITUserSelfMission(_name.text, _phone.text, _depart.text,
-        selectedDate, selectItemValue, _problemDescribe.text, _solution.text);
+    Future a = newITUserSelfMission(
+        _name.text,
+        _phone.text,
+        _depart.text,
+        selectedDate,
+        selectItemValue,
+        _problemDescribe.text,
+        _solution.text,
+        _time.text,
+        selectTimeUnit);
     a.then((value) {
       Navigator.of(context).pop();
       if (value == 1) {
@@ -34,12 +48,13 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Lottie.asset('res/logoAnim.json',width: 100,height: 100,repeat: false),
-                Text("操作成功~"),
-              ],
-            )));
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Lottie.asset('res/logoAnim.json',
+                width: 100, height: 100, repeat: false),
+            Text("操作成功~"),
+          ],
+        )));
       } else {}
     });
 
@@ -99,8 +114,18 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
         value: element,
       ));
     });
+
+    List<DropdownMenuItem<String>> items2 = [];
+    List<String> _timeUnit = ['秒', '分', '时'];
+    _timeUnit.forEach((element) {
+      items2.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
     setState(() {
       typeItems = items;
+      timeUnitItems = items2;
     });
   }
 
@@ -154,30 +179,38 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                       SizedBox(
                         height: 40,
                       ),
-                      InkWell(
-                        onTap: _selectDate,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.calendar_today),
-                            Text(formatDate(
-                                selectedDate, [yyyy, '/', mm, '/', dd])),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      DropdownButton<String>(
-                        value: selectItemValue,
-                        isExpanded: true,
-                        disabledHint: Text('暂不可用'),
-                        items: typeItems,
-                        onChanged: (String? value) {
-                          print(value);
-                          setState(() {
-                            selectItemValue = value!;
-                          });
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: _selectDate,
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.calendar_today),
+                                  Text(formatDate(
+                                      selectedDate, [yyyy, '/', mm, '/', dd])),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              value: selectItemValue,
+                              isExpanded: true,
+                              disabledHint: Text('暂不可用'),
+                              items: typeItems,
+                              onChanged: (String? value) {
+                                print(value);
+                                setState(() {
+                                  selectItemValue = value!;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
@@ -198,6 +231,40 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                         maxLines: null,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(), labelText: '解决方法'),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: _time,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '工作时长'),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              value: selectTimeUnit,
+                              isExpanded: true,
+                              disabledHint: Text('暂不可用'),
+                              items: timeUnitItems,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectTimeUnit = value!;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,

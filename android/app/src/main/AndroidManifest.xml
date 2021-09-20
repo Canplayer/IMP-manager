@@ -2,7 +2,7 @@
     package="net.canplayer.imp.hnszlyyimp">
    <application
         android:label="hnszlyyimp"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

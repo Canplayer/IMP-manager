@@ -1,0 +1,4 @@
+POST http://httpbin.org/post
+Content-Type: image/png
+
+1010110111111010101110

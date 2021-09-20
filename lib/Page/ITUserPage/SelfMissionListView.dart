@@ -30,7 +30,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
     super.dispose();
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     var a = await getITUserSelfMission();
     setState(() {
       myList = a;
@@ -39,11 +39,14 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
 
   Widget _buildSuggestions() {
     if (myList.length != 0) {
-      return ListView.builder(
-        itemCount: myList.length,
-        itemBuilder: (BuildContext context, int position) {
-          return _buildRow(myList[position]);
-        },
+      return RefreshIndicator(
+        onRefresh: loadData,
+        child: ListView.builder(
+          itemCount: myList.length,
+          itemBuilder: (BuildContext context, int position) {
+            return _buildRow(myList[position]);
+          },
+        ),
       );
     } else {
       return LinearProgressIndicator();
@@ -60,7 +63,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('您即将删除:' + pair!.describe!+pair!.id!),
+                Text('您即将删除:' + pair.describe! + pair.id!),
               ],
             ),
           ),
@@ -68,8 +71,8 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
             TextButton(
               child: Text('删除'),
               onPressed: () {
-                print("删除按钮被点击了"+pair!.id!);
-                Future a = delITUserSelfMission(pair!.id!);
+                print("删除按钮被点击了" + pair.id!);
+                Future a = delITUserSelfMission(pair.id!);
                 a.then((value) {
                   if (value == 1) {
                     Navigator.of(context).pop();
@@ -123,60 +126,87 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(pair!.department!),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(pair!.name!),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(pair!.date!),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(pair!.phone!),
-                        SizedBox(
-                          width: 10,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          pair!.type!,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          pair!.describe!,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(pair!.solution!),
-                      ],
-                    ),
-                  ],
-                ),
                 Icon(
                   Icons.done,
-                  size: 40,
+                  size: 30,
                   color: Colors.green,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.location_on,
+                              size: 15,
+                              color: Color.fromARGB(255, 150, 150, 150)),
+                          Text(pair.department!,
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 150, 150, 150))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(Icons.person,
+                              size: 15,
+                              color: Color.fromARGB(255, 150, 150, 150)),
+                          Text(pair.name!,
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 150, 150, 150))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.access_time,
+                            size: 15,
+                            color: Color.fromARGB(255, 150, 150, 150),
+                          ),
+                          Text(pair.date!,
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 150, 150, 150))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(pair.phone!),
+                          SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            pair.type!,
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            pair.describe!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Row(
+                        children: [
+                          Text(pair.solution!),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

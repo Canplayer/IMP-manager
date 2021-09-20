@@ -1,5 +1,3 @@
-
-
 //import 'package:filepicker_windows/filepicker_windows.dart';
 
 import 'dart:developer';
@@ -7,11 +5,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:cross_file/cross_file.dart';
 
 import '../../client.dart';
+
 class NewMissionPage extends StatefulWidget {
   const NewMissionPage({Key? key}) : super(key: key);
 
@@ -21,26 +22,62 @@ class NewMissionPage extends StatefulWidget {
 
 class _NewMissionPageState extends State<NewMissionPage> {
   XFile? _image;
-  final PhoneWebPicker = ImagePicker();
+  var _name = new TextEditingController();
+  var _phone = new TextEditingController();
+  var _depart = new TextEditingController();
+  var _problemDescribe = new TextEditingController();
+  List<DropdownMenuItem<String>> typeItems = [];
+  var selectItemValue = '其他';
+
+  @override
+  void initState() {
+    super.initState();
+    loadTypeList();
+  }
+
+  loadTypeList() async {
+    List<DropdownMenuItem<String>> items = [];
+    var a = await getTypeList();
+    a.data!.forEach((element) {
+      items.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
+    setState(() {
+      typeItems = items;
+    });
+  }
 
   //拍照
   Future _getImageFromCamera() async {
-    // final pickedFile =
+    final ImagePicker _picker = ImagePicker();
+    XFile? image = await _picker.pickImage(source: ImageSource.camera);
     //     await PhoneWebPicker.getImage(source: ImageSource.camera, maxHeight: 2048);
-    // setState(() {
-    //   if (pickedFile != null) {
-    //     _image = File(pickedFile.path);
-    //   }
-    // });
+    setState(() {
+      if (image != null) {
+        _image = image;
+      }
+    });
   }
+
   //相册
   Future _getImageFromGallery() async {
     //final pickedFile = await PhoneWebPicker.getImage(source: ImageSource.gallery, maxHeight: 2048);
     log("尝试读取图片");
-    final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery, maxHeight: 2048);
+    //final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery, maxHeight: 2048);
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+
     setState(() {
-      if (image != null) {
-        _image = image;
+      if (result != null) {
+        if (kIsWeb == true) {
+          var file = result.files.single;
+          if (file.bytes != null) {
+            _image = XFile.fromData(file.bytes!);
+          }
+        }
+        else _image = XFile(result.files.single.path!);
       }
     });
   }
@@ -57,21 +94,35 @@ class _NewMissionPageState extends State<NewMissionPage> {
   //   });
   // }
 
-  Future _openWindowsSSTool() async{
+  Future _openWindowsSSTool() async {
     const url = 'file://C:/Windows/system32/SnippingTool.exe';
-    await canLaunch(url)?launch(url):throw 'Could not launch $url';
+    await canLaunch(url) ? launch(url) : throw 'Could not launch $url';
   }
 
-
   Future<void> _showMyDialog() async {
-    // Future a = addNewReport();
-    // a.then((value) {
-    //   Navigator.of(context).pop();
-    //   if (value == 1) {
-    //     Navigator.pop(context);
-    //   }
-    //   else{}
-    // });
+    Future a = newNormalUserMission(_name.text, _phone.text, _depart.text,
+        selectItemValue, _problemDescribe.text, _image);
+    a.then((value) {
+      Navigator.of(context).pop();
+      if (value == 1) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Lottie.asset('res/logoAnim.json',
+                width: 100, height: 100, repeat: false),
+            Text("操作成功~"),
+          ],
+        )));
+      } else {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("操作失败")));
+      }
+    });
 
     return showDialog<void>(
       context: context,
@@ -99,7 +150,6 @@ class _NewMissionPageState extends State<NewMissionPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,6 +167,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
+                        controller: _name,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(), labelText: '报障人'),
                       ),
@@ -124,6 +175,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                         height: 20,
                       ),
                       TextField(
+                        controller: _phone,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(), labelText: '电话号码'),
                       ),
@@ -131,13 +183,30 @@ class _NewMissionPageState extends State<NewMissionPage> {
                         height: 20,
                       ),
                       TextField(
+                        controller: _depart,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(), labelText: '科室'),
                       ),
                       SizedBox(
                         height: 20,
                       ),
+                      DropdownButton<String>(
+                        value: selectItemValue,
+                        isExpanded: true,
+                        disabledHint: Text('暂不可用'),
+                        items: typeItems,
+                        onChanged: (String? value) {
+                          print(value);
+                          setState(() {
+                            selectItemValue = value!;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       TextField(
+                        controller: _problemDescribe,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         decoration: InputDecoration(
@@ -149,15 +218,16 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       _image == null
                           ? SizedBox()
                           : SizedBox(
-                        height: 200,
-                        child: (kIsWeb == true)?Image.network(
-                          _image!.path,
-                          fit: BoxFit.cover,
-                        ):Image.file(
-                          File(_image!.path),
-                          fit: BoxFit.cover,
-                        )
-                      ),
+                              height: 200,
+                              child: (kIsWeb == true)
+                                  ? Image.network(
+                                      _image!.path,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(_image!.path),
+                                      fit: BoxFit.cover,
+                                    )),
                       SizedBox(
                         height: 20,
                       ),
@@ -178,7 +248,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                           //     ],
                           //   ),
                           // ),
-                              // :
+                          // :
                           TextButton(
                             onPressed: () {
                               _getImageFromCamera();
@@ -212,7 +282,6 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       FloatingActionButton(
                         child: Icon(Icons.done),
                         onPressed: () {
-                          newNormalUserMission(_image!);
                           _showMyDialog();
                         },
                       ),

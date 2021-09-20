@@ -1,11 +1,9 @@
 import 'dart:developer';
 import 'dart:typed_data';
-import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:date_format/date_format.dart';
 import 'package:hnszlyyimp/model.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:cross_file/cross_file.dart';
 
 var url = "http://10.10.142.77:8081/";
 LoginResModel? isLogin;
@@ -38,6 +36,23 @@ Future<int> login(String _id, String _password) async {
   return 0;
 }
 
+Future<int> register(String id,String username,String department,String phone,String email,String passwd) async {
+  var loginUrl = url + "register";
+  response =
+  await dio.post(loginUrl, data: {"id": id,"username":username,"department":department,"phone":phone,"email":email,"passwd":passwd});
+  log(response!.data.toString());
+  SimpleModel sm = SimpleModel.fromJson(response!.data);
+  print(sm.result);
+  if (sm.result != 'FAILED') {
+    return int.parse(sm.result!);
+  }
+  return 0;
+}
+
+
+
+
+
 //工程师自定列表
 Future<List<SelfMissionModel>> getITUserSelfMission() async {
   var loginUrl = url + "iTUserSelfMission";
@@ -52,8 +67,9 @@ Future<List<SelfMissionModel>> getITUserSelfMission() async {
 
 //工程师上传新自定数据
 Future<int> newITUserSelfMission(String name, String phone, String dep,
-    DateTime date, String type, String des, String sol) async {
+    DateTime date, String type, String des, String sol,String time,String timeUnit) async {
   var loginUrl = url + "iTUserSelfMission";
+
   var data = {
     "original-streams-id": "",
     "distribute-streams-id": "",
@@ -72,8 +88,8 @@ Future<int> newITUserSelfMission(String name, String phone, String dep,
     "engineerphone": "",
     "faultprogress": "",
     "solution": sol,
-    "processingtime": "0",
-    "processingtime_unit": ""
+    "processingtime": time,
+    "processingtime_unit": timeUnit
   };
   response = await dio.post(loginUrl, data: data);
   print(response!.data.toString());
@@ -114,22 +130,54 @@ Future<List<MissionModel>> getNormalUserMission() async {
 }
 
 //客户端数据上报
-Future<int> newNormalUserMission(XFile image) async {
+Future<int> newNormalUserMission(String name, String phone, String dep, String type, String des, XFile? image) async {
   var loginUrl = url + "Client";
+  var file;
+  if (image != null) {
+    Uint8List? _bytesData = await image.readAsBytes();
+    file = MultipartFile.fromBytes(_bytesData, filename: "content.txt");
+  }
+  var data = {
+    "original-streams-id": "",
+    "distribute-streams-id": "",
+    "userid": isLogin!.id,
+    "opuserid": "",
+    "sduserid": "",
+    "department": dep,
+    "person2contact": name,
+    "phone2contact": phone,
+    "faultdate": formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]),
+    "faulttype": type,
+    "problemdescribe": des,
+    "reportdate": formatDate(DateTime.now(), [yyyy, '-', mm, '-', dd]),
+    "reporttime": formatDate(DateTime.now(), [hh, ':', mm, ':', ss]),
+    "engineer": "",
+    "engineerphone": "",
+    "faultprogress": "未处理",
+    "processingtime": "",
+    "processingtime_unit": "",
+    "solution": ""
+  };
 
-
-  Uint8List? _bytesData;
-  await image.readAsBytes().then((value) => _bytesData= value);
-
-  Map<String ,dynamic> map = Map();
-  map["id"]="12345";
-  map["file"] = http.MultipartFile.fromBytes("1.png",_bytesData!);
-
-  //File(path!,filename: "1.PNG");
+  Map<String, dynamic> map = Map();
+  map["info"] = data;
+  map["file"] = file;
   FormData formData = FormData.fromMap(map);
 
   response = await dio.post(loginUrl, data: formData);
   print(response!.data.toString());
+  var result = response!.data['result'];
+  if (result == 'OK') {
+    return 1;
+  }
+  return 0;
+}
 
-  return 1;
+//获取背景图片
+Future<XFile> getBackground() async {
+  var loginUrl = url + "GetPic";
+  response = await dio.get(loginUrl);
+  ResponseBody result = response!.data;
+  var a = await result.stream.first;
+  return XFile.fromData(a);
 }

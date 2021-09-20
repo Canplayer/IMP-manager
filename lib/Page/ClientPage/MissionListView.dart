@@ -61,51 +61,19 @@ class _MissionListViewState extends State<MissionListView> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('长按...'),
+          title: Text('详细信息'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('您即将删除:'+ pair.describe!+pair.id!),
+                Image.network(
+                  'http://10.10.142.77:8081/ClientPic?id='+pair.id!,
+                ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('删除'),
-              onPressed: () {
-                print("删除按钮被点击了"+pair.id!);
-                Future a = delITUserSelfMission(pair.id!);
-                a.then((value) {
-                  if (value == 1) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Lottie.asset('res/logoAnim.json',
-                            width: 100, height: 100, repeat: false),
-                        Text("操作成功~"),
-                      ],
-                    )));
-                  } else {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Lottie.asset('res/logoAnim.json',
-                            width: 100, height: 100, repeat: false),
-                        Text("操作失败~"),
-                      ],
-                    )));
-                  }
-                });
-              },
-            ),
-            TextButton(
-              child: Text('不要啊!'),
+              child: Text('好'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -117,21 +85,39 @@ class _MissionListViewState extends State<MissionListView> {
   }
 
   Widget _buildRow(MissionModel pair) {
-    String a =pair!.progress!;
+    String a = pair.progress!;
     IconData b;
-    switch(a){
-      case '未完成': {b=Icons.access_time;}break;
-      case '已分发': {b=Icons.assignment_ind;}break;
-      case '已处理': {b=Icons.done;}break;
-      case '已完成': {b=Icons.done_all;}break;
-      default:{b=Icons.voice_over_off_sharp;}
+    switch (a) {
+      case '未完成':
+        {
+          b = Icons.access_time;
+        }
+        break;
+      case '已分发':
+        {
+          b = Icons.assignment_ind;
+        }
+        break;
+      case '已处理':
+        {
+          b = Icons.done;
+        }
+        break;
+      case '已完成':
+        {
+          b = Icons.done_all;
+        }
+        break;
+      default:
+        {
+          b = Icons.voice_over_off_sharp;
+        }
     }
     return Container(
       child: Card(
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
-          onTap: () {},
-          onLongPress: () {
+          onTap: () {
             _showMyDialog(pair);
           },
           child: Padding(
@@ -142,11 +128,11 @@ class _MissionListViewState extends State<MissionListView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(pair!.date!),
+                    Text(pair.date!),
                     Row(
                       children: [
                         Text(
-                          pair!.type!,
+                          pair.type!,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
                         ),
@@ -154,7 +140,7 @@ class _MissionListViewState extends State<MissionListView> {
                           width: 10,
                         ),
                         Text(
-                          pair!.describe!,
+                          pair.describe!,
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w700),
                         ),
@@ -163,7 +149,7 @@ class _MissionListViewState extends State<MissionListView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(pair!.solution!),
+                        Text(pair.solution!),
                       ],
                     ),
                   ],

@@ -40,7 +40,7 @@ class _ITUserPageState extends State<ITUserPage> {
               });
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Center(
           child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),

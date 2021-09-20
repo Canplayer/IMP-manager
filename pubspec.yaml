@@ -23,23 +23,26 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.3
 
   url_launcher: ^6.0.4
   dio: ^4.0.0
   date_format: ^2.0.2
   lottie: ^1.1.0
-  flutter_launcher_icons: ^0.9.1
+  flutter_launcher_icons: ^0.9.2
   flutter_acrylic: ^0.0.2
   bitsdojo_window: ^0.1.1+1
-  image_picker: ^0.8.3
-  file_picker_desktop: ^1.0.2
+  file_picker: ^4.0.0
+  cross_file: ^0.3.1+4
+  image_picker: ^0.8.3+2
 
 dev_dependencies:
-  flutter_native_splash: ^1.1.8+4
+  flutter_native_splash: ^1.2.3
   #date_format: ^2.0.2
   flutter_test:
     sdk: flutter
@@ -52,8 +55,10 @@ flutter_icons:
 
 flutter_native_splash:
   color: "#FFFFFF"
+  color_dark: "#222222"
   image: "res/AppLogo.png"
   ardroid: true
+  android12: true
   ios: true
   windows: true
 
@@ -100,5 +105,11 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: SourceHanSans
+      fonts:
+        - asset: res/fonts/SourceHanSansHWSC-Regular.otf
+
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

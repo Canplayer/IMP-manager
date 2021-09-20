@@ -1,26 +1,40 @@
 const express = require("express")
 const zmq = require("zeromq")
-const parseStringPromise = require('xml2js').parseStringPromise;
-const redis = require("redis");
+const parseStringPromise = require('xml2js').parseStringPromise
+const redis = require("redis")
 const fs = require("fs")
-const bodyParser = require("body-parser")
-
-
 const { promisify } = require("util")
 const time = require("silly-datetime")
+const axios = require("axios")
+
 
 
 //const serverUrl = "10.10.142.81"  //测试服务器
 const serverUrl = "10.10.170.191"  //正式服务器
 const port = "5566"
+
+const app = express()
+app.use(express.json())
+
+var cors = require('cors')
+app.use(cors())
+const multer = require('multer')
+var uploads = multer({ storage: multer.memoryStorage() })
+
 const client = redis.createClient({
   host: serverUrl
 });
 client.on('error', function (err) {
-  console.log('与redis服务器连接出现了异常报告');
+  if (err) {
+    console.log('与redis服务器连接出现了异常报告');
+    rej(err)
+  } else {
+    res(key)
+  }
 });
-const app = express()
-app.use(express.json())
+
+
+
 
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -71,6 +85,49 @@ async function login(userid, passwd) {
   return result
 }
 
+//注册
+app.post("/register", async (req, res) => {
+  const { id, username, department, phone, email, passwd } = req.body
+  console.log("用户注册：" + id + username);
+  if (!id || !username || !department || !phone || !email || !passwd) {
+    res.json({
+      "result": "Failed"
+    })
+    return
+  }
+  console.log('用户' + username + '尝试登录');
+  let result = await register(id, username, department, phone, email, passwd)
+  if (result["SOAP"]["MSGTYPE"][0] === "000004" && result["SOAP"]["LOGONREPLY"][0] === "1") {
+    res.json({
+      "result": result["SOAP"]["LOGONREPLY"][0]
+    })
+  } else {
+    res.json({
+      "result": "FAILED"
+    })
+  }
+
+})
+async function register(id, username, department, phone, email, passwd) {
+  let sock = new zmq.Request()
+  let msg = `<?xml version="1.0" encoding="UTF-8"?>
+  <SOAP>
+  <MSGTYPE>000003</MSGTYPE>
+  <ACCOUNT>${id}</ACCOUNT>
+	<USERNAME>${username}</USERNAME>
+	<PASSWORD>${passwd}</PASSWORD>
+  <AUTHORITY>1</AUTHORITY>
+  <DEPARTMENT>${department}</DEPARTMENT>
+	<PHONE>${phone}</PHONE>
+	<EMAIL>${email}</EMAIL>
+  </SOAP>
+  `
+  sock.connect(`tcp://${serverUrl}:${port}`)
+  await sock.send(msg)
+  let result_str = (await sock.receive()).toString()
+  let result = await parseStringPromise(result_str)
+  return result
+}
 //---------------------------------------
 
 //获取自由录入数据
@@ -90,8 +147,13 @@ app.get("/iTUserSelfMission", async (req, res) => {
  * @param {string} id 
  */
 async function queryDataIn(id) {
+  var t = new Date()
+  var t_s = t.getTime()
+  var t_old = new Date().setTime(t_s - 1000 * 60 * 60 * 24 * 30)
+
+
   //发送数据，读取redis
-  let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>${id}</ACCOUNT><BEGINDATE>2021-06-13</BEGINDATE><ENDDATE>${time.format(new Date(), 'YYYY-MM-DD')}</ENDDATE></SOAP>`
+  let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>${id}</ACCOUNT><BEGINDATE>${time.format(t_old, 'YYYY-MM-DD')}</BEGINDATE><ENDDATE>${time.format(t, 'YYYY-MM-DD')}</ENDDATE></SOAP>`
   let sock = new zmq.Request()
 
   sock.connect(`tcp://${serverUrl}:${port}`)
@@ -122,22 +184,23 @@ async function read_matchorder(id) {
   return result
 }
 //上传自由录入数据
-app.post("/iTUserSelfMission", async (res, req) => {
+app.post("/iTUserSelfMission", async (req, res) => {
   console.log('有人上传新表单');
-  const data = res.body
+  const data = req.body
+  console.log(data)
   try {
-    let key = await dataIn(data)
-    req.json({
+    let key = await iTUserSelfMissionDataIn(data)
+    res.json({
       "result": "OK",
       "key": key
     })
   } catch (error) {
-    req.json({
+    res.json({
       "result": "FAILED",
     })
   }
 })
-function dataIn(data) {
+function iTUserSelfMissionDataIn(data) {
   let dataInMap = `ORDERDATAIN`
   let args = [dataInMap, "*"]
   Object.keys(data).forEach(key => {
@@ -266,6 +329,7 @@ app.get("/Client", async (req, res) => {
   let result = await read_redisClient(userId)
   res.json(result)
 })
+
 async function read_redisClient(id) {
   const xRead = promisify(client.xread).bind(client)
   let stream1 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDER`, "0-0")
@@ -329,101 +393,170 @@ async function read_redisClient(id) {
 }
 
 //故障报修上传
-app.post("/Client", async (res, req) => {
-  console.log('有人上传新故障报修');
-  const {  file } = req.body
 
-  if (file.files && file.files.codecsv != 'undifined') {
-
-    
-    var temp_path = file.files;
-    if (temp_path) {
-      // fs.readFile(temp_path, 'utf-8', function (err, content) {
-      //   //文件的内容
-      //   console.log('content', content);
-      //   // 删除临时文件
-      //   fs.unlink(temp_path);
-      // });
-      fs.writeFile("./3.PNG",temp_path,(err) => {console.log("文件写入成功");})
-    }
+app.post("/Client", uploads.single("file"), async (req, res) => {
+  console.log('有新的美团外卖订单');
+  let { info } = req.body
+  var file
+  if (req.file != null) {
+    file = req.file.buffer
+    console.log("骑手上传了一个图片")
   }
-
-
-
-  // console.log(req.size);
-
-  // const { file } = req.body
-  // console.log(file);
-  //fs.writeFile("./2.PNG",file,(err) => {console.log("文件写入成功");})
-
-
+  const data = info
+  //console.log(req.file.buffer)
   try {
-    req.json({
+    let key = await add_fault_order(data, file)
+    res.json({
       "result": "OK",
       "key": key
     })
   } catch (error) {
-    req.json({
+    res.json({
       "result": "FAILED",
     })
   }
+
+
+
 })
-async function add_fault_order() {
-  // FAULTREPORTLBM_C
+async function add_fault_order(data, file) {
 
-  // let data = {
-  //   "original-streams-id": "",
-  //   "distribute-streams-id": "",
-  //   "userid": "01599",
-  //   "opuserid": "",
-  //   "sduserid": "",
-  //   "department": "信息部",
-  //   "person2contact": "陈驰",
-  //   "phone2contact": "18689532602",
-  //   "faultdate": "2021-08-03",
-  //   "faulttype": "His系统",
-  //   "problemdescribe": "AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  //   "reportdate": "2021-05-30",
-  //   "reporttime": "16:59:35",
-  //   "engineer": "",
-  //   "engineerphone": "",
-  //   "faultprogress": "未处理",
-  //   "processingtime": "",
-  //   "processingtime_unit": "",
-  //   "solution": ""
-  // }
-  // let dataInMap = `FAULTORDER`
-  // let args = [dataInMap, "*"]
+  let faultorder_name = `FAULTORDER`
+  let args = [faultorder_name, "*"]
+
+  Object.keys(data).forEach(key => {
+    args.push(key)
+    args.push(data[key])
+  })
+
+  return new Promise((res, rej) => {
+    client.sendCommand(`XADD`, args, (err, key) => {
+      if (err) {
+        rej(err)
+        console.error("出了点问题1" + err)
+      } else {
+        res(key)
 
 
+        if (file != null) {
+          let img = file.toString("base64")
+          console.log("带了一张图片" + img.length);
+          let image_key = `${key}_Img_Req`
+          client.set(image_key, img, function (err) {
+
+            if (err) {
+              rej(err)
+              console.error("出了点问题2" + err)
+              client.end(true);
+            } else {
+              res(key)
+            }
+          })
+        }
 
 
-  fs.readFile("./1.PNG", (err, img_data) => {
-    console.log("获取图片成功");
 
 
-    let img = img_data.toString('base64')
-    // Object.keys(data).forEach(key => {
-    //   args.push(key)
-    //   args.push(data[key])
-    // })
+      }
+    })
+  })
 
-    // return new Promise((res, rej) => {
-    //   client.sendCommand(`XADD`, args, (err, key) => {
-    //     if (err) {
-    //       rej(err)
-    //     } else {
-    //       res(key)
-    //       let image_key = `${key}_Img_Req`
-    //   client.set(image_key, img, () => {
-    //     client.end(true)
-    //   })
-    //     }
-    //   })
-    // })
+
+
+
+
+
+  client.sendCommand(`XADD`, args, (err, key) => {
+    if (file != null) {
+      let img = file.toString("base64")
+      console.log("带了一张图片" + img.length);
+
+      let image_key = `${key}_Img_Req`
+      client.set(image_key, img, function (err) {
+        console.error("出了点问题" + err)
+      })
+    }
+
+
+
+    if (err) {
+      rej(err)
+    } else {
+      res(key)
+    }
   })
 
 }
+
+
+
+//获取上报图片
+app.get("/ClientPic", async (req, res) => {
+  const { id } = req.query
+  if (id == null) {
+    res.json({
+      "result": "failed"
+    })
+    return
+  }
+  let result = await clientPicQueryDataIn(id)
+  if(result != null)res.end(result.toString('binary'), 'binary')
+  else res.end()
+})
+/**
+ * 查询录入信息
+ * @param {string} id 
+ */
+async function clientPicQueryDataIn(id) {
+  //发送数据，读取redis
+  let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000005</MSGTYPE><ORDERID>${id}</ORDERID></SOAP>`
+  let sock = new zmq.Request()
+
+  sock.connect(`tcp://${serverUrl}:${port}`)
+  await sock.send(msg)
+  const result = await sock.receive()
+  // TODO: parse xml for result
+  return clientPicRead_matchorder(id)
+}
+async function clientPicRead_matchorder(id) {
+
+  let image_key = `${id}_Img_Rep`
+
+      const get = promisify(client.get).bind(client)
+      let stream = await get(image_key)
+      
+      var result
+      if (stream) {
+        result = new Buffer.from(stream, 'base64')
+      }
+      return result
+
+
+}
+
+
+//---------------------------------------
+//获取图片
+app.get("/GetPic", async (req, res) => {
+  //res.sendFile('background.jpg' ,{ root: __dirname })
+
+  picUrl = ""
+  await axios.get('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1', {
+    responseType: 'json', //这里只能是arraybuffer，不能是json等其他项，blob也不行
+  }).then(response => {
+    console.log("https://cn.bing.com" + (response.data.images)[0].url);
+    picUrl = "https://cn.bing.com" + (response.data.images)[0].url
+  })
+
+
+  axios.get(picUrl, {
+    responseType: 'arraybuffer', //这里只能是arraybuffer，不能是json等其他项，blob也不行
+  }).then(response => {
+    res.set(response.headers) //把整个的响应头塞入更优雅一些
+    res.end(response.data.toString('binary'), 'binary') //这句是关键，有两次的二进制转换
+  })
+})
+
 
 
 
@@ -432,3 +565,12 @@ async function add_fault_order() {
 
 app.listen(8081)
 console.log('服务器开始运作');
+
+
+
+const web = express()
+const path = require('path')
+web.use(express.static(path.join(__dirname, '../build/web')))
+web.listen(80, () => {
+  console.log('网页端开始运行')
+})

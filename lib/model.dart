@@ -28,6 +28,31 @@ class VersionCheckModel {
 }
 
 //登陆数据模型
+class SimpleModel {
+  SimpleModel(
+      {this.result});
+  factory SimpleModel.fromJson(Map<String, dynamic> jsonRes){
+    return SimpleModel(
+      result: asT<String?>(jsonRes['result']),
+    );
+  }
+
+  String? result;
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'result': result,
+  };
+
+  LoginResModel clone() => LoginResModel.fromJson(
+      asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
+}
+
+//登陆数据模型
 class LoginResModel {
   LoginResModel(
       {this.result,
@@ -120,6 +145,8 @@ class LoginResModel {
 // }
 
 //用于列表工程师自定义数据上报模型
+
+//IT服务台手动上报模型
 class SelfMissionModel {
   SelfMissionModel({
     this.id,
@@ -173,6 +200,7 @@ class SelfMissionModel {
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }
 
+//
 class MissionModel {
   MissionModel({
     this.id,

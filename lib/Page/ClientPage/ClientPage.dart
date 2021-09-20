@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
 
+import '../../client.dart';
 import 'NewMissionPage.dart';
 import '../ITUserPage/SelfMissionListView.dart';
 
@@ -169,10 +170,7 @@ class MyInfoPage extends StatelessWidget {
                     Icons.person,
                     size: 100,
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '报障人'),
-                  ),
+                  Text(isLogin!.username!),
                   SizedBox(
                     height: 20,
                   ),
