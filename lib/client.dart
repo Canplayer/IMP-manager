@@ -49,7 +49,17 @@ Future<int> register(String id,String username,String department,String phone,St
   return 0;
 }
 
-
+//服务台内容获取
+Future<List<MissionModel>> getITCenterMission(String type) async {
+  var loginUrl = url + "ITClient";
+  var a = {"type": type};
+  response = await dio.get(loginUrl, queryParameters: a);
+  //print(response!.data.toString());
+  List<MissionModel> patrolList = (response!.data)
+      .map<MissionModel>((e) => MissionModel.fromJson(e))
+      .toList();
+  return patrolList.reversed.toList();
+}
 
 
 
@@ -110,9 +120,17 @@ Future<int> delITUserSelfMission(String msgID) async {
 }
 
 //工作可用故障类型
-Future<TypeListModel> getTypeList() async {
-  var loginUrl = url + "getTypeList";
+Future<TypeListModel> getEngineerList() async {
+  var loginUrl = url + "getEngineerInfo";
   response = await dio.get(loginUrl);
+  TypeListModel list = TypeListModel.fromJson(response!.data);
+  return list;
+}
+
+//工作可用故障类型
+Future<TypeListModel> getTypeList() async {
+  var _url = url + "getTypeList";
+  response = await dio.get(_url);
   TypeListModel list = TypeListModel.fromJson(response!.data);
   return list;
 }
@@ -180,4 +198,15 @@ Future<XFile> getBackground() async {
   ResponseBody result = response!.data;
   var a = await result.stream.first;
   return XFile.fromData(a);
+}
+
+//工程师列表
+Future<List<OpUserListModel>> getOPList() async {
+  var _url = url + "getEngineerInfo";
+  response = await dio.get(_url);
+  print(response!.data.toString());
+  List<OpUserListModel> patrolList = (response!.data)
+      .map<OpUserListModel>((e) => OpUserListModel.fromJson(e))
+      .toList();
+  return patrolList.reversed.toList();
 }

@@ -7,7 +7,7 @@ import '../../client.dart';
 import 'WelcomePage.dart';
 
 class LoginPage extends StatefulWidget {
-  var fatherContext;
+  final fatherContext;
   LoginPage(this.fatherContext, {Key? key}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           if (value == 1) {
             Navigator.push(
               context,
-              new CupertinoPageRoute(builder: (context) => new WelcomePage(widget.fatherContext)),
+              new MaterialPageRoute(builder: (context) => new WelcomePage(widget.fatherContext)),
             );
           } else {
             return showDialog<void>(
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Lottie.asset('res/logoAnim.json',
+                Lottie.asset('res/doneAnim.json',
                     width: 100, height: 100, repeat: false),
                 Text("用户名和密码千万不能为空 :<"),
               ],
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             SizedBox(
               height: 120,
-              width: 120,
+              width: 360,
               child:
 //Image.asset('res/logo.png'),
               Lottie.asset('res/logoAnim.json'),

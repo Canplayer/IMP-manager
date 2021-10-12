@@ -33,13 +33,15 @@ dependencies:
   url_launcher: ^6.0.4
   dio: ^4.0.0
   date_format: ^2.0.2
-  lottie: ^1.1.0
+  lottie: ^1.2.1
   flutter_launcher_icons: ^0.9.2
   flutter_acrylic: ^0.0.2
   bitsdojo_window: ^0.1.1+1
   file_picker: ^4.0.0
   cross_file: ^0.3.1+4
   image_picker: ^0.8.3+2
+  chat_bubbles: ^1.1.0
+  animations: ^2.0.1
 
 dev_dependencies:
   flutter_native_splash: ^1.2.3
@@ -80,6 +82,7 @@ flutter:
   assets:
     - res/AppLogo.png
     - res/logo.png
+    - res/doneAnim.json
     - res/logoAnim.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -106,7 +109,7 @@ flutter:
   #         weight: 700
   #
   fonts:
-    - family: SourceHanSans
+    - family: Roboto
       fonts:
         - asset: res/fonts/SourceHanSansHWSC-Regular.otf
 

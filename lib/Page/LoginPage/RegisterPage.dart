@@ -35,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
             content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset('res/logoAnim.json',
+            Lottie.asset('res/doneAnim.json',
                 width: 100, height: 100, repeat: false),
             Text("操作成功~"),
           ],
@@ -93,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('新建任务')),
+        appBar: AppBar(title: Text('新用户注册')),
         body: Container(
           child: SingleChildScrollView(
             child: Padding(

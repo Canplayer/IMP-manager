@@ -7,6 +7,7 @@ T? asT<T>(dynamic value) {
   return null;
 }
 
+//版本检查（未实现）
 class VersionCheckModel {
   VersionCheckModel({
     this.version,
@@ -108,35 +109,7 @@ class LoginResModel {
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }
 
-// class ListItemModel {
-//   //ListItemModel(this.department,this.phone,this.type,this.describe,this.status);
-//   String department;
-//   String phone;
-//   String type;
-//   String describe;
-//   int status;
-//
-//   Map toJson() {
-//     Map map = new Map();
-//     map["department"] = this.department;
-//     map["phone"] = this.phone;
-//     map["type"] = this.type;
-//     map["describe"] = this.describe;
-//     map["status"] = this.status;
-//     return map;
-//   }
-//
-//   ListItemModel.ds(Map<String, dynamic> json)
-//       : department = json['department'],
-//         phone = json['phone'],
-//         type = json['type'],
-//         describe = json['describe'],
-//         status = json['status'];
-// }
-
-//用于列表工程师自定义数据上报模型
-
-//IT服务台手动上报模型
+//工程师手动上报模型
 class SelfMissionModel {
   SelfMissionModel({
     this.id,
@@ -190,7 +163,7 @@ class SelfMissionModel {
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }
 
-//
+//IT服务台数据模型
 class MissionModel {
   MissionModel({
     this.id,
@@ -252,6 +225,7 @@ class MissionModel {
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }
 
+//受支持故障类型列表模型
 class TypeListModel {
   TypeListModel({
     this.data,
@@ -279,5 +253,42 @@ class TypeListModel {
   }
 
   TypeListModel clone() => TypeListModel.fromJson(
+      asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
+}
+
+//工程师列表模型
+class OpUserListModel{
+  OpUserListModel({
+    this.id,
+    this.name,
+    this.phone,
+    this.email,
+  });
+
+  factory OpUserListModel.fromJson(Map<String, dynamic> jsonRes) =>
+      OpUserListModel(
+        id: asT<String?>(jsonRes['id']),
+        name: asT<String?>(jsonRes['name']),
+        phone: asT<String?>(jsonRes['phone']),
+        email: asT<String?>(jsonRes['email']),
+      );
+  String? id;
+  String? name;
+  String? phone;
+  String? email;
+
+  @override
+  String toString() {
+    return jsonEncode(this);
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'id': id,
+    'name': name,
+    'phone': phone,
+    'email': email,
+  };
+
+  OpUserListModel clone() => OpUserListModel.fromJson(
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }

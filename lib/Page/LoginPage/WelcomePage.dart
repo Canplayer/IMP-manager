@@ -3,7 +3,7 @@ import 'package:hnszlyyimp/Page/ClientPage/ClientPage.dart';
 import 'package:hnszlyyimp/model.dart';
 
 import '../../client.dart';
-import '../ITCenterPage.dart';
+import '../ITCenterPage/ITCenterPage.dart';
 import '../ITUserPage/ITUserPage.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -44,8 +44,8 @@ class WelcomePage extends StatelessWidget {
                     children: <Widget>[
                       const ListTile(
                         leading: Icon(Icons.work_outline),
-                        title: Text('【还没做！】我是IT服务台'),
-                        subtitle: Text('【还没做！】面向信息总台的选项'),
+                        title: Text('我是IT服务台'),
+                        subtitle: Text('面向信息总台的选项'),
                       ),
                     ],
                   ),

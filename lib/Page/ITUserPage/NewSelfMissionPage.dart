@@ -50,7 +50,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
             content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset('res/logoAnim.json',
+            Lottie.asset('res/doneAnim.json',
                 width: 100, height: 100, repeat: false),
             Text("操作成功~"),
           ],

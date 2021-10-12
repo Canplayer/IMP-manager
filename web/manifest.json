@@ -1,11 +1,11 @@
 {
-    "name": "hnszlyyimp",
-    "short_name": "hnszlyyimp",
+    "name": "IMP信息后勤",
+    "short_name": "IMP信息后勤",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "description": "海南省肿瘤医院信息后勤管理系统",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

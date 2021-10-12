@@ -44,7 +44,7 @@ app.all('*', function (req, res, next) {
   next();
 });
 
-//---------------------------------------
+//-------------------------------------用户资料操作逻辑-----------------------------------------
 //登陆
 app.post("/login", async (req, res) => {
   const { username, passwd } = req.body
@@ -128,7 +128,16 @@ async function register(id, username, department, phone, email, passwd) {
   let result = await parseStringPromise(result_str)
   return result
 }
-//---------------------------------------
+
+
+
+
+
+
+
+
+
+//------------------------------------工程师自定义任务------------------------------------------
 
 //获取自由录入数据
 app.get("/iTUserSelfMission", async (req, res) => {
@@ -288,7 +297,7 @@ async function read_redisITUserMission(id) {
 
 
 
-//---------------------------------------
+//---------------------------------------全局变量---------------------------------------
 
 //获取可选业务类型
 app.get("/getTypeList", async (req, res) => {
@@ -312,12 +321,46 @@ app.get("/getTypeList", async (req, res) => {
   })
 })
 
+//获取工程师列表
+app.get("/getEngineerInfo", async (req, res) => {
+  let result = await getEngineerInfo_matchorder()
+  if (result != null) {
+    res.json(result)
+  }
+  else res.end()
+})
 
-//---------------------------------------
+async function getEngineerInfo_matchorder() {
+  let xml2js = require('xml2js');
+  const get = promisify(client.get).bind(client)
+  let stream = await get("ENGINEERINFO")
 
+  return new Promise((res, rej) => {
+    xml2js.parseString(stream, { explicitArray: false }, function (err, json) {
+      if (err) {
+        rej(err)
+      } else {
+        let result = []
+        json.EngineerInfo.Item.forEach(element => {
+          //console.log(element.$);
+          result.push(element.$)
+        })
+        res(result)
+      }
+    })
+  })
+}
+
+
+
+
+
+
+
+//---------------------------------------故障上报---------------------------------------
 
 //客户端上报内容数据获取
-//获取上报录入数据
+//获取上报数据
 app.get("/Client", async (req, res) => {
   const { userId } = req.query
   if (userId == null) {
@@ -329,7 +372,6 @@ app.get("/Client", async (req, res) => {
   let result = await read_redisClient(userId)
   res.json(result)
 })
-
 async function read_redisClient(id) {
   const xRead = promisify(client.xread).bind(client)
   let stream1 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDER`, "0-0")
@@ -393,7 +435,6 @@ async function read_redisClient(id) {
 }
 
 //故障报修上传
-
 app.post("/Client", uploads.single("file"), async (req, res) => {
   console.log('有新的美团外卖订单');
   let { info } = req.body
@@ -454,9 +495,6 @@ async function add_fault_order(data, file) {
           })
         }
 
-
-
-
       }
     })
   })
@@ -488,8 +526,6 @@ async function add_fault_order(data, file) {
 
 }
 
-
-
 //获取上报图片
 app.get("/ClientPic", async (req, res) => {
   const { id } = req.query
@@ -500,7 +536,7 @@ app.get("/ClientPic", async (req, res) => {
     return
   }
   let result = await clientPicQueryDataIn(id)
-  if(result != null)res.end(result.toString('binary'), 'binary')
+  if (result != null) res.end(result.toString('binary'), 'binary')
   else res.end()
 })
 /**
@@ -522,20 +558,66 @@ async function clientPicRead_matchorder(id) {
 
   let image_key = `${id}_Img_Rep`
 
-      const get = promisify(client.get).bind(client)
-      let stream = await get(image_key)
-      
-      var result
-      if (stream) {
-        result = new Buffer.from(stream, 'base64')
-      }
-      return result
+  const get = promisify(client.get).bind(client)
+  let stream = await get(image_key)
+
+  var result
+  if (stream) {
+    result = new Buffer.from(stream, 'base64')
+  }
+  return result
 
 
 }
 
 
-//---------------------------------------
+
+
+
+
+
+//---------------------------------------IT服务台---------------------------------------
+app.get("/ITClient", async (req, res) => {
+  const { type } = req.query
+  if (type == null) {
+    res.json({
+      "result": "failed"
+    })
+    return
+  }
+  let result = await read_redisITClient(type)
+  res.json(result)
+})
+async function read_redisITClient(type) {
+  const xRead = promisify(client.xread).bind(client)
+  let result = []
+  let stream1 = await xRead("COUNT", 100, "STREAMS", type, "0-0")
+  if (stream1) {
+    // let stream_name = stream[0][0]
+    let stream_data = stream1[0][1]
+    for (stream_item of stream_data) {
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      result.push(item_json)
+    }
+  }
+
+  return result
+}
+
+
+
+
+
+
+
+
+
+
+//---------------------------------------没啥用增强体验的额外业务---------------------------------------
 //获取图片
 app.get("/GetPic", async (req, res) => {
   //res.sendFile('background.jpg' ,{ root: __dirname })
@@ -565,8 +647,6 @@ app.get("/GetPic", async (req, res) => {
 
 app.listen(8081)
 console.log('服务器开始运作');
-
-
 
 const web = express()
 const path = require('path')

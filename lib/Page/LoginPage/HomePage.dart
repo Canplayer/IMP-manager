@@ -33,11 +33,6 @@ class HomePageState extends State<HomePage> {
 
 
 
-  @override
-  void initState() {
-    super.initState();
-    //getBackground().then((value) => _background = value);
-  }
 
 
   @override
@@ -61,7 +56,7 @@ class HomePageState extends State<HomePage> {
                       initialRoute: '/',
                       onGenerateRoute: (RouteSettings settings) {
                         WidgetBuilder builder = (context1) => LoginPage(context);
-                        return CupertinoPageRoute(builder: builder);
+                        return MaterialPageRoute(builder: builder);
                       },
                     ),
                   ),

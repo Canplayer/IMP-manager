@@ -63,6 +63,7 @@ class _NormalUserPageState extends State<NormalUserPage> {
         title: Text(_page),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "555tt",
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
@@ -174,47 +175,15 @@ class MyInfoPage extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '电话号码'),
-                  ),
+                  Text(isLogin!.phone!),
                   SizedBox(
                     height: 20,
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '科室'),
-                  ),
+                  Text(isLogin!.department!),
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('123'),
-                              action: SnackBarAction(
-                                label: '897ad8',
-                                onPressed: (){},
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          '提交',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  Text(isLogin!.id!),
                 ],
               ),
             ),

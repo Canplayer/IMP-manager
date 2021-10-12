@@ -30,7 +30,7 @@ class _MissionListViewState extends State<MissionListView> {
     super.dispose();
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     var a = await getNormalUserMission();
     setState(() {
       myList = a;
@@ -39,11 +39,14 @@ class _MissionListViewState extends State<MissionListView> {
 
   Widget _buildSuggestions() {
     if (myList.length != 0) {
-      return ListView.builder(
-        itemCount: myList.length,
-        itemBuilder: (BuildContext context, int position) {
-          return _buildRow(myList[position]);
-        },
+      return RefreshIndicator(
+        onRefresh: loadData,
+        child: ListView.builder(
+          itemCount: myList.length,
+          itemBuilder: (BuildContext context, int position) {
+            return _buildRow(myList[position]);
+          },
+        ),
       );
     } else {
       return Row(
@@ -68,6 +71,16 @@ class _MissionListViewState extends State<MissionListView> {
                 Image.network(
                   'http://10.10.142.77:8081/ClientPic?id='+pair.id!,
                 ),
+                Text("id："+pair.id!),
+                Text("发起人:"+pair.name!),
+                Text("发起人联系手机:"+pair.phone!),
+                Text("发起日期:"+pair.date!),
+                Text("部门/位置:"+pair.department!),
+                Text("故障类型:"+pair.type!),
+                Text("描述:"+pair.describe!),
+                Text("受理工程师:"+pair.engineer!),
+                Text("解决方案："+pair.solution!),
+                Text("处理进度："+pair.progress!),
               ],
             ),
           ),
@@ -122,45 +135,136 @@ class _MissionListViewState extends State<MissionListView> {
           },
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Container(
+          child: Row(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+          Icon(
+            b,
+            size: 30,
+            color: Colors.green,
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(pair.date!),
-                    Row(
-                      children: [
-                        Text(
-                          pair.type!,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          pair.describe!,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w700),
-                        ),
-                      ],
+                    Icon(Icons.location_on,
+                        size: 15,
+                        color: Color.fromARGB(255, 150, 150, 150)),
+                    Text(pair.department!,
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 150, 150, 150))),
+                    SizedBox(
+                      width: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(pair.solution!),
-                      ],
+                    Icon(Icons.person,
+                        size: 15,
+                        color: Color.fromARGB(255, 150, 150, 150)),
+                    Text(pair.name!,
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 150, 150, 150))),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Icon(
+                      Icons.access_time,
+                      size: 15,
+                      color: Color.fromARGB(255, 150, 150, 150),
+                    ),
+                    Text(pair.date!,
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 150, 150, 150))),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(pair.phone!),
+                    SizedBox(
+                      width: 10,
                     ),
                   ],
                 ),
-                Icon(
-                  b,
-                  size: 40,
-                  color: Colors.black12,
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      pair.type!,
+                      style: TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: Text(
+                        pair.describe!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  children: [
+                    Text(pair.solution!),
+                  ],
                 ),
               ],
             ),
+          ),
+          ],
+        ),
+      ),
+
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Text(pair.date!),
+            //         Row(
+            //           children: [
+            //             Text(
+            //               pair.type!,
+            //               style: TextStyle(
+            //                   fontSize: 17, fontWeight: FontWeight.w700),
+            //             ),
+            //             SizedBox(
+            //               width: 10,
+            //             ),
+            //             Text(
+            //               pair.describe!,
+            //               style: TextStyle(
+            //                   fontSize: 17, fontWeight: FontWeight.w700),
+            //             ),
+            //           ],
+            //         ),
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           children: [
+            //             Text(pair.solution!),
+            //           ],
+            //         ),
+            //       ],
+            //     ),
+            //     Icon(
+            //       b,
+            //       size: 40,
+            //       color: Colors.black12,
+            //     ),
+            //   ],
+            // ),
           ),
         ),
       ),

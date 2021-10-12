@@ -24,8 +24,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "IMP信息后勤",
       home: HomePage(),
-      theme: ThemeData(fontFamily: "SourceHanSans"),
+      theme: ThemeData(primarySwatch: Colors.teal),
+      darkTheme: ThemeData(primarySwatch: Colors.teal),
       localizationsDelegates: [
         //此处
         GlobalMaterialLocalizations.delegate,

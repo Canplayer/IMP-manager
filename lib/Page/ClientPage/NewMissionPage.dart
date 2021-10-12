@@ -68,7 +68,6 @@ class _NewMissionPageState extends State<NewMissionPage> {
     //final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery, maxHeight: 2048);
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-
     setState(() {
       if (result != null) {
         if (kIsWeb == true) {
@@ -76,8 +75,8 @@ class _NewMissionPageState extends State<NewMissionPage> {
           if (file.bytes != null) {
             _image = XFile.fromData(file.bytes!);
           }
-        }
-        else _image = XFile(result.files.single.path!);
+        } else
+          _image = XFile(result.files.single.path!);
       }
     });
   }
@@ -111,7 +110,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
             content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Lottie.asset('res/logoAnim.json',
+            Lottie.asset('res/doneAnim.json',
                 width: 100, height: 100, repeat: false),
             Text("操作成功~"),
           ],
@@ -236,18 +235,18 @@ class _NewMissionPageState extends State<NewMissionPage> {
                         children: [
                           // Platform.isWindows||Platform.isLinux||Platform.isMacOS
                           // (1==1)?
-                          // TextButton(
-                          //   onPressed: () {
-                          //     _openWindowsSSTool();
-                          //   },
-                          //   child: Row(
-                          //     mainAxisSize: MainAxisSize.min,
-                          //     children: [
-                          //       Icon(Icons.airplay_outlined),
-                          //       Text('调用截图程序')
-                          //     ],
-                          //   ),
-                          // ),
+                          TextButton(
+                            onPressed: () {
+                              _openWindowsSSTool();
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.airplay_outlined),
+                                Text('调用截图程序')
+                              ],
+                            ),
+                          ),
                           // :
                           TextButton(
                             onPressed: () {
@@ -282,7 +281,15 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       FloatingActionButton(
                         child: Icon(Icons.done),
                         onPressed: () {
-                          _showMyDialog();
+                          if (_name.text.isNotEmpty &&
+                              _phone.text.isNotEmpty &&
+                              _depart.text.isNotEmpty &&
+                              _problemDescribe.text.isNotEmpty)
+                            _showMyDialog();
+                          else
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                backgroundColor: Colors.indigo,
+                                content: Text("检查一下！好像没有填全")));
                         },
                       ),
                     ],

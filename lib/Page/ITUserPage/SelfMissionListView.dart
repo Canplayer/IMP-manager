@@ -81,7 +81,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                         content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Lottie.asset('res/logoAnim.json',
+                        Lottie.asset('res/doneAnim.json',
                             width: 100, height: 100, repeat: false),
                         Text("操作成功~"),
                       ],
@@ -93,7 +93,7 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                         content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Lottie.asset('res/logoAnim.json',
+                        Lottie.asset('res/doneAnim.json',
                             width: 100, height: 100, repeat: false),
                         Text("操作失败~"),
                       ],
@@ -115,16 +115,16 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
   }
 
   Widget _buildRow(SelfMissionModel pair) {
-    return Container(
-      child: Card(
-        child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
-          onTap: () {},
-          onLongPress: () {
-            _showMyDialog(pair);
-          },
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+    return Card(
+      child: InkWell(
+        splashColor: Colors.blue.withAlpha(30),
+        onTap: () {},
+        onLongPress: () {
+          _showMyDialog(pair);
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          child: Container(
             child: Row(
               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -189,11 +189,14 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            pair.describe!,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w700),
+                          Expanded(
+                            child: Text(
+                              pair.describe!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.w700),
+                            ),
                           ),
                         ],
                       ),
