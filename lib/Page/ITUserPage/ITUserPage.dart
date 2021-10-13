@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:hnszlyyimp/Page/View/EmptyPage.dart';
 
 import 'SelfMissionListView.dart';
 import 'NewSelfMissionPage.dart';
@@ -23,45 +24,53 @@ class _ITUserPageState extends State<ITUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return (orientation == Orientation.portrait)
-            ? page()
-            : CustomMultiChildLayout(
-                delegate: ResponsivePageDelegate(
-                  isMainInRight: false,
-                  mainPanelMaxWidth: 400,
-                  mainPanelMinWidth: 400,
-                  secondaryPanelMaxWidth: double.infinity,
-                  secondaryPanelMinWidth: 0,
-                ),
-                children: [
-                  LayoutId(
-                    id: 1,
-                    child: page(),
+    return Scaffold(
+      body: OrientationBuilder(
+        builder: (BuildContext context, Orientation orientation) {
+          return (orientation == Orientation.portrait)
+              ? page(false)
+              : CustomMultiChildLayout(
+                  delegate: ResponsivePageDelegate(
+                    isMainInRight: false,
+                    mainPanelMaxWidth: 400,
+                    mainPanelMinWidth: 400,
+                    secondaryPanelMaxWidth: double.infinity,
+                    secondaryPanelMinWidth: 0,
                   ),
-                  LayoutId(
-                    id: 2,
-                    child: NewSelfMissionPage(),
-                  ),
-                ],
-              );
-      },
+                  children: [
+                    LayoutId(
+                      id: 1,
+                      child: page(true),
+                    ),
+                    LayoutId(
+                      id: 2,
+                      child: Navigator(
+                        initialRoute: '/',
+                        onGenerateRoute: (RouteSettings settings) {
+                          WidgetBuilder builder = (context1) => NewSelfMissionPage(true);
+                          return MaterialPageRoute(builder: builder);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+        },
+      ),
     );
   }
 
-  Widget page() {
+  Widget page(bool hasChild) {
     return Scaffold(
       appBar: AppBar(
         title: Text(_page),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: hasChild?null:FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) => new NewSelfMissionPage()),
+                builder: (context) => new NewSelfMissionPage(false)),
           ).then((value) => {if (value == "refresh") setState(() {})});
         },
       ),

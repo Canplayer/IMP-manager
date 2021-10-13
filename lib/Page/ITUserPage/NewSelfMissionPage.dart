@@ -8,7 +8,8 @@ import 'package:lottie/lottie.dart';
 import '../../client.dart';
 
 class NewSelfMissionPage extends StatefulWidget {
-  const NewSelfMissionPage({Key? key}) : super(key: key);
+  final bool isChild;
+  const NewSelfMissionPage(this.isChild,{Key? key}) : super(key: key);
 
   @override
   _NewSelfMissionPageState createState() => _NewSelfMissionPageState();
@@ -42,9 +43,21 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
         _time.text,
         selectTimeUnit);
     a.then((value) {
-      Navigator.of(context).pop();
+      Navigator.of(context, rootNavigator: true).pop();
       if (value == 1) {
-        Navigator.of(context).pop("refresh");
+        if(widget.isChild){
+          setState(() {
+            _name.text="";
+            _phone.text="";
+            _depart.text="";
+            _problemDescribe.text="";
+            _solution.text="";
+            _time.text="";
+            selectedDate = DateTime.now();
+            selectItemValue = '其他';
+            selectTimeUnit = '时';
+          });
+        }else Navigator.of(context).pop();
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Column(
@@ -132,7 +145,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('新建任务')),
+      appBar: widget.isChild?null:AppBar(title: Text('新建任务')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
