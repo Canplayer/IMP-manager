@@ -60,15 +60,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
   }
 
   Future<void> _showMyDialog(MissionModel pair) async {
-    String selectItemValue = '超级管理员';
-    List<DropdownMenuItem<String>> items = [];
     var b = await getOPList();
-    b.forEach((element) {
-      items.add(DropdownMenuItem(
-        child: Text(element.name!),
-        value: element.name!,
-      ));
-    });
 
     return showDialog<void>(
       context: context,
@@ -92,23 +84,54 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                 Text("受理工程师:" + pair.engineer!),
                 Text("解决方案：" + pair.solution!),
                 Text("处理进度：" + pair.progress!),
-                DropdownButton<String>(
-                  value: selectItemValue,
-                  isExpanded: true,
-                  disabledHint: Text('暂不可用'),
-                  items: items,
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectItemValue = value!;
-                    });
-                  },
+
+                Wrap(
+                  children: List<Widget>.generate(b.length, (index) =>
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: ChoiceChip(
+                          label: Text(b[index].name! ),
+                          selected: pair.engineer==b[index].name!,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              //_value = selected ? index : null;
+                            });
+                          },
+                        ),
+                      ),
+
+                  ),
                 ),
+
+
+                // DropdownButton<String>(
+                //   isDense:true,
+                //   value: selectItemValue,
+                //   isExpanded: true,
+                //   disabledHint: Text('暂不可用'),
+                //   items: items,
+                //   onChanged: (String? value) {
+                //     setState(() {
+                //       selectItemValue = value!;
+                //       Navigator.of(context, rootNavigator: true).pop();
+                //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //           content: Column(
+                //             mainAxisSize: MainAxisSize.min,
+                //             children: [
+                //               Lottie.asset('res/doneAnim.json',
+                //                   width: 100, height: 100, repeat: false),
+                //               Text("已经将问题转交给："+selectItemValue),
+                //             ],
+                //           )));
+                //     });
+                //   },
+                // ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('好'),
+              child: Text('关闭'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -241,6 +264,9 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                             Text(pair.solution!,
                                 maxLines: 4, overflow: TextOverflow.ellipsis),
                           ],
+                        ),
+                        Image.network(
+                          'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
                         ),
                       ],
                     ),

@@ -1,12 +1,7 @@
 import 'dart:ui';
 
-import 'package:cross_file/cross_file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
-import 'package:hnszlyyimp/Page/LoginPage/WelcomePage.dart';
-import 'package:hnszlyyimp/client.dart';
-import 'package:lottie/lottie.dart';
 
 import 'LoginPage.dart';
 
@@ -20,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  static const String _title = '登录页面';
 
   // @override
   // void initState() {

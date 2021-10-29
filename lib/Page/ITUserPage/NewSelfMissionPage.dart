@@ -52,10 +52,10 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
             _depart.text="";
             _problemDescribe.text="";
             _solution.text="";
-            _time.text="";
-            selectedDate = DateTime.now();
+            //_time.text="";
+            //selectedDate = DateTime.now();
             selectItemValue = '其他';
-            selectTimeUnit = '时';
+            //selectTimeUnit = '时';
           });
         }else Navigator.of(context).pop();
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -254,7 +254,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                             child: TextField(
                               controller: _time,
                               inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
+                                FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                               ],
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),

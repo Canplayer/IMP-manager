@@ -174,7 +174,7 @@ async function queryDataIn(id) {
 async function read_matchorder(id) {
   const xRead = promisify(client.xread).bind(client)
   const xDel = promisify(client.xdel).bind(client)
-  let stream = await xRead("COUNT", 100, "STREAMS", `${id}_MATCHORDER`, "0-0")
+  let stream = await xRead("COUNT", 1000, "STREAMS", `${id}_MATCHORDER`, "0-0")
   let result = []
   if (stream) {
     // let stream_name = stream[0][0]
@@ -182,6 +182,7 @@ async function read_matchorder(id) {
     for (stream_item of stream_data) {
       let item_id = stream_item[0]
       let count = await xDel(`${id}_MATCHORDER`, item_id)
+
       let item_data = stream_item[1]
       let item_json = {}
       for (let i = 0; i < item_data.length; i += 2) {
@@ -276,7 +277,7 @@ app.get("/iTUserMission", async (req, res) => {
 })
 async function read_redisITUserMission(id) {
   const xRead = promisify(client.xread).bind(client)
-  let stream = await xRead("COUNT", 100, "STREAMS", `OPFAULTORDER`, "0-0")
+  let stream = await xRead("COUNT", 1000, "STREAMS", `OPFAULTORDER`, "0-0")
   let result = []
   if (stream) {
     // let stream_name = stream[0][0]
@@ -374,10 +375,10 @@ app.get("/Client", async (req, res) => {
 })
 async function read_redisClient(id) {
   const xRead = promisify(client.xread).bind(client)
-  let stream1 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDER`, "0-0")
-  let stream2 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDERDONE`, "0-0")
-  let stream3 = await xRead("COUNT", 100, "STREAMS", `SDFAULTORDERHANDLED`, "0-0")
-  let stream4 = await xRead("COUNT", 100, "STREAMS", `OPFAULTORDER`, "0-0")
+  let stream1 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDER`, "0-0")
+  let stream2 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDERDONE`, "0-0")
+  let stream3 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDERHANDLED`, "0-0")
+  let stream4 = await xRead("COUNT", 1000, "STREAMS", `OPFAULTORDER`, "0-0")
   let result = []
   if (stream1) {
     // let stream_name = stream[0][0]
@@ -591,7 +592,7 @@ app.get("/ITClient", async (req, res) => {
 async function read_redisITClient(type) {
   const xRead = promisify(client.xread).bind(client)
   let result = []
-  let stream1 = await xRead("COUNT", 100, "STREAMS", type, "0-0")
+  let stream1 = await xRead("COUNT", 1000, "STREAMS", type, "0-0")
   if (stream1) {
     // let stream_name = stream[0][0]
     let stream_data = stream1[0][1]

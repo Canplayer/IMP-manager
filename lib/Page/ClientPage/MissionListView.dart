@@ -219,6 +219,9 @@ class _MissionListViewState extends State<MissionListView> {
                     Text(pair.solution!),
                   ],
                 ),
+                Image.network(
+                  'http://10.10.142.77:8081/ClientPic?id='+pair.id!,
+                ),
               ],
             ),
           ),

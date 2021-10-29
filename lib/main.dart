@@ -4,19 +4,17 @@
 
 import 'dart:io';
 
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hnszlyyimp/Page/LoginPage/HomePage.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(App());
   SystemChrome.setSystemUIOverlayStyle(my);
   WidgetsFlutterBinding.ensureInitialized();
-  Acrylic.initialize();
-  DesktopWindowFunctions();
+  //Acrylic.initialize();
+  //DesktopWindowFunctions();
 }
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -49,16 +47,16 @@ const SystemUiOverlayStyle my = SystemUiOverlayStyle(
   statusBarIconBrightness: Brightness.dark,
   statusBarBrightness: Brightness.light,
 );
-Future DesktopWindowFunctions() async{
-  if (Platform.isWindows) {
-    doWhenWindowReady(() {
-      final win = appWindow;
-      final initialSize = Size(1024, 800);
-      win.minSize = Size(640, 640);
-      win.size = initialSize;
-      win.alignment = Alignment.center;
-      win.title = "Custom window with Flutter";
-      win.show();
-    });
-  }
-}
+// Future DesktopWindowFunctions() async{
+//   if (Platform.isWindows) {
+//     doWhenWindowReady(() {
+//       final win = appWindow;
+//       final initialSize = Size(1024, 800);
+//       win.minSize = Size(640, 640);
+//       win.size = initialSize;
+//       win.alignment = Alignment.center;
+//       win.title = "Custom window with Flutter";
+//       win.show();
+//     });
+//   }
+// }
