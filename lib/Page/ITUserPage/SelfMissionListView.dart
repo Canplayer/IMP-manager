@@ -170,7 +170,14 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(pair.phone!),
+                          Icon(
+                            Icons.phone,
+                            size: 15,
+                            color: Color.fromARGB(255, 150, 150, 150),
+                          ),
+                          Text(pair.phone!,
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 150, 150, 150))),
                           SizedBox(
                             width: 10,
                           ),
