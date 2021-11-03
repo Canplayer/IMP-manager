@@ -93,9 +93,11 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                           label: Text(b[index].name! ),
                           selected: pair.engineer==b[index].name!,
                           onSelected: (bool selected) {
-                            setState(() {
-                              //_value = selected ? index : null;
-                            });
+                            // setState(() {
+                            //   //_value = selected ? index : null;
+                            // });
+                            Navigator.of(context).pop();
+                            setITCenterMissionO2OP(pair.id!,b[index].id!);
                           },
                         ),
                       ),

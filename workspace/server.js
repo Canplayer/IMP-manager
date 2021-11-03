@@ -8,7 +8,6 @@ const time = require("silly-datetime")
 const axios = require("axios")
 
 
-
 //const serverUrl = "10.10.142.81"  //测试服务器
 const serverUrl = "10.10.170.191"  //正式服务器
 const port = "5566"
@@ -34,13 +33,13 @@ client.on('error', function (err) {
 });
 
 
-
-
+//外域访问
 app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'PUT,GET,POST,DELETE,OPTIONS');
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  console.log("ip = " + req.ip);
   next();
 });
 
@@ -48,13 +47,13 @@ app.all('*', function (req, res, next) {
 //登陆
 app.post("/login", async (req, res) => {
   const { username, passwd } = req.body
+  console.log('用户' + username + '尝试登录' + passwd);
   if (!username || !passwd) {
     res.json({
       "result": "Failed"
     })
     return
   }
-  console.log('用户' + username + '尝试登录');
   let result = await login(username, passwd)
   console.log(result);
   if (result["SOAP"]["MSGTYPE"][0] === "000002" && result["SOAP"]["LOGINREPLY"][0] === "1") {
@@ -88,7 +87,7 @@ async function login(userid, passwd) {
 //注册
 app.post("/register", async (req, res) => {
   const { id, username, department, phone, email, passwd } = req.body
-  console.log("用户注册：" + id + username);
+  console.log("用户发起注册：" + id + username);
   if (!id || !username || !department || !phone || !email || !passwd) {
     res.json({
       "result": "Failed"
@@ -131,17 +130,12 @@ async function register(id, username, department, phone, email, passwd) {
 
 
 
-
-
-
-
-
-
 //------------------------------------工程师自定义任务------------------------------------------
 
 //获取自由录入数据
 app.get("/iTUserSelfMission", async (req, res) => {
   const { userId } = req.query
+  console.log("用户获取自由录入数据：" + userId);
   if (userId == null) {
     res.json({
       "result": "failed"
@@ -195,9 +189,8 @@ async function read_matchorder(id) {
 }
 //上传自由录入数据
 app.post("/iTUserSelfMission", async (req, res) => {
-  console.log('有人上传新表单');
   const data = req.body
-  console.log(data)
+  console.log('有人上传新表单' + data)
   try {
     let key = await iTUserSelfMissionDataIn(data)
     res.json({
@@ -266,6 +259,7 @@ async function deliTUserSelfMission(msgID) {
 //获取上报录入数据
 app.get("/iTUserMission", async (req, res) => {
   const { userId } = req.query
+  console.log("获取上报录入数据：" + userId);
   if (userId == null) {
     res.json({
       "result": "failed"
@@ -302,6 +296,7 @@ async function read_redisITUserMission(id) {
 
 //获取可选业务类型
 app.get("/getTypeList", async (req, res) => {
+  console.log("获取可选业务类型");
   res.json({
     "Data": [
       "His系统",
@@ -324,6 +319,7 @@ app.get("/getTypeList", async (req, res) => {
 
 //获取工程师列表
 app.get("/getEngineerInfo", async (req, res) => {
+  console.log("获取工程师列表");
   let result = await getEngineerInfo_matchorder()
   if (result != null) {
     res.json(result)
@@ -364,6 +360,7 @@ async function getEngineerInfo_matchorder() {
 //获取上报数据
 app.get("/Client", async (req, res) => {
   const { userId } = req.query
+  console.log("客户端上报数据获取" + userId);
   if (userId == null) {
     res.json({
       "result": "failed"
@@ -457,9 +454,6 @@ app.post("/Client", uploads.single("file"), async (req, res) => {
       "result": "FAILED",
     })
   }
-
-
-
 })
 async function add_fault_order(data, file) {
 
@@ -498,31 +492,6 @@ async function add_fault_order(data, file) {
 
       }
     })
-  })
-
-
-
-
-
-
-  client.sendCommand(`XADD`, args, (err, key) => {
-    if (file != null) {
-      let img = file.toString("base64")
-      console.log("带了一张图片" + img.length);
-
-      let image_key = `${key}_Img_Req`
-      client.set(image_key, img, function (err) {
-        console.error("出了点问题" + err)
-      })
-    }
-
-
-
-    if (err) {
-      rej(err)
-    } else {
-      res(key)
-    }
   })
 
 }
@@ -578,7 +547,9 @@ async function clientPicRead_matchorder(id) {
 
 
 //---------------------------------------IT服务台---------------------------------------
+//获取所有数据
 app.get("/ITClient", async (req, res) => {
+  console.log("IT服务台查询");
   const { type } = req.query
   if (type == null) {
     res.json({
@@ -609,7 +580,96 @@ async function read_redisITClient(type) {
   return result
 }
 
+//将条目从未受理转至工程师受理
+app.post("/ITClient_O2OP", async (req, res) => {
+  let { id, opid } = req.body
+  console.log(id + "任务被分配工程师" + opid)
+  try {
+    let key = await ITClient_O2OP(id, opid)
+    if (key != 0) {
+      res.json({
+        "result": "OK",
+        "key": key
+      })
+    } else {
+      res.json({
+        "result": "FAILED",
+      })
+    }
+  } catch (error) {
+    res.json({
+      "result": "FAILED",
+    })
+  }
+})
+async function ITClient_O2OP(id, opid) {
 
+  let opresult = await getEngineerInfo_matchorder()
+ 
+  let opName,opPhone
+  for(var i = 0;i<opresult.length;i++){
+    if (opresult[i].id==opid){
+      opName = opresult[i].name
+      opPhone = opresult[i].phone
+      break
+    }
+  }
+  if(opName==null||opPhone==null) return 0;
+console.log(opName,opPhone);
+  
+
+
+
+
+  const xRead = promisify(client.xread).bind(client)
+  const xDel = promisify(client.xdel).bind(client)
+  let stream1 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDER`, "0-0")
+  let result
+  if (stream1) {
+    let stream_data = stream1[0][1]
+    for (stream_item of stream_data) {
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      if (item_json["original-streams-id"] != id) continue
+      let item_id = stream_item[0]
+      let count = await xDel(`SDFAULTORDER`, item_id)
+      result = item_json
+    }
+  }
+  if (result == null) return 0;
+
+  result.faultprogress = "已分发"
+  result.engineer = opName
+  result.engineerphone = opPhone
+
+
+  console.log(result);
+
+  let faultorder_name = `OPFAULTORDER`
+  let args = [faultorder_name, "*"]
+
+  Object.keys(result).forEach(key => {
+    args.push(key)
+    args.push(result[key])
+  })
+
+  return new Promise((res, rej) => {
+    client.sendCommand(`XADD`, args, (err, key) => {
+      if (err) {
+        rej(err)
+        console.error("出了点问题1" + err)
+      } else {
+        res(key)
+
+      }
+    })
+  })
+
+
+}
 
 
 

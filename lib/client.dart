@@ -61,6 +61,19 @@ Future<List<MissionModel>> getITCenterMission(String type) async {
   return patrolList.reversed.toList();
 }
 
+//服务台分发工程师数据
+Future<int> setITCenterMissionO2OP(String ID, String opID) async {
+  var loginUrl = url + "ITClient_O2OP";
+
+  var data = {
+    "id": ID,
+    "opid": opID,
+  };
+  response = await dio.post(loginUrl, data: data);
+  print(response!.data.toString());
+
+  return 1;
+}
 
 
 //工程师自定列表
