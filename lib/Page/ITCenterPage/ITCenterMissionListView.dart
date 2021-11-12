@@ -60,6 +60,10 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
   }
 
   Future<void> _showMyDialog(MissionModel pair) async {
+    var ts = TextStyle(
+      fontSize: 13,
+          color: Color.fromARGB(255, 100, 100, 100),
+    );
     var b = await getOPList();
 
     return showDialog<void>(
@@ -68,24 +72,30 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('详细信息'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Image.network(
-                  'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
-                ),
-                Text("id：" + pair.id!),
-                Text("发起人:" + pair.name!),
-                Text("发起人联系手机:" + pair.phone!),
-                Text("发起日期:" + pair.date!),
-                Text("部门/位置:" + pair.department!),
-                Text("故障类型:" + pair.type!),
-                Text("描述:" + pair.describe!),
-                Text("受理工程师:" + pair.engineer!),
-                Text("解决方案：" + pair.solution!),
-                Text("处理进度：" + pair.progress!),
+          content: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Image.network(
+                      'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                    ),
+                    Text("id：" + pair.id!,style: ts,),
+                    Text("发起人:" + pair.name!,style: ts,),
+                    Text("发起人联系手机:" + pair.phone!,style: ts,),
+                    Text("发起日期:" + pair.date!,style: ts,),
+                    Text("部门/位置:" + pair.department!,style: ts,),
+                    Text("故障类型:" + pair.type!,style: ts,),
+                    Text("描述:" + pair.describe!,style: ts,),
+                    Text("受理工程师:" + pair.engineer!,style: ts,),
+                    Text("解决方案：" + pair.solution!,style: ts,),
+                    Text("处理进度：" + pair.progress!,style: ts,),
 
-                Wrap(
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Wrap(
                   children: List<Widget>.generate(b.length, (index) =>
                       Padding(
                         padding: const EdgeInsets.all(4),
@@ -104,32 +114,8 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
 
                   ),
                 ),
-
-
-                // DropdownButton<String>(
-                //   isDense:true,
-                //   value: selectItemValue,
-                //   isExpanded: true,
-                //   disabledHint: Text('暂不可用'),
-                //   items: items,
-                //   onChanged: (String? value) {
-                //     setState(() {
-                //       selectItemValue = value!;
-                //       Navigator.of(context, rootNavigator: true).pop();
-                //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //           content: Column(
-                //             mainAxisSize: MainAxisSize.min,
-                //             children: [
-                //               Lottie.asset('res/doneAnim.json',
-                //                   width: 100, height: 100, repeat: false),
-                //               Text("已经将问题转交给："+selectItemValue),
-                //             ],
-                //           )));
-                //     });
-                //   },
-                // ),
-              ],
-            ),
+              ),
+            ],
           ),
           actions: <Widget>[
             TextButton(
@@ -228,6 +214,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                             SizedBox(
                               width: 10,
                             ),
+                            if(pair.phone! != "")
                             Icon(
                               Icons.phone,
                               size: 15,

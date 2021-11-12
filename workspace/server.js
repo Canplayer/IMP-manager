@@ -190,7 +190,8 @@ async function read_matchorder(id) {
 //上传自由录入数据
 app.post("/iTUserSelfMission", async (req, res) => {
   const data = req.body
-  console.log('有人上传新表单' + data)
+  console.log('有人上传新表单')
+  console.log(data)
   try {
     let key = await iTUserSelfMissionDataIn(data)
     res.json({

@@ -40,8 +40,10 @@ dependencies:
   file_picker: ^4.0.0
   cross_file: ^0.3.1+4
   image_picker: ^0.8.3+2
-  chat_bubbles: ^1.1.0
+  #chat_bubbles: ^1.1.0
   animations: ^2.0.1
+  flutter_svg: ^0.23.0+1
+  transparent_image: ^2.0.0
 
 dev_dependencies:
   flutter_native_splash: ^1.2.3
@@ -84,6 +86,8 @@ flutter:
     - res/logo.png
     - res/doneAnim.json
     - res/logoAnim.json
+    - res/welcome.svg
+    - res/back_btn.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

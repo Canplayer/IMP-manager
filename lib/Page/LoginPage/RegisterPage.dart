@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../client.dart';
@@ -92,124 +93,135 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text('新用户注册')),
-        body: Container(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.person,
-                    size: 100,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          controller: _titleID,
-                          inputFormatters: <TextInputFormatter>[
-                            //FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(5),
-                          ],
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: '工号'),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _titleName,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: '名字'),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _titleDep,
-                          decoration: InputDecoration(
-                              //errorText: "123123123",
-                              border: OutlineInputBorder(),
-                              labelText: '科室'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          controller: _titlePhone,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: '手机'),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: _titleEmail,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), labelText: '邮箱'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: _titlePass,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '密码'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: _titlePass2,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: '确认密码'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  FloatingActionButton(
-                    child: Icon(Icons.done),
-                    onPressed: () {
-                      if ((_titleID.text.isNotEmpty &&
-                              _titleDep.text.isNotEmpty &&
-                              _titleEmail.text.isNotEmpty &&
-                              _titlePhone.text.isNotEmpty &&
-                              _titlePass.text.isNotEmpty) &&
-                          (_titlePass.text == _titlePass2.text))
-                        _showMyDialog();
-                      else
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: Colors.indigo,
-                            content: Text("检查一下！压根没填好好不好？")));
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: InkWell(
+                    child: SvgPicture.asset("res/back_btn.svg",color: Colors.teal),
+                    onTap: (){
+                      Navigator.of(context).pop();
                     },
                   ),
-                ],
-              ),
+                ),
+                SizedBox(width: 10,),
+                Text("注册",style: TextStyle(fontSize: 50,color: Color.fromARGB(255, 100, 100, 100)),)
+              ],
             ),
-          ),
-        ));
+            SizedBox(
+              height: 40,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: _titleID,
+                    inputFormatters: <TextInputFormatter>[
+                      //FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(5),
+                    ],
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: '工号'),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _titleName,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: '名字'),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _titleDep,
+                    decoration: InputDecoration(
+                      //errorText: "123123123",
+                        border: OutlineInputBorder(),
+                        labelText: '科室'),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: _titlePhone,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: '手机'),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _titleEmail,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: '邮箱'),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: _titlePass,
+              obscureText: true,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), labelText: '密码'),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: _titlePass2,
+              obscureText: true,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), labelText: '确认密码'),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            FloatingActionButton(
+              child: Icon(Icons.done),
+              onPressed: () {
+                if ((_titleID.text.isNotEmpty &&
+                    _titleDep.text.isNotEmpty &&
+                    _titleEmail.text.isNotEmpty &&
+                    _titlePhone.text.isNotEmpty &&
+                    _titlePass.text.isNotEmpty) &&
+                    (_titlePass.text == _titlePass2.text))
+                  _showMyDialog();
+                else
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.indigo,
+                      content: Text("检查一下！压根没填好好不好？")));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
