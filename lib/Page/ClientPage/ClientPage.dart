@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
@@ -73,7 +74,16 @@ class _NormalUserPageState extends State<NormalUserPage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: _tabInfo[currentIndex].widget,
+      body: PageTransitionSwitcher(
+        transitionBuilder: (child, animation, secondaryAnimation) {
+          return FadeThroughTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: _tabInfo[currentIndex!].widget,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           for (final tabInfo in _tabInfo)

@@ -1,10 +1,20 @@
 import 'dart:math';
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/View/EmptyPage.dart';
 
 import 'SelfMissionListView.dart';
 import 'NewSelfMissionPage.dart';
+
+class _TabInfo {
+  const _TabInfo(this.title, this.icon, this.color, this.widget);
+
+  final String title;
+  final IconData icon;
+  final Widget widget;
+  final Color color;
+}
 
 class ITUserPage extends StatefulWidget {
   const ITUserPage({Key? key}) : super(key: key);
@@ -24,56 +34,122 @@ class _ITUserPageState extends State<ITUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: OrientationBuilder(
-        builder: (BuildContext context, Orientation orientation) {
-          return (orientation == Orientation.portrait)
-              ? page(false)
-              : CustomMultiChildLayout(
-                  delegate: ResponsivePageDelegate(
-                    isMainInRight: false,
-                    mainPanelMaxWidth: 400,
-                    mainPanelMinWidth: 400,
-                    secondaryPanelMaxWidth: double.infinity,
-                    secondaryPanelMinWidth: 0,
-                  ),
-                  children: [
-                    LayoutId(
-                      id: 1,
-                      child: page(true),
-                    ),
-                    LayoutId(
-                      id: 2,
-                      child: Navigator(
-                        initialRoute: '/',
-                        onGenerateRoute: (RouteSettings settings) {
-                          WidgetBuilder builder = (context1) => NewSelfMissionPage(true);
-                          return MaterialPageRoute(builder: builder);
-                        },
+    final _tabInfo = [
+      _TabInfo(
+        '任务',
+        Icons.list,
+        Colors.blue,
+        Center(
+            child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.do_not_disturb_on,
+              color: Colors.red,
+              size: 80,
+            ),
+            Text(
+              "这个界面正在施工\n要录数据请点击“自录数据”选项卡\nこのインターフェースは工事中です。\nThis interface is under construction",
+              textAlign: TextAlign.center,
+            ),
+          ],
+        )),
+      ),
+      _TabInfo(
+        '自录数据',
+        Icons.addchart_outlined,
+        Colors.blue,
+        Scaffold(
+          body: OrientationBuilder(
+            builder: (BuildContext context, Orientation orientation) {
+              return (orientation == Orientation.portrait)
+                  ? page(false)
+                  : CustomMultiChildLayout(
+                      delegate: ResponsivePageDelegate(
+                        isMainInRight: false,
+                        mainPanelMaxWidth: 400,
+                        mainPanelMinWidth: 400,
+                        secondaryPanelMaxWidth: double.infinity,
+                        secondaryPanelMinWidth: 0,
                       ),
-                    ),
-                  ],
-                );
+                      children: [
+                        LayoutId(
+                          id: 1,
+                          child: page(true),
+                        ),
+                        LayoutId(
+                          id: 2,
+                          child: Navigator(
+                            initialRoute: '/',
+                            onGenerateRoute: (RouteSettings settings) {
+                              WidgetBuilder builder =
+                                  (context1) => NewSelfMissionPage(true);
+                              return MaterialPageRoute(builder: builder);
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+            },
+          ),
+        ),
+      ),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_page),
+      ),
+      body: PageTransitionSwitcher(
+        transitionBuilder: (child, animation, secondaryAnimation) {
+          return SharedAxisTransition(
+            child: child,
+            animation: animation,
+            transitionType: SharedAxisTransitionType.vertical,
+            secondaryAnimation: secondaryAnimation,
+          );
+        },
+        child: _tabInfo[currentIndex!].widget,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          for (final tabInfo in _tabInfo)
+            BottomNavigationBarItem(
+                icon: Icon(tabInfo.icon),
+                label: tabInfo.title,
+                backgroundColor: tabInfo.color)
+        ],
+        //type: BottomNavigationBarType.shifting,
+        currentIndex: currentIndex,
+        onTap: (index) {
+          _changePage(index);
         },
       ),
     );
   }
 
+  void _changePage(int index) {
+    if (index != currentIndex) {
+      setState(() {
+        currentIndex = index;
+      });
+    }
+  }
+
   Widget page(bool hasChild) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_page),
-      ),
-      floatingActionButton: hasChild?null:FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            new MaterialPageRoute(
-                builder: (context) => new NewSelfMissionPage(false)),
-          ).then((value) => {if (value == "refresh") setState(() {})});
-        },
-      ),
+      floatingActionButton: hasChild
+          ? null
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new NewSelfMissionPage(false)),
+                ).then((value) => {if (value == "refresh") setState(() {})});
+              },
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Center(
         child: Padding(
