@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../client.dart';
@@ -38,13 +39,67 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
   }
 
   Widget _buildSuggestions() {
+    int thisWeekAccount = 0;
     if (myList.length != 0) {
+      for (int i = 0; myList[i].isThisWeek; i++) {
+        thisWeekAccount++;
+      }
       return RefreshIndicator(
         onRefresh: loadData,
         child: ListView.builder(
-          itemCount: myList.length,
+          itemCount: myList.length + 2,
           itemBuilder: (BuildContext context, int position) {
-            return _buildRow(myList[position]);
+            if (position == 0) return Container(
+                color: Color.fromARGB(255, 0, 176, 159),
+                height: 120,
+                padding: EdgeInsets.fromLTRB(20, 10, 00, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "本周已录 ",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        Text(
+                          thisWeekAccount.toString(),
+                          style: TextStyle(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        Text(
+                          " 条数据",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        SizedBox(width: 30,),
+                        SvgPicture.asset(
+                          "res/img_working.svg",
+                          fit: BoxFit.fill,
+                          height: 110,
+                        )
+                      ],
+                    ),
+
+                  ],
+                ),
+              );
+            if (position == myList.length + 1) return Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Text("此处最多展示一个月的数据: "+myList.length.toString(),style: TextStyle(fontSize: 12,color: Colors.black54),),
+            );
+            return _buildRow(myList[position - 1]);
           },
         ),
       );
@@ -115,110 +170,118 @@ class _SelfMissionListViewState extends State<SelfMissionListView> {
   }
 
   Widget _buildRow(SelfMissionModel pair) {
-    return Card(
-      child: InkWell(
-        splashColor: Colors.blue.withAlpha(30),
-        onTap: () {},
-        onLongPress: () {
-          _showMyDialog(pair);
-        },
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: Container(
-            child: Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  Icons.done,
-                  size: 30,
-                  color: Colors.green,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.location_on,
-                              size: 15,
-                              color: Color.fromARGB(255, 150, 150, 150)),
-                          Text(pair.department!,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 150, 150, 150))),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(Icons.person,
-                              size: 15,
-                              color: Color.fromARGB(255, 150, 150, 150)),
-                          Text(pair.name!,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 150, 150, 150))),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
-                            Icons.access_time,
-                            size: 15,
-                            color: Color.fromARGB(255, 150, 150, 150),
-                          ),
-                          Text(pair.date!,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 150, 150, 150))),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          if(pair.phone!.length != 0)Icon(
-                            Icons.phone,
-                            size: 15,
-                            color: Color.fromARGB(255, 150, 150, 150),
-                          ),
-                          Text(pair.phone!,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 150, 150, 150))),
-                          SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            pair.type!,
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: Text(
-                              pair.describe!,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(pair.solution!),
-                        ],
-                      ),
-                    ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200),
+        child: Card(
+          color: pair.isThisWeek! ? Colors.white : Colors.white70,
+          child: InkWell(
+            splashColor: Colors.redAccent.withAlpha(255),
+            onTap: () {},
+            onLongPress: () {
+              _showMyDialog(pair);
+            },
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.done,
+                    size: 30,
+                    color: Colors.green,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.location_on,
+                                size: 12,
+                                color: Color.fromARGB(255, 150, 150, 150)),
+                            Text(pair.department!,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromARGB(255, 150, 150, 150))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(Icons.person,
+                                size: 12,
+                                color: Color.fromARGB(255, 150, 150, 150)),
+                            Text(pair.name!,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromARGB(255, 150, 150, 150))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.access_time,
+                              size: 12,
+                              color: Color.fromARGB(255, 150, 150, 150),
+                            ),
+                            Text(pair.date!,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromARGB(255, 150, 150, 150))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            if (pair.phone!.length != 0)
+                              Icon(
+                                Icons.phone,
+                                size: 15,
+                                color: Color.fromARGB(255, 150, 150, 150),
+                              ),
+                            Text(pair.phone!,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromARGB(255, 150, 150, 150))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              pair.type!,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w700),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Text(
+                                pair.describe!,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              pair.solution!,
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

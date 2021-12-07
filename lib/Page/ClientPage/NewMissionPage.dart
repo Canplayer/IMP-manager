@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:hnszlyyimp/model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,7 +15,8 @@ import 'package:cross_file/cross_file.dart';
 import '../../client.dart';
 
 class NewMissionPage extends StatefulWidget {
-  const NewMissionPage({Key? key}) : super(key: key);
+  LoginResModel loginContext;
+  NewMissionPage(this.loginContext, {Key? key}) : super(key: key);
 
   @override
   _NewMissionPageState createState() => _NewMissionPageState();
@@ -31,6 +33,9 @@ class _NewMissionPageState extends State<NewMissionPage> {
 
   @override
   void initState() {
+    _name.text=widget.loginContext.username!;
+    _phone.text=widget.loginContext.phone!;
+    _depart.text=widget.loginContext.department!;
     super.initState();
     loadTypeList();
   }
@@ -152,148 +157,156 @@ class _NewMissionPageState extends State<NewMissionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('新建任务')),
+      appBar: AppBar(title: Text('上报故障')),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: Card(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: _name,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '报障人'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        controller: _phone,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '电话号码'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        controller: _depart,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '科室'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      DropdownButton<String>(
-                        value: selectItemValue,
-                        isExpanded: true,
-                        disabledHint: Text('暂不可用'),
-                        items: typeItems,
-                        onChanged: (String? value) {
-                          print(value);
-                          setState(() {
-                            selectItemValue = value!;
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextField(
-                        controller: _problemDescribe,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: '故障描述'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _image == null
-                          ? SizedBox()
-                          : SizedBox(
-                              height: 200,
-                              child: (kIsWeb == true)
-                                  ? Image.network(
-                                      _image!.path,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(_image!.path),
-                                      fit: BoxFit.cover,
-                                    )),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // Platform.isWindows||Platform.isLinux||Platform.isMacOS
-                          // (1==1)?
-                          TextButton(
-                            onPressed: () {
-                              _openWindowsSSTool();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.airplay_outlined),
-                                Text('调用截图程序')
-                              ],
-                            ),
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 500),
+          child: Card(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _name,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(), labelText: '报障人'),
                           ),
-                          // :
-                          TextButton(
-                            onPressed: () {
-                              _getImageFromCamera();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.camera_enhance_outlined),
-                                Text('拍照')
-                              ],
-                            ),
+                        ),
+
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _phone,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(), labelText: '电话号码'),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              //(Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
-                              _getImageFromGallery();
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.photo_library_outlined),
-                                Text('相册')
-                              ],
-                            ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextField(
+                      controller: _depart,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), labelText: '科室/位置'),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    DropdownButton<String>(
+                      value: selectItemValue,
+                      isExpanded: true,
+                      disabledHint: Text('暂不可用'),
+                      items: typeItems,
+                      onChanged: (String? value) {
+                        print(value);
+                        setState(() {
+                          selectItemValue = value!;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextField(
+                      controller: _problemDescribe,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(), labelText: '故障描述'),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _image == null
+                        ? SizedBox()
+                        : SizedBox(
+                            height: 200,
+                            child: (kIsWeb == true)
+                                ? Image.network(
+                                    _image!.path,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(_image!.path),
+                                    fit: BoxFit.cover,
+                                  )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Platform.isWindows||Platform.isLinux||Platform.isMacOS
+                        // (1==1)?
+                        TextButton(
+                          onPressed: () {
+                            _openWindowsSSTool();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.airplay_outlined),
+                              Text('调用截图程序')
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FloatingActionButton(
-                        child: Icon(Icons.done),
-                        onPressed: () {
-                          if (_name.text.isNotEmpty &&
-                              _phone.text.isNotEmpty &&
-                              _depart.text.isNotEmpty &&
-                              _problemDescribe.text.isNotEmpty)
-                            _showMyDialog();
-                          else
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                backgroundColor: Colors.indigo,
-                                content: Text("检查一下！好像没有填全")));
-                        },
-                      ),
-                    ],
-                  ),
+                        ),
+                        // :
+                        TextButton(
+                          onPressed: () {
+                            _getImageFromCamera();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.camera_enhance_outlined),
+                              Text('拍照')
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            //(Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
+                            _getImageFromGallery();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.photo_library_outlined),
+                              Text('相册')
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    FloatingActionButton(
+                      child: Icon(Icons.done),
+                      heroTag: "555tt",
+                      onPressed: () {
+                        if (_name.text.isNotEmpty &&
+                            _phone.text.isNotEmpty &&
+                            _depart.text.isNotEmpty &&
+                            _problemDescribe.text.isNotEmpty)
+                          _showMyDialog();
+                        else
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.indigo,
+                              content: Text("检查一下！好像没有填全")));
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),

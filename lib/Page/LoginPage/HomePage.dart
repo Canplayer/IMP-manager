@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
               child: Container(
                 child: ClipRRect(
                   //背景过滤器
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
                     child: Container(
@@ -55,7 +55,7 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
                           color: Color.fromARGB(30, 0, 0, 0),

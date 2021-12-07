@@ -276,7 +276,7 @@
 
 
     if (userAgent.indexOf("Chrome") != -1) {
-      var arr = navigator.userAgent.split(' ');
+      var arr = userAgent.split(' ');
       var chromeVersion = '';
       for(var i=0;i < arr.length;i++){
         if(/chrome/i.test(arr[i]))

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
@@ -9,7 +10,7 @@ import '../../client.dart';
 
 class NewSelfMissionPage extends StatefulWidget {
   final bool isChild;
-  const NewSelfMissionPage(this.isChild,{Key? key}) : super(key: key);
+  const NewSelfMissionPage(this.isChild, {Key? key}) : super(key: key);
 
   @override
   _NewSelfMissionPageState createState() => _NewSelfMissionPageState();
@@ -31,6 +32,8 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   String selectTimeUnit = '时';
   String time = "0";
 
+  var checkbox = true;
+
   Future<void> _showMyDialog() async {
     Future a = newITUserSelfMission(
         _name.text,
@@ -45,19 +48,21 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
     a.then((value) {
       Navigator.of(context, rootNavigator: true).pop();
       if (value == 1) {
-        if(widget.isChild){
+        if (widget.isChild) {
+          if(checkbox)
           setState(() {
-            _name.text="";
-            _phone.text="";
-            _depart.text="";
-            _problemDescribe.text="";
-            _solution.text="";
+            _name.text = "";
+            _phone.text = "";
+            _depart.text = "";
+            _problemDescribe.text = "";
+            _solution.text = "";
             //_time.text="";
             //selectedDate = DateTime.now();
             selectItemValue = '其他';
             //selectTimeUnit = '时';
           });
-        }else Navigator.of(context).pop();
+        } else
+          if(checkbox)Navigator.of(context).pop();
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Column(
@@ -145,7 +150,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.isChild?null:AppBar(title: Text('新建任务')),
+      appBar: widget.isChild ? null : AppBar(title: Text('新建任务')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -190,7 +195,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                             border: OutlineInputBorder(), labelText: '科室/地点'),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 20,
                       ),
                       Row(
                         children: [
@@ -254,7 +259,8 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                             child: TextField(
                               controller: _time,
                               inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9.]")),
                               ],
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
@@ -282,11 +288,25 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      FloatingActionButton(
-                        child: Icon(Icons.done),
-                        onPressed: () {
-                          _showMyDialog();
-                        },
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                              value: checkbox,
+                              onChanged: (checkboxState) {
+                                setState(() {
+                                  checkbox = checkboxState!;
+                                });
+                              }),
+                          Text("提交时清空页面"),
+                          SizedBox(width: 100,),
+                          FloatingActionButton(
+                            child: Icon(Icons.done),
+                            onPressed: () {
+                              _showMyDialog();
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),

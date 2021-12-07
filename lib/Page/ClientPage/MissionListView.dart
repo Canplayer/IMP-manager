@@ -49,10 +49,11 @@ class _MissionListViewState extends State<MissionListView> {
         ),
       );
     } else {
-      return Row(
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("这里乜都冇啊~"),
-          CircularProgressIndicator(),
+          Icon(Icons.layers_clear,size: 150,color: Colors.black12,),
+          Text("这里乜都冇~\n点击下边的锤子报修",textAlign: TextAlign.center,),
         ],
       );
     }

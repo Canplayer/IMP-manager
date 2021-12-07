@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,45 @@ class _ITUserPageState extends State<ITUserPage> {
   Widget build(BuildContext context) {
     final _tabInfo = [
       _TabInfo(
+        '自录数据',
+        Icons.addchart_outlined,
+        Colors.blue,
+        Container(
+          child: OrientationBuilder(
+            builder: (BuildContext context, Orientation orientation) {
+              return (orientation == Orientation.portrait)
+                  ? page()
+                  : CustomMultiChildLayout(
+                      delegate: ResponsivePageDelegate(
+                        isMainInRight: false,
+                        mainPanelMaxWidth: 400,
+                        mainPanelMinWidth: 400,
+                        secondaryPanelMaxWidth: double.infinity,
+                        secondaryPanelMinWidth: 0,
+                      ),
+                      children: [
+                        LayoutId(
+                          id: 1,
+                          child: page(),
+                        ),
+                        LayoutId(
+                          id: 2,
+                          child: Navigator(
+                            initialRoute: '/',
+                            onGenerateRoute: (RouteSettings settings) {
+                              WidgetBuilder builder =
+                                  (context1) => NewSelfMissionPage(true);
+                              return MaterialPageRoute(builder: builder);
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+            },
+          ),
+        ),
+      ),
+      _TabInfo(
         '任务',
         Icons.list,
         Colors.blue,
@@ -55,77 +95,76 @@ class _ITUserPageState extends State<ITUserPage> {
           ],
         )),
       ),
-      _TabInfo(
-        '自录数据',
-        Icons.addchart_outlined,
-        Colors.blue,
-        Scaffold(
-          body: OrientationBuilder(
-            builder: (BuildContext context, Orientation orientation) {
-              return (orientation == Orientation.portrait)
-                  ? page(false)
-                  : CustomMultiChildLayout(
-                      delegate: ResponsivePageDelegate(
-                        isMainInRight: false,
-                        mainPanelMaxWidth: 400,
-                        mainPanelMinWidth: 400,
-                        secondaryPanelMaxWidth: double.infinity,
-                        secondaryPanelMinWidth: 0,
-                      ),
-                      children: [
-                        LayoutId(
-                          id: 1,
-                          child: page(true),
-                        ),
-                        LayoutId(
-                          id: 2,
-                          child: Navigator(
-                            initialRoute: '/',
-                            onGenerateRoute: (RouteSettings settings) {
-                              WidgetBuilder builder =
-                                  (context1) => NewSelfMissionPage(true);
-                              return MaterialPageRoute(builder: builder);
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-            },
-          ),
-        ),
-      ),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_page),
-      ),
-      body: PageTransitionSwitcher(
-        transitionBuilder: (child, animation, secondaryAnimation) {
-          return SharedAxisTransition(
-            child: child,
-            animation: animation,
-            transitionType: SharedAxisTransitionType.vertical,
-            secondaryAnimation: secondaryAnimation,
-          );
-        },
-        child: _tabInfo[currentIndex!].widget,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          for (final tabInfo in _tabInfo)
-            BottomNavigationBarItem(
-                icon: Icon(tabInfo.icon),
-                label: tabInfo.title,
-                backgroundColor: tabInfo.color)
-        ],
-        //type: BottomNavigationBarType.shifting,
-        currentIndex: currentIndex,
-        onTap: (index) {
-          _changePage(index);
-        },
-      ),
-    );
+    return OrientationBuilder(
+        builder: (BuildContext context, Orientation orientation) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(_page),
+        ),
+        body: Stack(
+          children: [
+            PageTransitionSwitcher(
+              transitionBuilder: (child, animation, secondaryAnimation) {
+                return SharedAxisTransition(
+                  child: child,
+                  animation: animation,
+                  transitionType: SharedAxisTransitionType.vertical,
+                  secondaryAnimation: secondaryAnimation,
+                );
+              },
+              child: _tabInfo[currentIndex].widget,
+            ),
+            Container(
+              alignment: Alignment.bottomLeft,
+              child: ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                  child: Container(
+                    height: 56,
+                    color: Color.fromARGB(100, 255, 255, 255),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        floatingActionButton: (orientation != Orientation.portrait||currentIndex == 1)
+            ? null
+            : FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new NewSelfMissionPage(false)),
+                  ).then((value) => {if (value == "refresh") setState(() {})});
+                },
+              ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          items: [
+            for (final tabInfo in _tabInfo)
+              BottomNavigationBarItem(
+                  icon: Icon(tabInfo.icon),
+                  label: tabInfo.title,
+                  backgroundColor: tabInfo.color)
+          ],
+          //type: BottomNavigationBarType.shifting,
+          currentIndex: currentIndex,
+          onTap: (index) {
+            _changePage(index);
+          },
+        ),
+      );
+    });
   }
 
   void _changePage(int index) {
@@ -136,29 +175,10 @@ class _ITUserPageState extends State<ITUserPage> {
     }
   }
 
-  Widget page(bool hasChild) {
+  Widget page() {
     return Scaffold(
-      floatingActionButton: hasChild
-          ? null
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new NewSelfMissionPage(false)),
-                ).then((value) => {if (value == "refresh") setState(() {})});
-              },
-            ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 500),
-            child: SelfMissionListView(),
-          ),
-        ),
+        child: SelfMissionListView(),
       ),
     );
   }

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:ui';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
@@ -21,6 +23,7 @@ class _TabInfo {
 }
 
 class NormalUserPage extends StatefulWidget {
+
   const NormalUserPage({Key? key}) : super(key: key);
 
   @override
@@ -28,7 +31,7 @@ class NormalUserPage extends StatefulWidget {
 }
 
 class _NormalUserPageState extends State<NormalUserPage> {
-  final String _page = '报障平台';
+  final String _page = '信息处理平台';
   int currentIndex = 0;
 
   @override
@@ -41,8 +44,8 @@ class _NormalUserPageState extends State<NormalUserPage> {
   Widget build(BuildContext context) {
     final _tabInfo = [
       _TabInfo(
-        '列表',
-        Icons.list,
+        '报障',
+        Icons.announcement,
         Colors.blue,
         Center(
             child: Padding(
@@ -65,26 +68,49 @@ class _NormalUserPageState extends State<NormalUserPage> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "555tt",
-        child: Icon(Icons.add),
+        child: Icon(Icons.handyman),
+        //Text("报",style:TextStyle(fontSize: 25,fontWeight: FontWeight.bold) ,),
         onPressed: () {
           Navigator.push(
             context,
-            new MaterialPageRoute(builder: (context) => new NewMissionPage()),
+            new MaterialPageRoute(builder: (context) => new NewMissionPage(isLogin!)),
           );
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: PageTransitionSwitcher(
-        transitionBuilder: (child, animation, secondaryAnimation) {
-          return FadeThroughTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            child: child,
-          );
-        },
-        child: _tabInfo[currentIndex!].widget,
+      body: Stack(
+        children: [
+          PageTransitionSwitcher(
+            transitionBuilder: (child, animation, secondaryAnimation) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
+              );
+            },
+            child: _tabInfo[currentIndex].widget,
+          ),
+          Container(
+            alignment: Alignment.bottomLeft,
+            child: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                child: Container(
+                  height: 56,
+                  color: Color.fromARGB(100, 255, 255, 255),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+
+
+      extendBody: true,
+      //extendBodyBehindAppBar: true,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         items: [
           for (final tabInfo in _tabInfo)
             BottomNavigationBarItem(
