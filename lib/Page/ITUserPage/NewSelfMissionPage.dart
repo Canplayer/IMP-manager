@@ -150,6 +150,7 @@ class _NewSelfMissionPageState extends State<NewSelfMissionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: (widget.isChild)?Colors.white70:null,
       appBar: widget.isChild ? null : AppBar(title: Text('新建任务')),
       body: Center(
         child: Padding(

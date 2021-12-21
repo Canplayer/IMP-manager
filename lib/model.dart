@@ -134,7 +134,7 @@ class SelfMissionModel {
         solution: asT<String?>(jsonRes['solution']),
         isThisWeek: DateTime.now()
                 .subtract(Duration(
-                    days: (DateTime.tuesday)))
+                    days: (DateTime.friday)))
                 .microsecondsSinceEpoch <
             DateTime.parse(asT<String?>(jsonRes['faultdate'])!)
                 .microsecondsSinceEpoch,

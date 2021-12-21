@@ -1,0 +1,7 @@
+/* fallback */
+@font-face {
+  font-family: 'Noto Color Emoji Compat';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/TUZgzxRkpOVJnwykwd_mLYH3Fv9u9SaFlBEYPRbQ.woff2) format('woff2');
+}

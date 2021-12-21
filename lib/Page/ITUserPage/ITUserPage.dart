@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:hnszlyyimp/Page/View/EmptyPage.dart';
+import 'package:hnszlyyimp/Widget/bottom_navigation_bar.dart';
 
 import 'SelfMissionListView.dart';
 import 'NewSelfMissionPage.dart';
@@ -103,32 +103,27 @@ class _ITUserPageState extends State<ITUserPage> {
         appBar: AppBar(
           title: Text(_page),
         ),
-        body: Stack(
-          children: [
-            PageTransitionSwitcher(
-              transitionBuilder: (child, animation, secondaryAnimation) {
-                return SharedAxisTransition(
-                  child: child,
-                  animation: animation,
-                  transitionType: SharedAxisTransitionType.vertical,
-                  secondaryAnimation: secondaryAnimation,
-                );
-              },
-              child: _tabInfo[currentIndex].widget,
-            ),
-            Container(
-              alignment: Alignment.bottomLeft,
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                  child: Container(
-                    height: 56,
-                    color: Color.fromARGB(100, 255, 255, 255),
-                  ),
-                ),
-              ),
-            ),
-          ],
+        body: Container(
+          // decoration: BoxDecoration(
+          //   image: DecorationImage(
+          //     image: new NetworkImage("http://10.10.142.77:8081/GetPic"),
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
+
+
+          child: PageTransitionSwitcher(
+            transitionBuilder: (child, animation, secondaryAnimation) {
+              return SharedAxisTransition(
+                fillColor: Colors.transparent,
+                child: child,
+                animation: animation,
+                transitionType: SharedAxisTransitionType.vertical,
+                secondaryAnimation: secondaryAnimation,
+              );
+            },
+            child: _tabInfo[currentIndex].widget,
+          ),
         ),
 
         floatingActionButton: (orientation != Orientation.portrait||currentIndex == 1)
@@ -147,9 +142,7 @@ class _ITUserPageState extends State<ITUserPage> {
 
         extendBody: true,
         extendBodyBehindAppBar: true,
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+        bottomNavigationBar: AeroBottomNavigationBar(
           items: [
             for (final tabInfo in _tabInfo)
               BottomNavigationBarItem(

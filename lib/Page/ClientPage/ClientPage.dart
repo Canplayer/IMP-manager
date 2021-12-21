@@ -8,6 +8,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
+import 'package:hnszlyyimp/Widget/bottom_navigation_bar.dart';
 
 import '../../client.dart';
 import 'NewMissionPage.dart';
@@ -78,39 +79,21 @@ class _NormalUserPageState extends State<NormalUserPage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Stack(
-        children: [
-          PageTransitionSwitcher(
-            transitionBuilder: (child, animation, secondaryAnimation) {
-              return FadeThroughTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              );
-            },
-            child: _tabInfo[currentIndex].widget,
-          ),
-          Container(
-            alignment: Alignment.bottomLeft,
-            child: ClipRRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                child: Container(
-                  height: 56,
-                  color: Color.fromARGB(100, 255, 255, 255),
-                ),
-              ),
-            ),
-          ),
-        ],
+      body: PageTransitionSwitcher(
+        transitionBuilder: (child, animation, secondaryAnimation) {
+          return FadeThroughTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: _tabInfo[currentIndex].widget,
       ),
 
 
       extendBody: true,
       //extendBodyBehindAppBar: true,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+      bottomNavigationBar: AeroBottomNavigationBar(
         items: [
           for (final tabInfo in _tabInfo)
             BottomNavigationBarItem(
