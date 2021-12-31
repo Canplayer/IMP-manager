@@ -132,10 +132,20 @@ class SelfMissionModel {
         type: asT<String?>(jsonRes['faulttype']),
         describe: asT<String?>(jsonRes['problemdescribe']),
         solution: asT<String?>(jsonRes['solution']),
-        isThisWeek: DateTime.now()
-                .subtract(Duration(
-                    days: (DateTime.friday)))
-                .microsecondsSinceEpoch <
+        // isThisWeek: DateTime.now()
+        //         .subtract(Duration(
+        //             days: (DateTime.friday)))
+        //         .microsecondsSinceEpoch <
+        //     DateTime.parse(asT<String?>(jsonRes['faultdate'])!)
+        //         .microsecondsSinceEpoch,
+
+        isThisWeek: ((DateTime.now().weekday <= 5)
+                ? DateTime.now()
+                    .subtract(Duration(days: DateTime.now().weekday + 2))
+                    .microsecondsSinceEpoch
+                : DateTime.now()
+                    .subtract(Duration(days: DateTime.now().weekday - 5))
+                    .microsecondsSinceEpoch) <=
             DateTime.parse(asT<String?>(jsonRes['faultdate'])!)
                 .microsecondsSinceEpoch,
       );
