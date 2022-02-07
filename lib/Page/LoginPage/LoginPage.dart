@@ -102,6 +102,12 @@ class _LoginPageState extends State<LoginPage> {
 //Image.asset('res/logo.png'),
               Lottie.asset('res/logoAnim.json'),
             ),
+            Text("BETA",
+              style: TextStyle(
+                color: Colors.black26,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),),
             SizedBox(
               height: 15,
             ),
