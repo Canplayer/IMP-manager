@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:hnszlyyimp/Widget/bottom_navigation_bar.dart';
+import 'package:hnszlyyimp/Widget/AeroBottomNavigationBar.dart';
 
 import 'SelfMissionListView.dart';
 import 'NewSelfMissionPage.dart';

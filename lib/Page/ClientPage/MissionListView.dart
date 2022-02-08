@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../Widget/PlasticsCard.dart';
 import '../../client.dart';
 import '../../model.dart';
 
@@ -52,8 +54,29 @@ class _MissionListViewState extends State<MissionListView> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.layers_clear,size: 150,color: Colors.black12,),
-          Text("这里乜都冇~\n点击下边的锤子报修",textAlign: TextAlign.center,),
+          //Icon(Icons.layers_clear,size: 150,color: Colors.black12,),
+          SvgPicture.asset(
+            "res/img_engineer.svg",
+            fit: BoxFit.fill,
+            height: 200,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "这里乜都冇",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 80, 80, 80)),
+          ),
+          Text(
+            "点击下方 ↓ 的锤子报修",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 15, color: Color.fromARGB(255, 100, 100, 100)),
+          ),
         ],
       );
     }
@@ -133,166 +156,177 @@ class _MissionListViewState extends State<MissionListView> {
         }
     }
     return Container(
-      child: Card(
+      child: PlasticsCard(
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             _showMyDialog(pair);
           },
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.location_on,
-                          size: 15,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      pair.type!,
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
                           color: Color.fromARGB(255, 150, 150, 150)),
-                      Text(pair.department!,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 150, 150, 150))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(Icons.person,
-                          size: 15,
-                          color: Color.fromARGB(255, 150, 150, 150)),
-                      Text(pair.name!,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 150, 150, 150))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.access_time,
-                        size: 15,
-                        color: Color.fromARGB(255, 150, 150, 150),
-                      ),
-                      Text(pair.date!,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 150, 150, 150))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.phone,
-                        size: 15,
-                        color: Color.fromARGB(255, 150, 150, 150),
-                      ),
-                      Text(pair.phone!,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 150, 150, 150))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        pair.type!,
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Text(
-                          pair.describe!,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      pair.describe!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    //详细小标识
+                    Row(
+                      children: [
+                        Icon(Icons.location_on,
+                            size: 15,
+                            color: Color.fromARGB(255, 150, 150, 150)),
+                        Text(pair.department!,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 150, 150, 150))),
+                        SizedBox(
+                          width: 10,
                         ),
+                        Icon(Icons.person,
+                            size: 15,
+                            color: Color.fromARGB(255, 150, 150, 150)),
+                        Text(pair.name!,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 150, 150, 150))),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.access_time,
+                          size: 15,
+                          color: Color.fromARGB(255, 150, 150, 150),
+                        ),
+                        Text(pair.date!,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 150, 150, 150))),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.phone,
+                          size: 15,
+                          color: Color.fromARGB(255, 150, 150, 150),
+                        ),
+                        Text(pair.phone!,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromARGB(255, 150, 150, 150))),
+                        SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      constraints: BoxConstraints(
+                        maxHeight: 150,
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Container(
-                    constraints: BoxConstraints(
-                      maxHeight: 150,
+                      child: Image.network(
+                        'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                      ),
                     ),
-                    child: Image.network(
-                      'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
+                  ],
+                ),
+
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(pair.date!),
+                //         Row(
+                //           children: [
+                //             Text(
+                //               pair.type!,
+                //               style: TextStyle(
+                //                   fontSize: 17, fontWeight: FontWeight.w700),
+                //             ),
+                //             SizedBox(
+                //               width: 10,
+                //             ),
+                //             Text(
+                //               pair.describe!,
+                //               style: TextStyle(
+                //                   fontSize: 17, fontWeight: FontWeight.w700),
+                //             ),
+                //           ],
+                //         ),
+                //         Row(
+                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //           children: [
+                //             Text(pair.solution!),
+                //           ],
+                //         ),
+                //       ],
+                //     ),
+                //     Icon(
+                //       b,
+                //       size: 40,
+                //       color: Colors.black12,
+                //     ),
+                //   ],
+                // ),
+              ),
+              Container(
+                color: Colors.grey,
+                height: 50,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
                     children: [
                       Icon(
                         b,
                         size: 30,
-                        color: Colors.green,
+                        color: Colors.white,
                       ),
                       SizedBox(
                         width: 10,
                       ),
                       Text(c,
                           style: TextStyle(
-                              color: Color.fromARGB(255, 150, 150, 150))),
+                              color: Colors.white)),
                     ],
                   ),
-                  if (pair.solution! != "")
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(pair.solution!),
-                      ],
-                    ),
-                ],
+                ),
+                //               if (pair.solution! != "")
+                //     Column(
+                //     children: [
+                //     SizedBox(
+                //     height: 4,
+                //   ),
+                //   Text(pair.solution!),
+                //   ],
+                // ),
               ),
-            ),
-
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Text(pair.date!),
-            //         Row(
-            //           children: [
-            //             Text(
-            //               pair.type!,
-            //               style: TextStyle(
-            //                   fontSize: 17, fontWeight: FontWeight.w700),
-            //             ),
-            //             SizedBox(
-            //               width: 10,
-            //             ),
-            //             Text(
-            //               pair.describe!,
-            //               style: TextStyle(
-            //                   fontSize: 17, fontWeight: FontWeight.w700),
-            //             ),
-            //           ],
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //           children: [
-            //             Text(pair.solution!),
-            //           ],
-            //         ),
-            //       ],
-            //     ),
-            //     Icon(
-            //       b,
-            //       size: 40,
-            //       color: Colors.black12,
-            //     ),
-            //   ],
-            // ),
+            ],
           ),
         ),
       ),

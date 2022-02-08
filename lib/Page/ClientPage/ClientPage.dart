@@ -8,7 +8,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Page/View/PList.dart';
-import 'package:hnszlyyimp/Widget/bottom_navigation_bar.dart';
+import 'package:hnszlyyimp/Widget/AeroBottomNavigationBar.dart';
 
 import '../../client.dart';
 import 'NewMissionPage.dart';
@@ -64,9 +64,9 @@ class _NormalUserPageState extends State<NormalUserPage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_page),
-      ),
+      // appBar: AppBar(
+      //   title: Text(_page),
+      // ),
       floatingActionButton: FloatingActionButton(
         heroTag: "555tt",
         child: Icon(Icons.handyman),
@@ -94,6 +94,7 @@ class _NormalUserPageState extends State<NormalUserPage> {
       extendBody: true,
       //extendBodyBehindAppBar: true,
       bottomNavigationBar: AeroBottomNavigationBar(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         items: [
           for (final tabInfo in _tabInfo)
             BottomNavigationBarItem(
