@@ -80,7 +80,12 @@ class PlasticsCard extends StatelessWidget {
             transformAlignment: transformAlignment,
             clipBehavior: clipBehavior,
             color: color,
-            child: child,
+            child: Material(
+              type: MaterialType.card,
+              child: Semantics(
+                child: child,
+              ),
+            ),
 
 
           ),

@@ -10,7 +10,8 @@ const axios = require("axios")
 
 //const serverUrl = "10.10.142.81"  //测试服务器
 const serverUrl = "10.10.170.191"  //正式服务器
-const port = "5566"
+const redisport = "6381"
+const zmqport ="6382"
 
 const app = express()
 app.use(express.json())
@@ -21,7 +22,8 @@ const multer = require('multer')
 var uploads = multer({ storage: multer.memoryStorage() })
 
 const client = redis.createClient({
-  host: serverUrl
+  host: serverUrl,
+  port:redisport
 });
 client.on('error', function (err) {
   if (err) {
@@ -77,7 +79,7 @@ async function login(userid, passwd) {
   let msg = `<?xml version="1.0" encoding="UTF-8"?>
   <SOAP><MSGTYPE>000001</MSGTYPE><ACCOUNT>${userid}</ACCOUNT
   ><PASSWORD>${passwd}</PASSWORD><AUTHORITY>1</AUTHORITY></SOAP>`
-  sock.connect(`tcp://${serverUrl}:${port}`)
+  sock.connect(`tcp://${serverUrl}:${zmqport}`)
   await sock.send(msg)
   let result_str = (await sock.receive()).toString()
   let result = await parseStringPromise(result_str)
@@ -121,7 +123,7 @@ async function register(id, username, department, phone, email, passwd) {
 	<EMAIL>${email}</EMAIL>
   </SOAP>
   `
-  sock.connect(`tcp://${serverUrl}:${port}`)
+  sock.connect(`tcp://${serverUrl}:${zmqport}`)
   await sock.send(msg)
   let result_str = (await sock.receive()).toString()
   let result = await parseStringPromise(result_str)
@@ -159,7 +161,7 @@ async function queryDataIn(id) {
   let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000016</MSGTYPE><ACCOUNT>${id}</ACCOUNT><BEGINDATE>${time.format(t_old, 'YYYY-MM-DD')}</BEGINDATE><ENDDATE>${time.format(t, 'YYYY-MM-DD')}</ENDDATE></SOAP>`
   let sock = new zmq.Request()
 
-  sock.connect(`tcp://${serverUrl}:${port}`)
+  sock.connect(`tcp://${serverUrl}:${zmqport}`)
   await sock.send(msg)
   const result = await sock.receive()
   // TODO: parse xml for result
@@ -248,7 +250,7 @@ async function deliTUserSelfMission(msgID) {
   let msg = `<?xml version="1.0" encoding="UTF-8"?>
   <SOAP><MSGTYPE>000024</MSGTYPE><ORDERID>${msgID}</ORDERID
   ></SOAP>`
-  sock.connect(`tcp://${serverUrl}:${port}`)
+  sock.connect(`tcp://${serverUrl}:${zmqport}`)
   await sock.send(msg)
   let result_str = (await sock.receive()).toString()
   let result = await parseStringPromise(result_str)
@@ -373,10 +375,10 @@ app.get("/Client", async (req, res) => {
 })
 async function read_redisClient(id) {
   const xRead = promisify(client.xread).bind(client)
-  let stream1 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDER`, "0-0")
+  let stream1 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDER`, "0-0") //未处理
   let stream2 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDERDONE`, "0-0")
-  let stream3 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDERHANDLED`, "0-0")
-  let stream4 = await xRead("COUNT", 1000, "STREAMS", `OPFAULTORDER`, "0-0")
+  let stream3 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDERHANDLED`, "0-0")//已给解决方案
+  let stream4 = await xRead("COUNT", 1000, "STREAMS", `OPFAULTORDER`, "0-0")//已处理
   let result = []
   if (stream1) {
     // let stream_name = stream[0][0]
@@ -519,7 +521,7 @@ async function clientPicQueryDataIn(id) {
   let msg = `<?xml version="1.0" encoding="UTF-8"?><SOAP><MSGTYPE>000005</MSGTYPE><ORDERID>${id}</ORDERID></SOAP>`
   let sock = new zmq.Request()
 
-  sock.connect(`tcp://${serverUrl}:${port}`)
+  sock.connect(`tcp://${serverUrl}:${zmqport}`)
   await sock.send(msg)
   const result = await sock.receive()
   // TODO: parse xml for result
@@ -542,7 +544,77 @@ async function clientPicRead_matchorder(id) {
 }
 
 
+//客户觉得很开心要将完成
+app.post("/ITClient_done", async (req, res) => {
+  let { id } = req.body
+  console.log(id + "任务已经结束")
+  try {
+    let key = await ITClient_done(id)
+    if (key != 0) {
+      res.json({
+        "result": "OK",
+        "key": key
+      })
+    } else {
+      res.json({
+        "result": "FAILED",
+      })
+    }
+  } catch (error) {
+    res.json({
+      "result": "FAILED",
+    })
+  }
+})
+async function ITClient_done(id) {
 
+  const xRead = promisify(client.xread).bind(client)
+  const xDel = promisify(client.xdel).bind(client)
+  let stream1 = await xRead("COUNT", 1000, "STREAMS", `SDFAULTORDERHANDLED`, "0-0")
+  let result
+  if (stream1) {
+    let stream_data = stream1[0][1]
+    for (stream_item of stream_data) {
+      let item_data = stream_item[1]
+      let item_json = {}
+      for (let i = 0; i < item_data.length; i += 2) {
+        item_json[item_data[i]] = item_data[i + 1]
+      }
+      if (item_json["original-streams-id"] != id) continue
+      let item_id = stream_item[0]
+      let count = await xDel(`SDFAULTORDERHANDLED`, item_id)
+      result = item_json
+    }
+  }
+  if (result == null) return 0;
+
+  result.faultprogress = "已完成"
+
+
+  console.log(result);
+
+  let faultorder_name = `SDFAULTORDERDONE`
+  let args = [faultorder_name, "*"]
+
+  Object.keys(result).forEach(key => {
+    args.push(key)
+    args.push(result[key])
+  })
+
+  return new Promise((res, rej) => {
+    client.sendCommand(`XADD`, args, (err, key) => {
+      if (err) {
+        rej(err)
+        console.error("出了点问题1" + err)
+      } else {
+        res(key)
+
+      }
+    })
+  })
+
+
+}
 
 
 

@@ -33,9 +33,9 @@ class _NewMissionPageState extends State<NewMissionPage> {
 
   @override
   void initState() {
-    _name.text=widget.loginContext.username!;
-    _phone.text=widget.loginContext.phone!;
-    _depart.text=widget.loginContext.department!;
+    _name.text = widget.loginContext.username!;
+    _phone.text = widget.loginContext.phone!;
+    _depart.text = widget.loginContext.department!;
     super.initState();
     loadTypeList();
   }
@@ -54,10 +54,10 @@ class _NewMissionPageState extends State<NewMissionPage> {
     });
   }
 
-  //拍照
+  //从相机获取图片
   Future _getImageFromCamera() async {
     final ImagePicker _picker = ImagePicker();
-    XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    XFile? image = await _picker.pickImage(source: ImageSource.camera,maxHeight: 2048,imageQuality: 20);
     //     await PhoneWebPicker.getImage(source: ImageSource.camera, maxHeight: 2048);
     setState(() {
       if (image != null) {
@@ -66,41 +66,51 @@ class _NewMissionPageState extends State<NewMissionPage> {
     });
   }
 
-  //相册
+  //从相册获取图片
   Future _getImageFromGallery() async {
     //final pickedFile = await PhoneWebPicker.getImage(source: ImageSource.gallery, maxHeight: 2048);
-    log("尝试读取图片");
     //final XFile? image = await PhoneWebPicker.pickImage(source: ImageSource.gallery, maxHeight: 2048);
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-    setState(() {
-      if (result != null) {
-        if (kIsWeb == true) {
-          var file = result.files.single;
-          if (file.bytes != null) {
-            _image = XFile.fromData(file.bytes!);
-          }
-        } else
-          _image = XFile(result.files.single.path!);
-      }
-    });
+    log("尝试读取图片");
+
+    if(kIsWeb==false) {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      setState(() {
+        if (result != null) {
+          if (kIsWeb == true) {
+            var file = result.files.single;
+            if (file.bytes != null) {
+              _image = XFile.fromData(file.bytes!);
+            }
+          } else
+            _image = XFile(result.files.single.path!);
+        }
+      });
+    }
+    else{
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery,maxHeight: 2048,imageQuality: 20);
+      //     await PhoneWebPicker.getImage(source: ImageSource.camera, maxHeight: 2048);
+      setState(() {
+        if (image != null) {
+          _image = image;
+        }
+      });
+    }
+
   }
 
-  // Future _getImageFromPC() async{
-  //   final pickedFile = await OpenFilePicker()..filterSpecification={
-  //     '支持的图片格式':'*.jpg;*.jpeg;*.png',
-  //   }..defaultFilterIndex=0 ..defaultExtension='jpg' ..title= '选择一张图片';
-  //   final result = pickedFile.getFile();
-  //   setState(() {
-  //     if (result != null) {
-  //       _image = File(result.path);
-  //     }
-  //   });
-  // }
-
+  //调用系统截图程序
   Future _openWindowsSSTool() async {
-    const url = 'file://C:/Windows/system32/SnippingTool.exe';
-    await canLaunch(url) ? launch(url) : throw 'Could not launch $url';
+    // const url = 'file://C:/Windows/system32/SnippingTool.exe';
+    // await canLaunch(url) ? launch(url) : throw 'Could not launch $url';
+    var url = Client().screenClipUrl;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Future<void> _showMyDialog() async {
@@ -177,7 +187,6 @@ class _NewMissionPageState extends State<NewMissionPage> {
                                 border: OutlineInputBorder(), labelText: '报障人'),
                           ),
                         ),
-
                         SizedBox(
                           width: 15,
                         ),
@@ -185,12 +194,12 @@ class _NewMissionPageState extends State<NewMissionPage> {
                           child: TextField(
                             controller: _phone,
                             decoration: InputDecoration(
-                                border: OutlineInputBorder(), labelText: '电话号码'),
+                                border: OutlineInputBorder(),
+                                labelText: '电话号码'),
                           ),
                         ),
                       ],
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -222,7 +231,10 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), labelText: '故障描述'),
+                          border: OutlineInputBorder(),
+                          labelText: '故障描述',
+                        hintText: "请尽可能描述详细，让工程师能够迅速你的意思。如：\nHIS系统-医生工作站-xx板块点击xx时弹出“xxxxxxx”错误。\n网络打印机点击打印没有反应、打印机弹出“xxxxx”提示"
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -248,7 +260,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       children: [
                         // Platform.isWindows||Platform.isLinux||Platform.isMacOS
                         // (1==1)?
-                        TextButton(
+                        if(Theme.of(context).platform.name == "windows")TextButton(
                           onPressed: () {
                             _openWindowsSSTool();
                           },
@@ -256,12 +268,12 @@ class _NewMissionPageState extends State<NewMissionPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.airplay_outlined),
-                              Text('调用截图程序')
+                              Text('截图')
                             ],
                           ),
                         ),
                         // :
-                        TextButton(
+                        if(Theme.of(context).platform.name != "windows")TextButton(
                           onPressed: () {
                             _getImageFromCamera();
                           },
@@ -275,7 +287,6 @@ class _NewMissionPageState extends State<NewMissionPage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            //(Platform.isWindows||Platform.isLinux||Platform.isMacOS)?_getImageFromPC():_getImageFromGallery();
                             _getImageFromGallery();
                           },
                           child: Row(
