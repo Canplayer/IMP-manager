@@ -67,7 +67,7 @@ Future<int> uploadAvatar(XFile? image) async {
     file = MultipartFile.fromBytes(_bytesData, filename: "content.txt");
   }
   var data = {
-    "userid": isLogin!.id,
+    "id": isLogin!.id,
   };
 
   Map<String, dynamic> map = Map();
@@ -82,19 +82,6 @@ Future<int> uploadAvatar(XFile? image) async {
     return 1;
   }
   return 0;
-}
-//获取用户头像
-Future<XFile?> getAvatar() async {
-  var loginUrl = Client().url + "getAvatar";
-  response = await dio.get(loginUrl, queryParameters: {"userid": isLogin!.id});
-  print(response!.data.toString());
-  var result = response!.data['result'];
-  if (result == 'OK') {
-    var data = response!.data['data'];
-    var file = XFile.fromData(data);
-    return file;
-  }
-  return null;
 }
 
 //服务台内容获取
@@ -266,13 +253,13 @@ Future<int> setNormalUserMissionDone(String ID) async {
 }
 
 //获取背景图片
-Future<XFile> getBackground() async {
-  var loginUrl = Client().url + "GetPic";
-  response = await dio.get(loginUrl);
-  ResponseBody result = response!.data;
-  var a = await result.stream.first;
-  return XFile.fromData(a);
-}
+// Future<XFile> getBackground() async {
+//   var loginUrl = Client().url + "GetPic";
+//   response = await dio.get(loginUrl);
+//   ResponseBody result = response!.data;
+//   var a = await result.stream.first;
+//   return XFile.fromData(a);
+// }
 
 //工程师列表
 Future<List<OpUserListModel>> getOPList() async {

@@ -96,7 +96,7 @@ class _MissionListViewState extends State<MissionListView> {
             child: ListBody(
               children: <Widget>[
                 Image.network(
-                  'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                    "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
                 ),
                 Text("id：" + pair.id!),
                 Text("发起人:" + pair.name!),
@@ -434,7 +434,7 @@ class _MissionListViewState extends State<MissionListView> {
                         maxHeight: 150,
                       ),
                       child: Image.network(
-                        'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                          "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
                       ),
                     ),
                     SizedBox(

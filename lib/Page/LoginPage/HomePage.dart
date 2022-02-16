@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import '../../client.dart';
 import 'LoginPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,7 +32,7 @@ class HomePageState extends State<HomePage> {
           Container(
               constraints: new BoxConstraints.expand(),
               child: FadeInImage.memoryNetwork(
-                image: "http://10.10.142.77:8081/GetPic",
+                image: "http://"+Client().ip+":"+Client().serverPort+"/GetPic",
                 placeholder: kTransparentImage,
                 fit: BoxFit.cover,
               )),

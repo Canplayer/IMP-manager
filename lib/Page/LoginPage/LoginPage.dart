@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/LoginPage/RegisterPage.dart';
 import 'package:lottie/lottie.dart';
@@ -7,7 +6,7 @@ import '../../client.dart';
 import 'WelcomePage.dart';
 
 class LoginPage extends StatefulWidget {
-  final fatherContext;
+  final BuildContext fatherContext;
   LoginPage(this.fatherContext, {Key? key}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();

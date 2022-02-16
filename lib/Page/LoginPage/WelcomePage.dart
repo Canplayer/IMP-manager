@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:cross_file/cross_file.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hnszlyyimp/Page/ClientPage/ClientPage.dart';
@@ -7,6 +11,7 @@ import 'package:transparent_image/transparent_image.dart';
 import '../../client.dart';
 import '../ITCenterPage/ITCenterPage.dart';
 import '../ITUserPage/ITUserPage.dart';
+import 'InfoEditPage.dart';
 
 class WelcomePage extends StatelessWidget {
   var fatherContext;
@@ -14,48 +19,86 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<int> a = [1, 2, 3];
     return Column(
       children: [
-        Stack(
-          children: [
-            SizedBox(
-              width: 600,
-              child: SvgPicture.asset(
-                "res/welcome.svg",
-                fit: BoxFit.cover,
-              ),
-            ),
-            InkWell(
-              onTap: (){
-                Navigator.push(
-                  fatherContext,
-                  new MaterialPageRoute(
-                      builder: (context) => new ITCenterPage()),
-                );
-              },
-              child: Container(
-                  height: 80,
-                  width: 80,
-                  child: FadeInImage.memoryNetwork(
-                    image: "http://10.10.142.77:8081/GetPic",
-                    placeholder: kTransparentImage,
-                    fit: BoxFit.cover,
-                  )),
-            ),
-            Positioned(
-              top: 55,
-              left: 40,
-              child: Text(
-                '欢迎回来,\n' + isLogin!.username!,
-                style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+        SizedBox(
+          height: 40,
         ),
+        Container(
+          height: 120,
+          width: 120,
+          child: ClipOval(
+              child: InkWell(
+            onTap: () {
+
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return InfoEditPage(fatherContext);
+              }));
+            },
+            child: Image.network(
+              "http://" +
+                  Client().ip +
+                  ":" +
+                  Client().serverPort +
+                  "/getAvatar?id=" +
+                  isLogin!.id!,
+              fit: BoxFit.cover,
+            ),
+          )),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          isLogin!.username!,
+          style: TextStyle(
+              fontSize: 35,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 30, 30, 30)),
+        ),
+        SizedBox(
+          height: 2,
+        ),
+        Text("欢迎回来"),
+        // Stack(
+        //   children: [
+        //     SizedBox(
+        //       width: 600,
+        //       child: SvgPicture.asset(
+        //         "res/welcome.svg",
+        //         fit: BoxFit.cover,
+        //       ),
+        //     ),
+        //     InkWell(
+        //       onTap: () {
+        //         Navigator.push(
+        //           fatherContext,
+        //           new MaterialPageRoute(
+        //               builder: (context) => new ITCenterPage()),
+        //         );
+        //       },
+        //       child: Container(
+        //           height: 80,
+        //           width: 80,
+        //           child: Image.network(
+        //             "http://"+Client().ip+":"+Client().serverPort+"/getAvatar?id=" + isLogin!.id!,
+        //           ),
+        //       )
+        //     ),
+        //     Positioned(
+        //       top: 55,
+        //       left: 40,
+        //       child: Text(
+        //         '欢迎回来,\n' + isLogin!.username!,
+        //         style: TextStyle(
+        //             fontSize: 40,
+        //             color: Colors.white,
+        //             fontWeight: FontWeight.bold),
+        //       ),
+        //     ),
+        //   ],
+        // ),
         SizedBox(
           width: 300,
           child: Column(

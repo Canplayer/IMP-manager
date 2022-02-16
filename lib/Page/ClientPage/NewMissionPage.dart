@@ -233,7 +233,7 @@ class _NewMissionPageState extends State<NewMissionPage> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: '故障描述',
-                        hintText: "请尽可能描述详细，让工程师能够迅速你的意思。如：\nHIS系统-医生工作站-xx板块点击xx时弹出“xxxxxxx”错误。\n网络打印机点击打印没有反应、打印机弹出“xxxxx”提示"
+                        hintText: "请尽可能描述详细，让工程师能够迅速你的意思。"
                       ),
                     ),
                     SizedBox(

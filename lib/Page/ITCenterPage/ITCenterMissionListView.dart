@@ -78,7 +78,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                 child: Column(
                   children: [
                     Image.network(
-                      'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                        "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
                     ),
                     Text("id：" + pair.id!,style: ts,),
                     Text("发起人:" + pair.name!,style: ts,),
@@ -262,7 +262,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                           ],
                         ),
                         Image.network(
-                          'http://10.10.142.77:8081/ClientPic?id=' + pair.id!,
+                            "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
                         ),
                       ],
                     ),

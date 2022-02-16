@@ -11,7 +11,7 @@ const axios = require("axios")
 //const serverUrl = "10.10.142.81"  //测试服务器
 const serverUrl = "10.10.170.191"  //正式服务器
 const redisport = "6381"
-const zmqport ="6382"
+const zmqport = "6382"
 
 const app = express()
 app.use(express.json())
@@ -23,7 +23,7 @@ var uploads = multer({ storage: multer.memoryStorage() })
 
 const client = redis.createClient({
   host: serverUrl,
-  port:redisport
+  port: redisport
 });
 client.on('error', function (err) {
   if (err) {
@@ -46,10 +46,9 @@ app.all('*', function (req, res, next) {
 //-------------------------------------用户资料操作逻辑-----------------------------------------
 //登陆
 app.post("/login", async (req, res) => {
-  var user = req.body.user
-  var password = req.body.password
-  //if user or password is not exist, return error json
-  if (!user || !password) {
+  const { username, passwd } = req.body
+  console.log('用户' + username + '尝试登录' + passwd);
+  if (!username || !passwd) {
     res.json({
       "result": "Failed"
     })
@@ -135,7 +134,13 @@ async function register(id, username, department, phone, email, passwd) {
 
 //用户上传头像到本地
 app.post("/uploadAvatar", uploads.single('file'), async (req, res) => {
-  var { id } = req.body
+
+  
+
+  let { info } = req.body
+
+//read id from req.body
+  let id = info.id
   console.log("用户" + id + "上传头像");
   if (!id) {
     res.json({
@@ -143,14 +148,37 @@ app.post("/uploadAvatar", uploads.single('file'), async (req, res) => {
     })
     return
   }
+
+  var file
+  if (req.file != null) {
+    file = req.file.buffer
+    console.log("骑手上传了一个图片，大小" + file.length);
+  }
+
+  
   let result = req.file.buffer
-  //判断result是否为图片
-  if (result.toString('base64').indexOf('data:image') === -1) {
+  //判断result格式是否为jpg
+  if (result.toString('hex', 0, 4) === 'ffd8ffe0'||result.toString('hex', 0, 4) === '89504e47') {
+    console.log("上传的是jpg/Png格式的图片");
+  } else {
+    console.log("上传的图片格式不正确");
     res.json({
-      "result": "FAILED"
+      "result": "Failed"
     })
     return
   }
+
+  //判断result大小是否超过2M
+  if (result.length > 2000000) {
+    console.log("上传的图片大小超过2M");
+    res.json({
+      "result": "Failed"
+    })
+    return
+  }
+
+  console.log("是图片" + file.length);
+
   //图片储存在当前目录下的images文件夹中
   fs.writeFile(`./images/${id}.jpg`, result, 'base64', function (err) {
     if (err) {
@@ -172,7 +200,17 @@ app.get("/getAvatar", async (req, res) => {
     })
     return
   }
-  let result = fs.readFileSync(`./images/${id}.jpg`)
+  //判断文件是否存在，如果文件不存在，返回默认头像
+  let result
+  if (fs.existsSync(`./images/${id}.jpg`)) {
+    result = fs.readFileSync(`./images/${id}.jpg`)
+  }
+  
+  if (!result) {
+    result = fs.readFileSync(`./images/default.jpg`)
+  }
+
+
   res.writeHead(200, {
     'Content-Type': 'image/jpeg',
     'Content-Length': result.length
@@ -180,7 +218,7 @@ app.get("/getAvatar", async (req, res) => {
   res.end(result)
 })
 
-  
+
 
 
 
@@ -731,18 +769,18 @@ app.post("/ITClient_O2OP", async (req, res) => {
 async function ITClient_O2OP(id, opid) {
 
   let opresult = await getEngineerInfo_matchorder()
- 
-  let opName,opPhone
-  for(var i = 0;i<opresult.length;i++){
-    if (opresult[i].id==opid){
+
+  let opName, opPhone
+  for (var i = 0; i < opresult.length; i++) {
+    if (opresult[i].id == opid) {
       opName = opresult[i].name
       opPhone = opresult[i].phone
       break
     }
   }
-  if(opName==null||opPhone==null) return 0;
-console.log(opName,opPhone);
-  
+  if (opName == null || opPhone == null) return 0;
+  console.log(opName, opPhone);
+
 
 
 
