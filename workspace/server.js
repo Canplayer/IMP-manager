@@ -28,9 +28,7 @@ const client = redis.createClient({
 client.on('error', function (err) {
   if (err) {
     console.log('与redis服务器连接出现了异常报告');
-    rej(err)
   } else {
-    res(key)
   }
 });
 
@@ -48,9 +46,10 @@ app.all('*', function (req, res, next) {
 //-------------------------------------用户资料操作逻辑-----------------------------------------
 //登陆
 app.post("/login", async (req, res) => {
-  const { username, passwd } = req.body
-  console.log('用户' + username + '尝试登录' + passwd);
-  if (!username || !passwd) {
+  var user = req.body.user
+  var password = req.body.password
+  //if user or password is not exist, return error json
+  if (!user || !password) {
     res.json({
       "result": "Failed"
     })
@@ -77,8 +76,12 @@ app.post("/login", async (req, res) => {
 async function login(userid, passwd) {
   let sock = new zmq.Request()
   let msg = `<?xml version="1.0" encoding="UTF-8"?>
-  <SOAP><MSGTYPE>000001</MSGTYPE><ACCOUNT>${userid}</ACCOUNT
-  ><PASSWORD>${passwd}</PASSWORD><AUTHORITY>1</AUTHORITY></SOAP>`
+  <SOAP>
+  <MSGTYPE>000001</MSGTYPE>
+  <ACCOUNT>${userid}</ACCOUNT>
+  <PASSWORD>${passwd}</PASSWORD>
+  <AUTHORITY>1</AUTHORITY>
+  </SOAP>`
   sock.connect(`tcp://${serverUrl}:${zmqport}`)
   await sock.send(msg)
   let result_str = (await sock.receive()).toString()
@@ -88,7 +91,7 @@ async function login(userid, passwd) {
 
 //注册
 app.post("/register", async (req, res) => {
-  const { id, username, department, phone, email, passwd } = req.body
+  var { id, username, department, phone, email, passwd } = req.body
   console.log("用户发起注册：" + id + username);
   if (!id || !username || !department || !phone || !email || !passwd) {
     res.json({
@@ -129,6 +132,56 @@ async function register(id, username, department, phone, email, passwd) {
   let result = await parseStringPromise(result_str)
   return result
 }
+
+//用户上传头像到本地
+app.post("/uploadAvatar", uploads.single('file'), async (req, res) => {
+  var { id } = req.body
+  console.log("用户" + id + "上传头像");
+  if (!id) {
+    res.json({
+      "result": "Failed"
+    })
+    return
+  }
+  let result = req.file.buffer
+  //判断result是否为图片
+  if (result.toString('base64').indexOf('data:image') === -1) {
+    res.json({
+      "result": "FAILED"
+    })
+    return
+  }
+  //图片储存在当前目录下的images文件夹中
+  fs.writeFile(`./images/${id}.jpg`, result, 'base64', function (err) {
+    if (err) {
+      console.log(err);
+    }
+  })
+  res.json({
+    "result": "OK"
+  })
+})
+
+//用户获取头像
+app.get("/getAvatar", async (req, res) => {
+  var { id } = req.query
+  console.log("用户" + id + "获取头像");
+  if (!id) {
+    res.json({
+      "result": "Failed"
+    })
+    return
+  }
+  let result = fs.readFileSync(`./images/${id}.jpg`)
+  res.writeHead(200, {
+    'Content-Type': 'image/jpeg',
+    'Content-Length': result.length
+  })
+  res.end(result)
+})
+
+  
+
 
 
 

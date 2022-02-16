@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hnszlyyimp/Page/ClientPage/ClientPage.dart';
 import 'package:hnszlyyimp/model.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../client.dart';
 import '../ITCenterPage/ITCenterPage.dart';
@@ -25,12 +26,32 @@ class WelcomePage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+            InkWell(
+              onTap: (){
+                Navigator.push(
+                  fatherContext,
+                  new MaterialPageRoute(
+                      builder: (context) => new ITCenterPage()),
+                );
+              },
+              child: Container(
+                  height: 80,
+                  width: 80,
+                  child: FadeInImage.memoryNetwork(
+                    image: "http://10.10.142.77:8081/GetPic",
+                    placeholder: kTransparentImage,
+                    fit: BoxFit.cover,
+                  )),
+            ),
             Positioned(
               top: 55,
               left: 40,
               child: Text(
                 '欢迎回来,\n' + isLogin!.username!,
-                style: TextStyle(fontSize: 40,color: Colors.white,fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -40,11 +61,11 @@ class WelcomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               SizedBox(
                 height: 30,
               ),
               //for(var i in isLogin.authority) cardList[i]
+
               if (isLogin!.authority!.contains("3"))
                 Card(
                   child: InkWell(

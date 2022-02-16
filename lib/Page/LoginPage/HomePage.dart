@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -29,7 +28,13 @@ class HomePageState extends State<HomePage> {
       //backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          Container(constraints: new BoxConstraints.expand(),child: FadeInImage.memoryNetwork(image:"http://10.10.142.77:8081/GetPic", placeholder: kTransparentImage,  fit: BoxFit.cover,)),
+          Container(
+              constraints: new BoxConstraints.expand(),
+              child: FadeInImage.memoryNetwork(
+                image: "http://10.10.142.77:8081/GetPic",
+                placeholder: kTransparentImage,
+                fit: BoxFit.cover,
+              )),
           Container(
             child: Center(
               //可裁切的矩形
@@ -58,12 +63,14 @@ class HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                          color: Color.fromARGB(30, 0, 0, 0),
-                          offset: Offset(0.0, 25.0), //阴影xy轴偏移量
-                          blurRadius: 30.0, //阴影模糊程度
-                          spreadRadius: 0.0 //阴影扩散程度
-                          )
-                    ]),
+                        color: Color.fromARGB(60, 0, 0, 0),
+                        //offset: Offset(0.0, 25.0), //阴影xy轴偏移量
+                        blurRadius: 30.0, //阴影模糊程度
+                        spreadRadius: 0.0, //阴影扩散程度
+                        blurStyle: BlurStyle.outer,
+                      )
+                    ],
+                ),
               ),
             ),
           )

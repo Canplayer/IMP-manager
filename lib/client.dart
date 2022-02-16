@@ -17,6 +17,7 @@ final int version = 1;
 Response? response;
 var dio = Dio();
 
+//获取服务器版本号
 Future<int> versionCheck() async {
   var loginUrl = Client().url + "versionCheck";
   var a = {"version": isLogin!.id};
@@ -27,6 +28,7 @@ Future<int> versionCheck() async {
   return 1;
 }
 
+//登录
 Future<int> login(String _id, String _password) async {
   var loginUrl = Client().url + "login";
   response =
@@ -42,6 +44,7 @@ Future<int> login(String _id, String _password) async {
   return 0;
 }
 
+//注册
 Future<int> register(String id,String username,String department,String phone,String email,String passwd) async {
   var loginUrl = Client().url + "register";
   response =
@@ -53,6 +56,45 @@ Future<int> register(String id,String username,String department,String phone,St
     return int.parse(sm.result!);
   }
   return 0;
+}
+
+//上传用户头像
+Future<int> uploadAvatar(XFile? image) async {
+  var loginUrl = Client().url + "uploadAvatar";
+  var file;
+  if (image != null) {
+    Uint8List? _bytesData = await image.readAsBytes();
+    file = MultipartFile.fromBytes(_bytesData, filename: "content.txt");
+  }
+  var data = {
+    "userid": isLogin!.id,
+  };
+
+  Map<String, dynamic> map = Map();
+  map["info"] = data;
+  map["file"] = file;
+  FormData formData = FormData.fromMap(map);
+
+  response = await dio.post(loginUrl, data: formData);
+  print(response!.data.toString());
+  var result = response!.data['result'];
+  if (result == 'OK') {
+    return 1;
+  }
+  return 0;
+}
+//获取用户头像
+Future<XFile?> getAvatar() async {
+  var loginUrl = Client().url + "getAvatar";
+  response = await dio.get(loginUrl, queryParameters: {"userid": isLogin!.id});
+  print(response!.data.toString());
+  var result = response!.data['result'];
+  if (result == 'OK') {
+    var data = response!.data['data'];
+    var file = XFile.fromData(data);
+    return file;
+  }
+  return null;
 }
 
 //服务台内容获取
