@@ -22,7 +22,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "IMP信息后勤",
+      title: "IMP信息平台",
       home: HomePage(),
       theme: ThemeData(primarySwatch: Colors.teal),
       darkTheme: ThemeData(primarySwatch: Colors.teal),

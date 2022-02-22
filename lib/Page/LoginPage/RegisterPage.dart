@@ -16,16 +16,43 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
+List<DropdownMenuItem<String>> DepartmentItems = [];
+var _titleDep = '其他';
+
+//读取部门列表
+  loadDepartmentList() async {
+    List<DropdownMenuItem<String>> items = [];
+    var a = await getDepartmentList();
+    a.data!.forEach((element) {
+      print(element);
+      items.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
+    setState(() {
+      _titleDep = a.data![0];
+      DepartmentItems = items;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadDepartmentList();
+  }
+
+
   var _titleID = new TextEditingController();
   var _titleName = new TextEditingController();
-  var _titleDep = new TextEditingController();
   var _titlePhone = new TextEditingController();
   var _titleEmail = new TextEditingController();
   var _titlePass = new TextEditingController();
   var _titlePass2 = new TextEditingController();
 
   Future<void> _showMyDialog() async {
-    Future a = register(_titleID.text, _titleName.text, _titleDep.text,
+    Future a = register(_titleID.text, _titleName.text, _titleDep,
         _titlePhone.text, _titleEmail.text, _titlePass.text);
     a.then((value) {
       Navigator.of(widget.fatherContext).pop();
@@ -94,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      //color: Colors.white,
       child: Center(
         child: Padding(
           padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -114,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   SizedBox(width: 10,),
-                  Text("注册",style: TextStyle(fontSize: 50,color: Color.fromARGB(255, 100, 100, 100)),)
+                  Text("注册",style: TextStyle(fontSize: 50,color: Color.fromARGB(255, 60, 60, 60)),)
                 ],
               ),
               SizedBox(
@@ -147,12 +174,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: 20,
                   ),
                   Expanded(
-                    child: TextField(
-                      controller: _titleDep,
-                      decoration: InputDecoration(
-                        //errorText: "123123123",
-                          border: OutlineInputBorder(),
-                          labelText: '科室'),
+                    child: DropdownButton<String>(
+                      value: _titleDep,
+                      isExpanded: true,
+                      disabledHint: Text('暂不可用'),
+                      items: DepartmentItems,
+                      onChanged: (String? value) {
+                        print(value);
+                        setState(() {
+                          _titleDep = value!;
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -209,7 +241,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Icon(Icons.done),
                 onPressed: () {
                   if ((_titleID.text.isNotEmpty &&
-                      _titleDep.text.isNotEmpty &&
+                      _titleDep.isNotEmpty &&
                       _titleEmail.text.isNotEmpty &&
                       _titlePhone.text.isNotEmpty &&
                       _titlePass.text.isNotEmpty) &&

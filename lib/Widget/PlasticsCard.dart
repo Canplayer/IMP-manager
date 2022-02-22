@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 
 
 
-const Color defaultColor = Color.fromARGB(255, 255, 255, 255);
+const Color defaultCardColor = Colors.white;
+const Color defaultShadowColor = Color.fromARGB(40, 0, 0, 0);//Color.fromARGB(70, 96, 200, 232);
+const Offset defaultShadowOffset = Offset(0.0, 20.0);
 
 class PlasticsCard extends StatelessWidget {
   PlasticsCard({
     Key? key,
     this.alignment,
     this.padding,
-    this.color = defaultColor,
+    this.CardColor = defaultCardColor,
     this.decoration,
     this.foregroundDecoration,
     double? width,
@@ -25,16 +27,21 @@ class PlasticsCard extends StatelessWidget {
     this.transformAlignment,
     this.child,
     this.clipBehavior = Clip.none,
-    this.borderRadius = 12,
+    this.borderRadius = 20,
     this.outPadding = 10,
-    this.blurRadius = 10,
+
+    this.shadowBlurRadius = 20,
+    this.shadowOffset = defaultShadowOffset,
+    this.shadowSpreadRadius = -10,
+    this.shadowColor = defaultShadowColor,
+
 }): assert(margin == null || margin.isNonNegative),
         assert(padding == null || padding.isNonNegative),
         assert(decoration == null || decoration.debugAssertIsValid()),
         assert(constraints == null || constraints.debugAssertIsValid()),
         assert(clipBehavior != null),
         assert(decoration != null || clipBehavior == Clip.none),
-        assert(color == null || decoration == null,
+        assert(CardColor == null || decoration == null,
         'Cannot provide both a color and a decoration\n'
             'To provide both, use "decoration: BoxDecoration(color: color)".',
         ),
@@ -50,7 +57,7 @@ class PlasticsCard extends StatelessWidget {
   final Widget? child;
   final AlignmentGeometry? alignment;
   final EdgeInsetsGeometry? padding;
-  final Color? color;
+  final Color? CardColor;
   final Decoration? decoration;
   final Decoration? foregroundDecoration;
   final BoxConstraints? constraints;
@@ -59,8 +66,13 @@ class PlasticsCard extends StatelessWidget {
   final AlignmentGeometry? transformAlignment;
   final Clip clipBehavior;
   final double borderRadius;
+
+  final Offset shadowOffset;
+  final double shadowSpreadRadius;
+  final Color shadowColor;
+
   final double outPadding;
-  final double blurRadius;
+  final double shadowBlurRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +91,9 @@ class PlasticsCard extends StatelessWidget {
             transform: transform,
             transformAlignment: transformAlignment,
             clipBehavior: clipBehavior,
-            color: color,
             child: Material(
-              type: MaterialType.card,
+              color: CardColor,
+              //type: MaterialType.card,
               child: Semantics(
                 child: child,
               ),
@@ -91,13 +103,13 @@ class PlasticsCard extends StatelessWidget {
           ),
         ),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(borderRadius),
             boxShadow: [
               BoxShadow(
-                  color: Color.fromARGB(10, 0, 0, 0),
-                  offset: Offset(0.0, 0.0), //阴影xy轴偏移量
-                  blurRadius: borderRadius, //阴影模糊程度
-                  spreadRadius: 0.0 //阴影扩散程度
+                  color: shadowColor,
+                  offset: shadowOffset, //阴影xy轴偏移量
+                  blurRadius: shadowBlurRadius, //阴影模糊程度
+                  spreadRadius: shadowSpreadRadius //阴影扩散程度
               )
             ]),
       ),

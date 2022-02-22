@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hnszlyyimp/Page/ClientPage/ClientPage.dart';
 import 'package:hnszlyyimp/model.dart';
+import 'package:lottie/lottie.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../../client.dart';
@@ -21,46 +22,49 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 40,
-        ),
-        Container(
-          height: 120,
-          width: 120,
-          child: ClipOval(
-              child: InkWell(
-            onTap: () {
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Lottie.asset('res/avatarAnim.json',height: 200),
+            Container(
+              height: 120,
+              width: 120,
+              child: ClipOval(
+                  child: InkWell(
+                    onTap: () {
 
 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return InfoEditPage(fatherContext);
-              }));
-            },
-            child: Image.network(
-              "http://" +
-                  Client().ip +
-                  ":" +
-                  Client().serverPort +
-                  "/getAvatar?id=" +
-                  isLogin!.id!,
-              fit: BoxFit.cover,
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                        return InfoEditPage(fatherContext);
+                      }));
+                    },
+                    child: Image.network(
+                      "http://" +
+                          Client().ip +
+                          ":" +
+                          Client().serverPort +
+                          "/getAvatar?id=" +
+                          isLogin!.id!,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
             ),
-          )),
+            Column(children: [
+              SizedBox(height: 200,),
+              Text(
+                isLogin!.username!,
+                style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 30, 30, 30)),
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Text("欢迎回来"),
+            ],),
+          ],
         ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          isLogin!.username!,
-          style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 30, 30, 30)),
-        ),
-        SizedBox(
-          height: 2,
-        ),
-        Text("欢迎回来"),
         // Stack(
         //   children: [
         //     SizedBox(

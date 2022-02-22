@@ -6,13 +6,12 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
-import 'package:hnszlyyimp/Page/View/PList.dart';
 import 'package:hnszlyyimp/Widget/AeroBottomNavigationBar.dart';
 
 import '../../client.dart';
 import 'NewMissionPage.dart';
-import '../ITUserPage/SelfMissionListView.dart';
 
 class _TabInfo {
   const _TabInfo(this.title, this.icon, this.color, this.widget);
@@ -24,7 +23,6 @@ class _TabInfo {
 }
 
 class NormalUserPage extends StatefulWidget {
-
   const NormalUserPage({Key? key}) : super(key: key);
 
   @override
@@ -50,10 +48,11 @@ class _NormalUserPageState extends State<NormalUserPage> {
         Colors.blue,
         Center(
             child: Padding(
-              padding: const EdgeInsets.only(left: 10,right: 10),
-              child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: MissionListView()),
-            )),
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Container(
+              constraints: BoxConstraints(maxWidth: 500),
+              child: MissionListView()),
+        )),
       ),
       _TabInfo(
         '个人资料',
@@ -64,9 +63,37 @@ class _NormalUserPageState extends State<NormalUserPage> {
     ];
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(_page),
-      // ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+
+        actions: <Widget>[
+          IconButton(
+            icon: new Container(
+              child: ClipOval(
+                  child: Image.network(
+                    "http://" +
+                        Client().ip +
+                        ":" +
+                        Client().serverPort +
+                        "/getAvatar?id=" +
+                        isLogin!.id!,
+                    fit: BoxFit.cover,
+                  )),
+            ),
+            onPressed: (){
+            },
+          ),
+        ],
+
+
+
+        //backgroundColor: Color(0x44000000),
+        elevation: 0,
+        title: Text("报障平台"),
+        foregroundColor: Color.fromARGB(255, 150, 150, 150),
+      ),
+
       floatingActionButton: FloatingActionButton(
         heroTag: "555tt",
         child: Icon(Icons.handyman),
@@ -74,8 +101,9 @@ class _NormalUserPageState extends State<NormalUserPage> {
         onPressed: () {
           Navigator.push(
             context,
-            new MaterialPageRoute(builder: (context) => new NewMissionPage(isLogin!)),
-          );
+            new MaterialPageRoute(
+                builder: (context) => new NewMissionPage(isLogin!)),
+          ).then((value) => {});
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -89,7 +117,6 @@ class _NormalUserPageState extends State<NormalUserPage> {
         },
         child: _tabInfo[currentIndex].widget,
       ),
-
 
       extendBody: true,
       //extendBodyBehindAppBar: true,
@@ -187,9 +214,19 @@ class MyInfoPage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.person,
-                    size: 100,
+                  Container(
+                    height: 120,
+                    width: 120,
+                    child: ClipOval(
+                        child: Image.network(
+                          "http://" +
+                              Client().ip +
+                              ":" +
+                              Client().serverPort +
+                              "/getAvatar?id=" +
+                              isLogin!.id!,
+                          fit: BoxFit.cover,
+                        )),
                   ),
                   Text(isLogin!.username!),
                   SizedBox(

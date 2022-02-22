@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hnszlyyimp/Page/View/FullScreenPhotoView.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../Widget/PlasticsCard.dart';
@@ -96,7 +97,12 @@ class _MissionListViewState extends State<MissionListView> {
             child: ListBody(
               children: <Widget>[
                 Image.network(
-                    "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
+                  "http://" +
+                      Client().ip +
+                      ":" +
+                      Client().serverPort +
+                      "/ClientPic?id=" +
+                      pair.id!,
                 ),
                 Text("id：" + pair.id!),
                 Text("发起人:" + pair.name!),
@@ -171,10 +177,25 @@ class _MissionListViewState extends State<MissionListView> {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      icon,
-                      size: 40,
-                      color: Colors.white,
+                    // Icon(
+                    //   icon,
+                    //   size: 40,
+                    //   color: Colors.white,
+                    // ),
+
+                    Container(
+                      height: 40,
+                      width: 40,
+                      child: ClipOval(
+                          child: Image.network(
+                            "http://" +
+                                Client().ip +
+                                ":" +
+                                Client().serverPort +
+                                "/getAvatar?id=" +
+                                isLogin!.id!,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                     SizedBox(
                       width: 10,
@@ -280,39 +301,66 @@ class _MissionListViewState extends State<MissionListView> {
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // TextButton.icon(
-                      //   style: ButtonStyle(
-                      //     foregroundColor:
-                      //         MaterialStateProperty.all(Colors.white),
-                      //   ),
-                      //   onPressed: () {},
-                      //   icon: Icon(Icons.not_interested_rounded),
-                      //   label: Text("未解决"),
-                      // ),
-                      // SizedBox(
-                      //   width: 8,
-                      // ),
-                      TextButton.icon(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                        ),
-                        onPressed: () {
-                          setNormalUserMissionDone(pair.id!);
-                        },
-                        icon: Icon(Icons.done),
-                        label: Text("完成订单"),
-                      ),
-                    ],
+                Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 150,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) =>
+                                new FullScreenPhotoView(id: pair.id!)),
+                      );
+                    },
+                    child: Image.network(
+                      "http://" +
+                          Client().ip +
+                          ":" +
+                          Client().serverPort +
+                          "/ClientOpPic?id=" +
+                          pair.id!,
+                    ),
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+
+                // SizedBox(
+                //   width: double.infinity,
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       // TextButton.icon(
+                //       //   style: ButtonStyle(
+                //       //     foregroundColor:
+                //       //         MaterialStateProperty.all(Colors.white),
+                //       //   ),
+                //       //   onPressed: () {},
+                //       //   icon: Icon(Icons.not_interested_rounded),
+                //       //   label: Text("未解决"),
+                //       // ),
+                //       // SizedBox(
+                //       //   width: 8,
+                //       // ),
+                //       TextButton.icon(
+                //         style: ButtonStyle(
+                //           foregroundColor:
+                //               MaterialStateProperty.all(Colors.white),
+                //         ),
+                //         onPressed: () {
+                //           setNormalUserMissionDone(pair.id!);
+                //         },
+                //         icon: Icon(Icons.done),
+                //         label: Text("完成订单"),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           );
@@ -332,7 +380,10 @@ class _MissionListViewState extends State<MissionListView> {
               SizedBox(
                 width: 10,
               ),
-              Text(text, style: TextStyle(color: Colors.grey,)),
+              Text(text,
+                  style: TextStyle(
+                    color: Colors.grey,
+                  )),
             ],
           );
         }
@@ -344,8 +395,9 @@ class _MissionListViewState extends State<MissionListView> {
     }
     return Container(
       child: PlasticsCard(
+        shadowColor: bgColor.withAlpha(150),
         child: InkWell(
-          splashColor: Colors.blue.withAlpha(30),
+          splashColor: Colors.white,//.withAlpha(30),
           onTap: () {
             _showMyDialog(pair);
           },
@@ -434,7 +486,12 @@ class _MissionListViewState extends State<MissionListView> {
                         maxHeight: 150,
                       ),
                       child: Image.network(
-                          "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
+                        "http://" +
+                            Client().ip +
+                            ":" +
+                            Client().serverPort +
+                            "/ClientPic?id=" +
+                            pair.id!,
                       ),
                     ),
                     SizedBox(

@@ -6,7 +6,7 @@ import 'package:hnszlyyimp/model.dart';
 import 'package:cross_file/cross_file.dart';
 
 class Client{
-  get ip => "10.10.142.77";
+  get ip => "10.10.170.170";
   get serverPort => "8081";
   get url => "http://"+ip+":"+serverPort+"/";
   get screenClipUrl => "http://"+ip+"/tools/screenclip.html";
@@ -168,18 +168,18 @@ Future<int> delITUserSelfMission(String msgID) async {
 }
 
 //工作可用故障类型
-Future<TypeListModel> getEngineerList() async {
+Future<SimpleListModel> getEngineerList() async {
   var loginUrl = Client().url + "getEngineerInfo";
   response = await dio.get(loginUrl);
-  TypeListModel list = TypeListModel.fromJson(response!.data);
+  SimpleListModel list = SimpleListModel.fromJson(response!.data);
   return list;
 }
 
 //工作可用故障类型
-Future<TypeListModel> getTypeList() async {
+Future<SimpleListModel> getTypeList() async {
   var _url = Client().url + "getTypeList";
   response = await dio.get(_url);
-  TypeListModel list = TypeListModel.fromJson(response!.data);
+  SimpleListModel list = SimpleListModel.fromJson(response!.data);
   return list;
 }
 
@@ -252,14 +252,22 @@ Future<int> setNormalUserMissionDone(String ID) async {
   return 1;
 }
 
-//获取背景图片
-// Future<XFile> getBackground() async {
-//   var loginUrl = Client().url + "GetPic";
-//   response = await dio.get(loginUrl);
-//   ResponseBody result = response!.data;
-//   var a = await result.stream.first;
-//   return XFile.fromData(a);
-// }
+//获取部门列表
+Future<SimpleListModel> getDepartmentList() async {
+
+  var loginUrl = Client().url + "getDepartmentList";
+  response = await dio.get(loginUrl);
+  print(response!.data.toString());
+  SimpleListModel list = SimpleListModel.fromJson(response!.data);
+  return list;
+
+
+  // var loginUrl = Client().url + "getDepartmentList";
+  // response = await dio.get(loginUrl);
+  // print(response!.data.toString());
+  // SimpleListModel list = SimpleListModel.fromJson(response!.data);
+  // return list;
+}
 
 //工程师列表
 Future<List<OpUserListModel>> getOPList() async {

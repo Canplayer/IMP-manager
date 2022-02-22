@@ -1,11 +1,11 @@
 {
-    "name": "IMP信息后勤",
-    "short_name": "IMP信息后勤",
+    "name": "IMP信息管理",
+    "short_name": "IMP信息管理",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
-    "description": "海南省肿瘤医院信息后勤管理系统",
+    "description": "海南省肿瘤医院信息管理管理系统",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

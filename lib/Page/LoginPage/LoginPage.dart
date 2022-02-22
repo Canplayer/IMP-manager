@@ -172,7 +172,8 @@ class _LoginPageState extends State<LoginPage> {
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                     return RegisterPage(widget.fatherContext);
-                    }));
+                    },
+                    fullscreenDialog: false));
                   },
                   child: Text(
                     '注册',

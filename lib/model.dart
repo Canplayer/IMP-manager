@@ -243,12 +243,12 @@ class MissionModel {
 }
 
 //受支持故障类型列表模型
-class TypeListModel {
-  TypeListModel({
+class SimpleListModel {
+  SimpleListModel({
     this.data,
   });
 
-  factory TypeListModel.fromJson(Map<String, dynamic> jsonRes) {
+  factory SimpleListModel.fromJson(Map<String, dynamic> jsonRes) {
     final List<String>? _data = jsonRes['Data'] is List ? <String>[] : null;
     if (_data != null) {
       for (final dynamic item in jsonRes['Data']!) {
@@ -257,7 +257,7 @@ class TypeListModel {
         }
       }
     }
-    return TypeListModel(
+    return SimpleListModel(
       data: _data,
     );
   }
@@ -269,7 +269,7 @@ class TypeListModel {
     return jsonEncode(this);
   }
 
-  TypeListModel clone() => TypeListModel.fromJson(
+  SimpleListModel clone() => SimpleListModel.fromJson(
       asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }
 

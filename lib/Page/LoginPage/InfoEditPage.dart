@@ -5,13 +5,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hnszlyyimp/Page/LoginPage/RegisterPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../client.dart';
-import 'WelcomePage.dart';
 
 class InfoEditPage extends StatefulWidget {
   final BuildContext fatherContext;

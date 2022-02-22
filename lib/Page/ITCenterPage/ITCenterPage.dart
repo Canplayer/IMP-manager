@@ -48,7 +48,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("SDFAULTORDER")),
+                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("未处理")),
             )),
       ),
       _TabInfo(
@@ -60,7 +60,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("OPFAULTORDER")),
+                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("已分发")),
             )),
       ),
       _TabInfo(
@@ -72,7 +72,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("SDFAULTORDERHANDLED")),
+                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("已处理")),
             )),
       ),
       _TabInfo(
@@ -83,7 +83,7 @@ class _ITCenterPageState extends State<ITCenterPage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 10,right: 10),
               child: Container(
-                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("SDFAULTORDERDONE")),
+                  constraints: BoxConstraints(maxWidth: 500), child: ITCenterMissionListView("已完成")),
             )),
       ),
     ];
@@ -91,6 +91,9 @@ class _ITCenterPageState extends State<ITCenterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_page),
+        foregroundColor: Colors.grey,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: PageTransitionSwitcher(
         transitionBuilder: (child, animation, secondaryAnimation) {

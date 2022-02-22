@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../client.dart';
@@ -24,7 +25,6 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
 
   @override
   void initState() {
-    print(widget.data);
     super.initState();
     timer = Timer.periodic(Duration(seconds: 10), (Timer t) => loadData());
     loadData();
@@ -55,7 +55,30 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
         ),
       );
     } else {
-      return LinearProgressIndicator();
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          //Icon(Icons.layers_clear,size: 150,color: Colors.black12,),
+          SvgPicture.asset(
+            "res/img_engineer.svg",
+            fit: BoxFit.fill,
+            height: 200,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "暂无",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 80, 80, 80)),
+          ),
+        ],
+      );
+
+      //LinearProgressIndicator();
     }
   }
 
@@ -78,7 +101,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                 child: Column(
                   children: [
                     Image.network(
-                        "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
+                        "http://"+Client().ip+":"+Client().serverPort+"/ClientPic?id=" + pair.id!,
                     ),
                     Text("id：" + pair.id!,style: ts,),
                     Text("发起人:" + pair.name!,style: ts,),
@@ -172,10 +195,15 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
               child: Row(
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    b,
-                    size: 30,
-                    color: Colors.green,
+                  Column(
+                    children: [
+                      Icon(
+                        b,
+                        size: 30,
+                        color: Colors.green,
+                      ),
+                      Text(pair.engineer!)
+                    ],
                   ),
                   SizedBox(
                     width: 20,
@@ -262,7 +290,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
                           ],
                         ),
                         Image.network(
-                            "http://"+Client().ip+":"+Client().serverPort+"ClientPic?id=" + pair.id!,
+                            "http://"+Client().ip+":"+Client().serverPort+"/ClientPic?id=" + pair.id!,
                         ),
                       ],
                     ),
