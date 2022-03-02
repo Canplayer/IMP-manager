@@ -88,36 +88,39 @@ class _ITCenterPageState extends State<ITCenterPage> {
       ),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_page),
-        foregroundColor: Colors.grey,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: PageTransitionSwitcher(
-        transitionBuilder: (child, animation, secondaryAnimation) {
-          return FadeThroughTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            child: child,
-          );
-        },
-        child: _tabInfo[currentIndex!].widget,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          for (final tabInfo in _tabInfo)
-            BottomNavigationBarItem(
-                icon: Icon(tabInfo.icon),
-                label: tabInfo.title,
-                backgroundColor: tabInfo.color)
-        ],
-        //type: BottomNavigationBarType.shifting,
-        currentIndex: currentIndex!,
-        onTap: (index) {
-          _changePage(index);
-        },
+    return Hero(
+      tag: "page",
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_page),
+          foregroundColor: Colors.grey,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: PageTransitionSwitcher(
+          transitionBuilder: (child, animation, secondaryAnimation) {
+            return FadeThroughTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+            );
+          },
+          child: _tabInfo[currentIndex!].widget,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            for (final tabInfo in _tabInfo)
+              BottomNavigationBarItem(
+                  icon: Icon(tabInfo.icon),
+                  label: tabInfo.title,
+                  backgroundColor: tabInfo.color)
+          ],
+          //type: BottomNavigationBarType.shifting,
+          currentIndex: currentIndex!,
+          onTap: (index) {
+            _changePage(index);
+          },
+        ),
       ),
     );
   }

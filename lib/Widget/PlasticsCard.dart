@@ -16,7 +16,7 @@ class PlasticsCard extends StatelessWidget {
     Key? key,
     this.alignment,
     this.padding,
-    this.CardColor = defaultCardColor,
+    this.cardColor = defaultCardColor,
     this.decoration,
     this.foregroundDecoration,
     double? width,
@@ -41,7 +41,7 @@ class PlasticsCard extends StatelessWidget {
         assert(constraints == null || constraints.debugAssertIsValid()),
         assert(clipBehavior != null),
         assert(decoration != null || clipBehavior == Clip.none),
-        assert(CardColor == null || decoration == null,
+        assert(cardColor == null || decoration == null,
         'Cannot provide both a color and a decoration\n'
             'To provide both, use "decoration: BoxDecoration(color: color)".',
         ),
@@ -57,7 +57,7 @@ class PlasticsCard extends StatelessWidget {
   final Widget? child;
   final AlignmentGeometry? alignment;
   final EdgeInsetsGeometry? padding;
-  final Color? CardColor;
+  final Color? cardColor;
   final Decoration? decoration;
   final Decoration? foregroundDecoration;
   final BoxConstraints? constraints;
@@ -92,7 +92,7 @@ class PlasticsCard extends StatelessWidget {
             transformAlignment: transformAlignment,
             clipBehavior: clipBehavior,
             child: Material(
-              color: CardColor,
+              color: cardColor,
               //type: MaterialType.card,
               child: Semantics(
                 child: child,

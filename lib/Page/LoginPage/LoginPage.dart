@@ -80,7 +80,8 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Lottie.asset('res/doneAnim.json',
-                    width: 100, height: 100, repeat: false),
+                    width: 100, height: 100, repeat: false,
+                ),
                 Text("用户名和密码千万不能为空 :<"),
               ],
             )));

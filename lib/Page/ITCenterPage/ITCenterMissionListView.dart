@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hnszlyyimp/Widget/PlasticsCard.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../client.dart';
@@ -183,7 +184,7 @@ class _ITCenterMissionListViewState extends State<ITCenterMissionListView> {
         }
     }
     return Container(
-      child: Card(
+      child: PlasticsCard(
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
