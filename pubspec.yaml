@@ -95,6 +95,11 @@ flutter:
     - res/icon_cloud.svg
     - res/icon_doc_done.svg
     - res/icon_msg.svg
+    - res/img_IDCard.svg
+    - res/img_password.svg
+    - res/img_userInfo.svg
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

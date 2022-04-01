@@ -6,7 +6,6 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hnszlyyimp/Page/ClientPage/MissionListView.dart';
 import 'package:hnszlyyimp/Widget/AeroBottomNavigationBar.dart';
 
@@ -70,16 +69,21 @@ class _NormalUserPageState extends State<NormalUserPage> {
         actions: <Widget>[
           IconButton(
             icon: new Container(
-              child: ClipOval(
-                  child: Image.network(
-                    "http://" +
-                        Client().ip +
-                        ":" +
-                        Client().serverPort +
-                        "/getAvatar?id=" +
-                        isLogin!.id!,
-                    fit: BoxFit.cover,
-                  )),
+              height: 25,
+              width: 25,
+              child: Hero(
+                tag: "avatar",
+                child: ClipOval(
+                    child: Image.network(
+                      "http://" +
+                          Client().ip +
+                          ":" +
+                          Client().serverPort +
+                          "/getAvatar?id=" +
+                          isLogin!.id!,
+                      fit: BoxFit.cover,
+                    )),
+              ),
             ),
             onPressed: (){
             },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hnszlyyimp/Page/LoginPage/RegisterPage.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../AnimRoute/FlyRoute.dart';
 import '../../client.dart';
 import 'WelcomePage.dart';
 
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           if (value == 1) {
             Navigator.push(
               context,
-              new MaterialPageRoute(builder: (context) => new WelcomePage(widget.fatherContext)),
+              new FlyRoute(builder: (context) => new WelcomePage(widget.fatherContext)),
             );
           } else {
             return showDialog<void>(
@@ -96,20 +97,19 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: 120,
-              width: 360,
+              height: 80,
               child:
 //Image.asset('res/logo.png'),
               Lottie.asset('res/logoAnim.json'),
             ),
-            Text("BETA",
+            Text("ALPHA V22.310",
               style: TextStyle(
                 color: Colors.black26,
-              fontSize: 20,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),),
             SizedBox(
-              height: 15,
+              height: 25,
             ),
             TextField(
               controller: _titleID,
@@ -129,29 +129,17 @@ class _LoginPageState extends State<LoginPage> {
               InputDecoration(border: OutlineInputBorder(), labelText: '密码'),
             ),
             SizedBox(
-              height: 15,
+              height: 25,
             ),
-            Container(
-              child: SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(StadiumBorder(
-                      side: BorderSide(color: Colors.transparent),
-                    )),
-                  ),
-                  onPressed: () {
-                    _login();
-                  },
-                  child: Text(
-                    '登陆',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+            SizedBox(
+              width: 60,
+              height: 60,
+              child:
+              FloatingActionButton(
+                child: Icon(Icons.chevron_right),
+                onPressed: () {
+                  _login();
+                },
               ),
             ),
             SizedBox(
@@ -171,10 +159,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   onPressed: () {
 
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    Navigator.of(context).push(FlyRoute(builder: (context) {
                     return RegisterPage(widget.fatherContext);
-                    },
-                    fullscreenDialog: false));
+                    }));
                   },
                   child: Text(
                     '注册',

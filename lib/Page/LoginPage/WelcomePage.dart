@@ -19,7 +19,7 @@ import '../test.dart';
 import 'InfoEditPage.dart';
 
 class WelcomePage extends StatelessWidget {
-  var fatherContext;
+  final fatherContext;
   WelcomePage(this.fatherContext, {Key? key}) : super(key: key);
 
   @override
@@ -30,27 +30,36 @@ class WelcomePage extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Lottie.asset('res/avatarAnim.json', height: 200),
-            Container(
-              height: 120,
-              width: 120,
-              child: ClipOval(
-                  child: InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return InfoEditPage(fatherContext);
-                  }));
-                },
-                child: Image.network(
-                  "http://" +
-                      Client().ip +
-                      ":" +
-                      Client().serverPort +
-                      "/getAvatar?id=" +
-                      isLogin!.id!,
-                  fit: BoxFit.cover,
+            Hero(
+              tag: "avatar",
+              child: Container(
+                height: 120,
+                width: 120,
+                child: ClipOval(
+                  child: Material(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return InfoEditPage(fatherContext);
+                            },
+                          ),
+                        );
+                      },
+                      child: Image.network(
+                        "http://" +
+                            Client().ip +
+                            ":" +
+                            Client().serverPort +
+                            "/getAvatar?id=" +
+                            isLogin!.id!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
-              )),
+              ),
             ),
             Column(
               children: [
@@ -68,25 +77,25 @@ class WelcomePage extends StatelessWidget {
                   height: 2,
                 ),
                 Text("欢迎回来"),
-                if(kDebugMode)
-                OutlinedButton(
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all(StadiumBorder(
-                        side: BorderSide(
-                          color: Colors.transparent,
-                        ))),
+                if (kDebugMode)
+                  OutlinedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(StadiumBorder(
+                          side: BorderSide(
+                        color: Colors.transparent,
+                      ))),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => new MainPage(context)),
+                      );
+                    },
+                    child: Text(
+                      'Debug测试通道',
+                    ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      fatherContext,
-                      new MaterialPageRoute(
-                          builder: (context) => new RadialExpansionDemo()),
-                    );
-                  },
-                  child: Text(
-                    'Debug测试通道',
-                  ),
-                ),
               ],
             ),
           ],
@@ -135,125 +144,72 @@ class WelcomePage extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            color: Color.fromARGB(12, 0, 0, 0),
+            color: Colors.white.withAlpha(150),
             //height: 200,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isLogin!.authority!.contains("3"))
-                  Hero(
-                    tag: "page",
-                    child: PlasticsCard(
-                      cardColor: Color.fromARGB(200, 255, 255, 255),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            fatherContext,
-                            new MaterialPageRoute(
-                                builder: (context) => new ITCenterPage()),
-                          );
-                        },
-                        child: SizedBox(
-                          height: 145,
-                          width: 130,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                  height: 60,
-                                  width: 60,
-                                  child: SvgPicture.asset(
-                                    "res/icon_cloud.svg",
-                                  )),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "IT服务台",
-                                style: TextStyle(color: Colors.grey.shade800),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _item("故障报修", "res/icon_cloud.svg", () {
+                    Navigator.push(
+                      fatherContext,
+                      new MaterialPageRoute(
+                          builder: (context) => new ITCenterPage()),
+                    );
+                  }),
                 if (isLogin!.authority!.contains("2"))
-                  PlasticsCard(
-                    cardColor: Color.fromARGB(200, 255, 255, 255),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          fatherContext,
-                          new MaterialPageRoute(
-                              builder: (context) => new ITUserPage()),
-                        );
-                      },
-                      child: SizedBox(
-                        height: 145,
-                        width: 130,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                height: 60,
-                                width: 60,
-                                child: SvgPicture.asset(
-                                  "res/icon_doc_done.svg",
-                                )),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "信息员",
-                              style: TextStyle(color: Colors.grey.shade800),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  _item("信息员", "res/icon_doc_done.svg", () {
+                    Navigator.push(
+                      fatherContext,
+                      new MaterialPageRoute(
+                          builder: (context) => new ITUserPage()),
+                    );
+                  }),
                 if (isLogin!.authority!.contains("1"))
-                  PlasticsCard(
-                    cardColor: Color.fromARGB(200, 255, 255, 255),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          fatherContext,
-                          new MaterialPageRoute(
-                              builder: (context) => new NormalUserPage()),
-                        );
-                      },
-                      child: SizedBox(
-                        height: 145,
-                        width: 130,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                height: 60,
-                                width: 60,
-                                child: SvgPicture.asset(
-                                  "res/icon_msg.svg",
-                                )),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "故障报修",
-                              style: TextStyle(color: Colors.grey.shade800),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
+                  _item("故障报修", "res/icon_msg.svg", () {
+                    Navigator.push(
+                      fatherContext,
+                      new MaterialPageRoute(
+                          builder: (context) => new NormalUserPage()),
+                    );
+                  }),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _item(
+    String text,
+    String svgPath,
+    GestureTapCallback function,
+  ) {
+    return InkWell(
+      onTap: function,
+      child: SizedBox(
+        height: 145,
+        width: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                height: 55,
+                width: 55,
+                child: SvgPicture.asset(
+                  svgPath,
+                )),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              text,
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

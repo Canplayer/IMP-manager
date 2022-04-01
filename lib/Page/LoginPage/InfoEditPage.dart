@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -97,45 +96,49 @@ class _InfoEditPageState extends State<InfoEditPage> {
             ),
           ),
           SizedBox(height: 20,),
-          Container(
-            height: 250,
-            width: 250,
-            child: ClipOval(
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      height: 250,
-                      width: 250,
-                      child: Image.network(
-                        "http://" +
-                            Client().ip +
-                            ":" +
-                            Client().serverPort +
-                            "/getAvatar?id=" +
-                            isLogin!.id!,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.bottomCenter,
-                      ),
-                    ),
-                    SizedBox(
+          Hero(
+            tag: "avatar",
 
-                      height: 250,
-                      width: 250,
-                      child: (_image == null)?
-                      SizedBox():
-                      (kIsWeb == true)
-                          ? Image.network(
-                        _image!.path,
-                        fit: BoxFit.cover,
+            child: Container(
+              height: 250,
+              width: 250,
+              child: ClipOval(
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: 250,
+                        width: 250,
+                        child: Image.network(
+                          "http://" +
+                              Client().ip +
+                              ":" +
+                              Client().serverPort +
+                              "/getAvatar?id=" +
+                              isLogin!.id!,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.bottomCenter,
+                        ),
+                      ),
+                      SizedBox(
+
+                        height: 250,
+                        width: 250,
+                        child: (_image == null)?
+                        SizedBox():
+                        (kIsWeb == true)
+                            ? Image.network(
+                          _image!.path,
+                          fit: BoxFit.cover,
+                        )
+                            : Image.file(
+                          File(_image!.path),
+                          fit: BoxFit.cover,
+                        ),
                       )
-                          : Image.file(
-                        File(_image!.path),
-                        fit: BoxFit.cover,
-                      ),
-                    )
 
-                  ],
-                )),
+                    ],
+                  )),
+            ),
           ),
           SizedBox(
             height: 20,
